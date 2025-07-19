@@ -1,0 +1,92 @@
+<?php
+
+namespace App\Services;
+
+use App\Interfaces\CarRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+
+class CarService
+{
+    public function __construct(private CarRepositoryInterface $carRepository)
+    {
+        // Middleware or other initializations can be done here
+    }
+
+    public function all()
+    {
+        try {
+            return $this->carRepository->all();
+        } catch (ModelNotFoundException $e) {
+            \Log::error('Cars not found: ' . $e->getMessage());
+            throw new \Exception('Cars not found.');
+        }
+    }
+
+    public function paginateCars(array $requestData, string $sort_direction, string $sort_by, int $page, int $per_page)
+    {
+        try {
+            return $this->carRepository->paginate($requestData, $sort_direction, $sort_by, $page, $per_page);
+        } catch (ModelNotFoundException $e) {
+            \Log::error('Cars not found: ' . $e->getMessage());
+            throw new \Exception('Cars not found.');
+        }
+    }
+
+    // This class will handle car-related services
+    public function getCarDetails($carId)
+    {
+        try {
+            return $this->carRepository->get($carId);
+        } catch (ModelNotFoundException $e) {
+            \Log::error('Car not found: ' . $e->getMessage());
+            throw new \Exception('Car not found.');
+        }
+    }
+
+    public function addNewCar(array $carData)
+    {
+        try {
+            return $this->carRepository->insert($carData);
+        } catch (QueryException $e) {
+            \Log::error('Error inserting car: ' . $e->getMessage());
+            throw new \Exception('Unexpected Error happened during inserting car data.');
+        }
+    }
+
+    public function updateCar(int $carId, array $carData)
+    {
+        try {
+            return $this->carRepository->update($carId, $carData);
+        } catch (QueryException $e) {
+            \Log::error('Error updating car: ' . $e->getMessage());
+            throw new \Exception('Unexpected Error happened during updating car data.');
+        } catch (ModelNotFoundException $e) {
+            \Log::error('Car not found: ' . $e->getMessage());
+            throw new \Exception('Car not found.');
+        }
+    }
+
+    public function deleteCar($carId)
+    {
+        try {
+            return $this->carRepository->delete($carId);
+        } catch (QueryException $e) {
+            \Log::error('Error deleting car: ' . $e->getMessage());
+            throw new \Exception('Unexpected Error happened during deleting car data.');
+        } catch (ModelNotFoundException $e) {
+            \Log::error('Car not found: ' . $e->getMessage());
+            throw new \Exception('Car not found.');
+        }
+    }
+
+    public function getCount()
+    {
+        try {
+            return $this->carRepository->getCount();
+        } catch (QueryException $e) {
+            \Log::error('Error counting cars: ' . $e->getMessage());
+            throw new \Exception('Unexpected Error happened during counting cars.');
+        }
+    }
+}
