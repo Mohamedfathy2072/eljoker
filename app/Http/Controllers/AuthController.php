@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -12,36 +14,105 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|string|email|max:255|unique:users'
         ]);
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
+        $otp = random_int(100000, 999999);
+        $email = $request->input('email');
+        User::create([
+            'email' => $email,
+            'otp_hash' => Hash::make($otp),
+            'otp_expires_at' => now()->addMinutes(5)
         ]);
+
+        // send OTP to user via email or SMS here (not implemented in this example)
+        Mail::to($email)->send(new OtpMail($otp));
+
+        return response()->json([
+            'message' => 'User registered successfully. Please check your email for the OTP.',
+            'user' => $email
+        ], 201);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email',
+            'otp' => 'required|integer|digits:6'
+        ]);
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user || !Hash::check($request->input('otp'), $user->otp_hash)) {
+            return response()->json(['error' => 'Invalid OTP'], 400);
+        }
+
+        if ($user->otp_expires_at < now()) {
+            return response()->json(['error' => 'OTP expired'], 400);
+        }
+
+        $user->is_active = true;
+        $user->otp_hash = null;
+        $user->save();
+
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
+            'message' => 'OTP verified successfully.',
+            'token' => $token
+        ]);
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email'
+        ]);
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        $email = $request->input('email');
+
+        $user = User::where('email', $email)->first();
+
+        $otp = random_int(100000, 999999);
+        $user->otp_hash = Hash::make($otp);
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
+
+        Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
-            'token' => $token,
+            'message' => 'Login successful. Please check your email for the OTP.',
+            'user' => $email
         ]);
+    }
+
+    public function resendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email|max:255|exists:users,email'
+        ]);
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user || !$user->otp_hash) {
+            return response()->json(['error' => 'No OTP found for this user'], 400);
+        }
+
+        $otp = random_int(100000, 999999);
+        $user->otp_hash = Hash::make($otp);
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
+
+        Mail::to($user->email)->send(new OtpMail($otp));
+
+        return response()->json(['message' => 'OTP resent successfully.']);
+    }
+
+    public function logout()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'User logged out successfully.']);
     }
 
     public function me()
