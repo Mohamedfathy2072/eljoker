@@ -23,7 +23,7 @@ return new class extends Migration
             // Vehicle specifications
             $table->string('body_style', 50); // SUV, Sedan, Hatchback, etc.
             $table->string('type', 50); // vehicle category
-            $table->foreignId('fuel_economy_id')->constrained()->onDelete('set null'); // Fuel economy reference
+            $table->foreignId('fuel_economy_id')->nullable()->constrained()->onDelete('set null'); // Fuel economy reference
             $table->string('transmission_type', 20); // Automatic, Manual, etc.
             $table->string('drive_type', 20); // FWD, RWD, AWD, etc.
             $table->string('engine_type', 50); // Petrol, Diesel, Electric, Hybrid
@@ -31,11 +31,11 @@ return new class extends Migration
 
             // Physical attributes
             $table->string('color', 50);
-            $table->foreignId('size_id')->constrained()->onDelete('set null'); // Size Long, Width, Height
+            $table->foreignId('size_id')->nullable()->constrained()->onDelete('set null'); // Size Long, Width, Height
 
             // Performance & condition
             $table->unsignedInteger('mileage'); // Total kilometers driven
-            $table->foreignId('horsepower_id')->constrained()->onDelete('set null'); // Speed
+            $table->foreignId('horsepower_id')->nullable()->constrained()->onDelete('set null'); // Speed
             $table->string('vehicle_status', 20); // New, Used, etc.
             $table->string('refurbishment_status', 50); // Refurbishment status if applicable
 
