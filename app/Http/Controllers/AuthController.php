@@ -62,11 +62,14 @@ class AuthController extends Controller
         $user->save();
 
 
-        $token = JWTAuth::fromUser($user);
+        $accessToken = JWTAuth::fromUser($user);
+        $refreshToken = JWTAuth::refresh($accessToken); // Refresh token for better security
 
         return response()->json([
             'message' => 'OTP verified successfully.',
-            'token' => $token
+            'token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            'user' => new UserResource($user)
         ]);
     }
 
@@ -140,5 +143,15 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Profile updated successfully.', 'user' => new UserResource($user)]);
+    }
+
+    public function refershToken()
+    {
+        try {
+            $token = JWTAuth::refresh(JWTAuth::getToken());
+            return response()->json(['token' => $token]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Could not refresh token'], 500);
+        }
     }
 }
