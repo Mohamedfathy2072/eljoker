@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sizes', function (Blueprint $table) {
+        Schema::create('conditions', function (Blueprint $table) {
             $table->id();
-            $table->decimal('long');
-            $table->decimal('width');
-            $table->decimal('height');
+            $table->foreignId('car_id')->constrained()->onDelete('cascade');
+            $table->string('name', 119); // Condition name
+            $table->string('part', 199); // Condition part
+            $table->text('description')->nullable(); // Condition description
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sizes');
+        Schema::dropIfExists('conditions');
     }
 };
