@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class AuthController extends Controller
 
         $user->is_active = true;
         $user->otp_hash = null;
+        $user->otp_expires_at = null;
         $user->save();
 
 
@@ -117,6 +119,22 @@ class AuthController extends Controller
 
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(new UserResource(auth()->user()));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'phone' => 'nullable|string|regex:/^\+?[0-9]{7,15}$/|unique:users,phone,' . $user->id,
+            'name' => 'nullable|string|max:119'
+        ]);
+
+        $user->phone = $request->input('phone', $user->phone);
+        $user->name = $request->input('name', $user->name);
+        $user->save();
+
+        return response()->json(['message' => 'Profile updated successfully.', 'user' => new UserResource($user)]);
     }
 }
