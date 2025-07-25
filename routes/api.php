@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\BrandController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -23,3 +24,6 @@ Route::prefix('cars')->middleware('auth:api')->group(function () {
     Route::put('/{id}', [CarController::class, 'update']);
     Route::delete('/{id}', [CarController::class, 'delete']);
 });
+
+
+Route::apiResource('brands', BrandController::class);
