@@ -63,7 +63,7 @@ class AuthController extends Controller
 
 
         $accessToken = JWTAuth::fromUser($user);
-        $refreshToken = JWTAuth::refresh($accessToken); // Refresh token for better security
+        $refreshToken = JWTAuth::setToken($accessToken)->refresh();
 
         return response()->json([
             'message' => 'OTP verified successfully.',
