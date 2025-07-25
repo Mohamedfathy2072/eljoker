@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RefurbishmentStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class CreateCarRequest extends FormRequest
 {
@@ -41,7 +43,7 @@ class CreateCarRequest extends FormRequest
             'mileage' => 'required|integer|min:0|max:9999999',
             'speed' => 'nullable|integer|min:0|max:500',
             'vehicle_status' => 'required|string|max:20|in:new,used,certified_pre_owned',
-            'refurbishment_status' => 'nullable|string|max:50',
+            'refurbishment_status' => ['required', new Enum(RefurbishmentStatus::class)],
 
             // Pricing
             'price' => 'required|numeric|min:0|max:9999999999.99',

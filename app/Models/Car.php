@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RefurbishmentStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Car extends Model
@@ -26,5 +27,8 @@ class Car extends Model
         'category',
     ];
 
+    protected $casts = [
+        'refurbishment_status' => RefurbishmentStatus::class,
+    ];
 
 }
