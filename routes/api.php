@@ -12,7 +12,7 @@ Route::prefix('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
-    Route::post('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
 });
 
 Route::prefix('cars')->middleware('auth:api')->group(function () {
