@@ -14,6 +14,10 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        User::where('email', $request->input('email'))
+                ->where('is_active', false)
+                ->delete(); // Clear any existing inactive user with the same email
+
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users'
         ]);
