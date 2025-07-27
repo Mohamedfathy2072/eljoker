@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum RefurbishmentStatus: string
 {
-    case NotRefurbished = 'not_refurbished';
-    case PartiallyRefurbished = 'partially_refurbished';
+    case Empty = 'empty';
+    case LimitedOffer = 'limited_offer';
     case FullyRefurbished = 'fully_refurbished';
     case CertifiedRefurbished = 'certified_refurbished';
 
     public function label(): string
     {
         return match ($this) {
-            self::NotRefurbished => 'Not Refurbished',
-            self::PartiallyRefurbished => 'Partially Refurbished',
+            self::Empty => 'Empty',
+            self::LimitedOffer => 'Limited Time Offer',
             self::FullyRefurbished => 'Fully Refurbished',
             self::CertifiedRefurbished => 'Certified Refurbished',
         };
