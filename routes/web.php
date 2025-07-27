@@ -1,14 +1,24 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\{
+    BodyStyleController,
+    BrandController,
+    CarModelController,
+    DashboardController,
+    DriveTypeController,
+    EngineTypeController,
+    TransmissionTypeController,
+    TrimController,
+    TypeController,
+    VehicleStatusController,
+    AuthController
+};
+use App\Http\Controllers\CarController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     dd("Welcome to the API! Please use the /api endpoint for API requests.");
-//     // return view('welcome');
-// });
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+});
 
 // Route::middleware('auth:web')->group(function () {
 //     Route::get('/admin', [DashboardController::class, 'index']);
@@ -30,11 +40,84 @@ Route::prefix('admin')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+
+        Route::prefix('cars')->group(function () {
+            Route::get('/', [CarController::class, 'index'])->name('admin.cars');
+            Route::get('/add', [CarController::class, 'add'])->name('admin.car.add');
+            Route::post('/', [CarController::class, 'store'])->name('admin.car.store');
+            Route::put('/{id}', [CarController::class, 'edit'])->name('admin.car.edit');
+            Route::delete('/{id}', [CarController::class, 'destroy'])->name('admin.car.destroy');
+        });
+
+
         Route::prefix('brands')->group(function () {
             Route::get('/', [BrandController::class, 'showBrands'])->name('admin.brands');
             Route::post('/', [BrandController::class, 'storeBrand'])->name('admin.brands.store');
             Route::put('/{id}', [BrandController::class, 'editBrand'])->name('admin.brands.edit');
             Route::delete('/{id}', [BrandController::class, 'destroyBrand'])->name('admin.brands.destroy');
+        });
+
+        Route::prefix('CarModel')->group(function () {
+            Route::get('/', [CarModelController::class, 'index'])->name('admin.CarModels');
+            Route::post('/', [CarModelController::class, 'store'])->name('admin.CarModel.store');
+            Route::put('/{id}', [CarModelController::class, 'edit'])->name('admin.CarModel.edit');
+            Route::delete('/{id}', [CarModelController::class, 'destroy'])->name('admin.CarModel.destroy');
+        });
+
+
+        Route::prefix('BodyStyles')->group(function () {
+            Route::get('/', [BodyStyleController::class, 'index'])->name('admin.BodyStyles');
+            Route::post('/', [BodyStyleController::class, 'store'])->name('admin.BodyStyle.store');
+            Route::put('/{id}', [BodyStyleController::class, 'edit'])->name('admin.BodyStyle.edit');
+            Route::delete('/{id}', [BodyStyleController::class, 'destroy'])->name('admin.BodyStyle.destroy');
+        });
+
+
+        Route::prefix('Types')->group(function () {
+            Route::get('/', [TypeController::class, 'index'])->name('admin.Types');
+            Route::post('/', [TypeController::class, 'store'])->name('admin.Type.store');
+            Route::put('/{id}', [TypeController::class, 'edit'])->name('admin.Type.edit');
+            Route::delete('/{id}', [TypeController::class, 'destroy'])->name('admin.Type.destroy');
+        });
+
+
+        Route::prefix('TransmissionTypes')->group(function () {
+            Route::get('/', [TransmissionTypeController::class, 'index'])->name('admin.TransmissionTypes');
+            Route::post('/', [TransmissionTypeController::class, 'store'])->name('admin.TransmissionType.store');
+            Route::put('/{id}', [TransmissionTypeController::class, 'edit'])->name('admin.TransmissionType.edit');
+            Route::delete('/{id}', [TransmissionTypeController::class, 'destroy'])->name('admin.TransmissionType.destroy');
+        });
+
+
+        Route::prefix('DriveTypes')->group(function () {
+            Route::get('/', [DriveTypeController::class, 'index'])->name('admin.DriveTypes');
+            Route::post('/', [DriveTypeController::class, 'store'])->name('admin.DriveType.store');
+            Route::put('/{id}', [DriveTypeController::class, 'edit'])->name('admin.DriveType.edit');
+            Route::delete('/{id}', [DriveTypeController::class, 'destroy'])->name('admin.DriveType.destroy');
+        });
+
+
+        Route::prefix('EngineTypes')->group(function () {
+            Route::get('/', [EngineTypeController::class, 'index'])->name('admin.EngineTypes');
+            Route::post('/', [EngineTypeController::class, 'store'])->name('admin.EngineType.store');
+            Route::put('/{id}', [EngineTypeController::class, 'edit'])->name('admin.EngineType.edit');
+            Route::delete('/{id}', [EngineTypeController::class, 'destroy'])->name('admin.EngineType.destroy');
+        });
+
+
+        Route::prefix('VehicleStatuses')->group(function () {
+            Route::get('/', [VehicleStatusController::class, 'index'])->name('admin.VehicleStatuses');
+            Route::post('/', [VehicleStatusController::class, 'store'])->name('admin.VehicleStatus.store');
+            Route::put('/{id}', [VehicleStatusController::class, 'edit'])->name('admin.VehicleStatus.edit');
+            Route::delete('/{id}', [VehicleStatusController::class, 'destroy'])->name('admin.VehicleStatus.destroy');
+        });
+
+
+        Route::prefix('Trim')->group(function () {
+            Route::get('/', [TrimController::class, 'index'])->name('admin.Trim');
+            Route::post('/', [TrimController::class, 'store'])->name('admin.Trim.store');
+            Route::put('/{id}', [TrimController::class, 'edit'])->name('admin.Trim.edit');
+            Route::delete('/{id}', [TrimController::class, 'destroy'])->name('admin.Trim.destroy');
         });
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');

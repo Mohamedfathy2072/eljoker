@@ -16,6 +16,11 @@
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
+            <a href="{{ route('admin.car.add') }}">
+              <i class="bi bi-circle"></i><span>Add Car</span>
+            </a>
+          </li>
+          <li>
             <a href="components-alerts.html">
               <i class="bi bi-circle"></i><span>Cars</span>
             </a>
@@ -26,42 +31,42 @@
             </a>
           </li>
           <li>
-            <a href="components-badges.html">
+            <a href="{{ route('admin.CarModels') }}">
               <i class="bi bi-circle"></i><span>Models</span>
             </a>
           </li>
           <li>
-            <a href="components-breadcrumbs.html">
+            <a href="{{ route('admin.BodyStyles') }}">
               <i class="bi bi-circle"></i><span>Body Styles</span>
             </a>
           </li>
           <li>
-            <a href="components-buttons.html">
+            <a href="{{ route('admin.Types') }}">
               <i class="bi bi-circle"></i><span>Types</span>
             </a>
           </li>
           <li>
-            <a href="components-cards.html">
+            <a href="{{ route('admin.TransmissionTypes') }}">
               <i class="bi bi-circle"></i><span>Transmission Types</span>
             </a>
           </li>
           <li>
-            <a href="components-carousel.html">
+            <a href="{{ route('admin.DriveTypes') }}">
               <i class="bi bi-circle"></i><span>Drive Types</span>
             </a>
           </li>
           <li>
-            <a href="components-list-group.html">
+            <a href="{{ route('admin.EngineTypes') }}">
               <i class="bi bi-circle"></i><span>Engine Types</span>
             </a>
           </li>
           <li>
-            <a href="components-modal.html">
+            <a href="{{ route('admin.VehicleStatuses') }}">
               <i class="bi bi-circle"></i><span>Vehicle Statuses</span>
             </a>
           </li>
           <li>
-            <a href="components-tabs.html">
+            <a href="{{ route('admin.Trim') }}">
               <i class="bi bi-circle"></i><span>Trim</span>
             </a>
           </li>

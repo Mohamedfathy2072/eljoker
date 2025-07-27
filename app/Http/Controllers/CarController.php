@@ -76,4 +76,9 @@ class CarController extends Controller
             return response()->json(['message' => 'Error deleting car', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function add()
+    {
+        return view('pages.addCar');
+    }
 }

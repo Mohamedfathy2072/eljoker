@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Blank Page')
+@section('title', 'Drive Types')
 
 @section('content')
 <div class="pagetitle">
@@ -8,7 +8,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-      <li class="breadcrumb-item active">Brands</li>
+      <li class="breadcrumb-item active">Drive Types</li>
     </ol>
   </nav>
 </div>
@@ -21,7 +21,7 @@
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title">Brands</h5>
+                    <h5 class="card-title">Drive Types</h5>
                     @error('name')
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="bi bi-exclamation-octagon me-1"></i>
@@ -37,20 +37,20 @@
                         </div>
                     @endsession
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
-                        Add New Brand
+                        Add New Drive Types
                     </button>
                     <div class="modal fade" id="verticalycentered" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="{{ route('admin.brands.store') }}" method="POST">
+                            <form action="{{ route('admin.DriveType.store') }}" method="POST">
                                 @csrf
                                 <div class="modal-header">
-                                <h5 class="modal-title">Add New Brand</h5>
+                                <h5 class="modal-title">Add New Drive Types</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="brandName" class="form-label">Brand Name</label>
+                                        <label for="brandName" class="form-label">Drive Types Name</label>
                                         <input type="text" class="form-control" id="brandName" name="name" required>
 
                                     </div>
@@ -77,31 +77,31 @@
                   </tr>
                 </thead>
                 <tbody>
-                    @foreach($brands as $brand)
+                    @foreach($data as $item)
                     <tr>
-                        <td>{{ $brand->name }}</td>
-                        <td>{{ $brand->created_at->format('Y/m/d') }}</td>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
                             <!-- Edit Button triggers modal -->
-                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBrandModal{{ $brand->id }}">
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBrandModal{{ $item->id }}">
                                 Edit
                             </button>
 
                             <!-- Edit Brand Modal -->
-                            <div class="modal fade" id="editBrandModal{{ $brand->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $brand->id }}" aria-hidden="true">
+                            <div class="modal fade" id="editBrandModal{{ $item->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <form action="{{ route('admin.brands.edit', $brand->id) }}" method="POST">
+                                        <form action="{{ route('admin.DriveType.edit', $item->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editBrandModalLabel{{ $brand->id }}">Edit Brand</h5>
+                                                <h5 class="modal-title" id="editBrandModalLabel{{ $item->id }}">Edit Drive Types</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editBrandName{{ $brand->id }}" class="form-label">Brand Name</label>
-                                                    <input type="text" class="form-control" id="editBrandName{{ $brand->id }}" name="name" value="{{ $brand->name }}" required>
+                                                    <label for="editBrandName{{ $item->id }}" class="form-label">Drive Types Name</label>
+                                                    <input type="text" class="form-control" id="editBrandName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -112,7 +112,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('admin.DriveType.destroy', $item->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -125,7 +125,7 @@
 
             </table>
              <div class="d-flex justify-content-center mt-3">
-                    {{ $brands->links('pagination::bootstrap-5') }}
+                    {{ $data->links('pagination::bootstrap-5') }}
             </div>
             </div>
               <!-- End Table with stripped rows -->

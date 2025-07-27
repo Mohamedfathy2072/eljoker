@@ -11,7 +11,7 @@ class BrandController extends Controller
 {
     public function showBrands()
     {
-        $brands = Brand::all();
+        $brands = Brand::latest()->paginate(10);
         return view('pages.brands', compact('brands'));
     }
 
