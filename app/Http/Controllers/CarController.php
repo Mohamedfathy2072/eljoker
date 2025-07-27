@@ -2,9 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Condition;
+use App\Enums\Feature;
+use App\Enums\RefurbishmentStatus;
 use App\Http\Requests\CreateCarRequest;
 use App\Http\Requests\PaginatedCarsRequest;
 use App\Http\Requests\UpdateCarRequest;
+use App\Models\BodyStyle;
+use App\Models\Brand;
+use App\Models\CarModel;
+use App\Models\DriveType;
+use App\Models\EngineType;
+use App\Models\TransmissionType;
+use App\Models\Trim;
+use App\Models\Type;
+use App\Models\VehicleStatus;
 use App\Services\CarService;
 
 class CarController extends Controller
@@ -79,6 +91,32 @@ class CarController extends Controller
 
     public function add()
     {
-        return view('pages.addCar');
+        // get brand list for the dropdown
+        $brands = Brand::all();
+        $carModels = CarModel::all();
+        $bodyStyles = BodyStyle::all();
+        $types = Type::all();
+        $transmissionTypes = TransmissionType::all();
+        $driveTypes = DriveType::all();
+        $engineTypes = EngineType::all();
+        $vehicleStatuses = VehicleStatus::all();
+        $refurbishmentStatuses = RefurbishmentStatus::cases();
+        $trim = Trim::all();
+        $features = Feature::cases();
+        $conditions = Condition::cases();
+        return view('pages.addCar', [
+            'brands' => $brands,
+            'carModels' => $carModels,
+            'bodyStyles' => $bodyStyles,
+            'types' => $types,
+            'transmissionTypes' => $transmissionTypes,
+            'driveTypes' => $driveTypes,
+            'engineTypes' => $engineTypes,
+            'vehicleStatuses' => $vehicleStatuses,
+            'refurbishmentStatuses' => $refurbishmentStatuses,
+            'trim' => $trim,
+            'features' => $features,
+            'conditions' => $conditions
+        ]);
     }
 }
