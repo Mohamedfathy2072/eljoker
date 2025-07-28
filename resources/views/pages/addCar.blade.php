@@ -43,7 +43,7 @@
 
                     <div class="col-md-4">
                         <label for="inputDate" class="form-label">Model Year</label>
-                        <input type="date" class="form-control" id="inputDate">
+                        <input type="number" class="form-control" id="inputDate" placeholder="year">
                     </div>
 
                     <div class="col-md-4">
@@ -72,8 +72,13 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="customRange1" class="form-label">Fuel Economy Range</label>
-                        <input type="range" class="form-range" id="customRange1">
+                        <label for="minRange" class="form-label">Min Fuel Economy</label>
+                        <input type="number" class="form-control" id="minRange" placeholder="Min Fuel Economy">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="maxRange" class="form-label">Max Fuel Economy</label>
+                        <input type="number" class="form-control" id="maxRange" placeholder="Max Fuel Economy">
                     </div>
 
                     <div class="col-md-4">
@@ -113,7 +118,7 @@
 
                     <div class="col-md-4">
                         <label for="inputColor" class="form-label">Color</label>
-                        <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#4154f1" title="Choose your color">
+                        <input type="text" class="form-control" id="exampleColorInput" title="Choose your color">
                     </div>
 
                     <div class="col-md-4">
@@ -137,8 +142,13 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="customRange2" class="form-label">Horse Power Range</label>
-                        <input type="range" class="form-range" id="customRange2">
+                        <label for="minRange" class="form-label">Min Horse Power</label>
+                        <input type="number" class="form-control" id="minRangePower" placeholder="Min Horse Power">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="maxRange" class="form-label">Max Horse Power</label>
+                        <input type="number" class="form-control" id="maxRangePower" placeholder="Max Horse Power">
                     </div>
 
                     <div class="col-md-4">
@@ -188,53 +198,83 @@
 
                     <div class="col-md-4">
                         <label for="formFile" class="form-label">Images Upload</label>
-                        <input class="form-control" type="file" id="formFile">
+                        <input class="form-control" type="file" id="formFile" multiple>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-12">
                         <label for="inputFlags" class="form-label">Flags</label>
-                        <input type="text" class="form-control" id="inputFlags">
+                        <div id="flagContainer">
+                            <div class="flagInput">
+                                <input type="text" class="form-control" id="inputFlags">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-link" onclick="addFlagInput()">
+                            <i class="bi bi-plus-circle"></i> Add Flag
+                        </button>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="inputFeatures" class="form-label">Features</label>
-                        <select id="inputFeatures" class="form-select">
-                            <option selected>Choose...</option>
-                            @foreach ($features as $item)
-                                <option value="{{ $item->value }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
+                    <div class="col-12">
+                        <div id="featureBlockContainer">
+                            <!-- First Block of Fields -->
+                            <div class="feature-block mb-3">
+                                <div class="col-md-4">
+                                    <label for="inputFeatures" class="form-label">Features</label>
+                                    <select class="form-select" name="inputFeatures[]">
+                                        <option selected>Choose...</option>
+                                        @foreach ($features as $item)
+                                            <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="inputLabel" class="form-label">Label</label>
+                                    <input type="text" class="form-control" name="inputLabel[]">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="inputValue" class="form-label">Value</label>
+                                    <input type="text" class="form-control" name="inputValue[]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-link" onclick="addFeatureBlock()">
+                            <i class="bi bi-plus-circle"></i> Add More
+                        </button>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="inputLabel" class="form-label">Label</label>
-                        <input type="text" class="form-control" id="inputLabel">
+                    <div class="col-12">
+                        <div id="conditionBlockContainer">
+                            <!-- First Block of Fields -->
+                            <div class="condition-block mb-3">
+                                <div class="col-md-4">
+                                    <label for="inputConditions" class="form-label">Conditions</label>
+                                    <select class="form-select" name="inputConditions[]">
+                                        <option selected>Choose...</option>
+                                        @foreach ($conditions as $item)
+                                            <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="inputPart" class="form-label">Part</label>
+                                    <input type="text" class="form-control" name="inputPart[]">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="inputDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" name="inputDescription[]" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-link" onclick="addConditionBlock()">
+                            <i class="bi bi-plus-circle"></i> Add More
+                        </button>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="inputValue" class="form-label">Value</label>
-                        <input type="text" class="form-control" id="inputValue">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="inputConditions" class="form-label">Conditions</label>
-                        <select id="inputConditions" class="form-select">
-                            <option selected>Choose...</option>
-                            @foreach ($conditions as $item)
-                                <option value="{{ $item->value }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="inputPart" class="form-label">Part</label>
-                        <input type="text" class="form-control" id="inputPart">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="inputDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="inputDescription" rows="3"></textarea>
-                    </div>
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary">Submit</button>
