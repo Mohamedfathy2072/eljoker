@@ -21,6 +21,7 @@
         const newInput = document.createElement('input');
         newInput.type = 'text';
         newInput.classList.add('form-control');
+        newInput.classList.add('mt-3');
         flagContainer.appendChild(newFlagInput);
         newFlagInput.appendChild(newInput);
     }

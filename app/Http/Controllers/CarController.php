@@ -26,6 +26,18 @@ class CarController extends Controller
         // Middleware or other initializations can be done here
     }
 
+    public function store(CreateCarRequest $request)
+    {
+        try {
+            $carData = $request->validated();
+            $newCar = $this->carService->addNewCar($carData);
+            return response()->json(['message' => 'Car created', 'data' => $newCar]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
     public function all()
     {
         try {

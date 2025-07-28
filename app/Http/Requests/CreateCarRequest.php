@@ -25,25 +25,43 @@ class CreateCarRequest extends FormRequest
     {
         return [
             // Car identification
-            'brand' => 'required|string|max:100',
-            'model' => 'required|string|max:100',
-            'model_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'brand' => 'nullable',
+            'model' => 'nullable',
+            'model_year' => 'nullable|numeric|min:1900|max:' . (date('Y') + 1),
 
             // Vehicle specifications
-            'body_style' => 'required|string|max:50|in:SUV,Sedan,Hatchback,Coupe,Convertible,Wagon,Truck,Van,Crossover',
-            'type' => 'required|string|max:50',
-            'fuel_type' => 'required|string|max:20|in:petrol,diesel,electric,hybrid,lpg,cng',
-            'transmission_type' => 'required|string|max:20|in:automatic,manual,cvt,semi-automatic',
-            'drive_type' => 'required|string|max:20|in:fwd,rwd,awd,4wd',
+            'body_style' => 'nullable',
+            'type' => 'nullable',
+            'transmission_type' => 'nullable',
+            'drive_type' => 'nullable',
 
             // Physical attributes
-            'color' => 'required|string|max:50',
+            'color' => 'nullable|string|max:50',
+
+            // License Expiry Date
+            'license_expiry_date' => 'nullable|date|after:today',
+
+            // Dimensions
+            'length' => 'nullable|numeric|min:0|max:99999',
+            'width' => 'nullable|numeric|min:0|max:99999',
+            'height' => 'nullable|numeric|min:0|max:99999',
+
+            // Fuel Economy
+            'min_fuel_economy' => 'nullable|numeric|min:0|max:999',
+            'max_fuel_economy' => 'nullable|numeric|min:0|max:999',
+
+            // Engine type and capacity
+            'engine_type' => 'nullable',
+            'engine_capacity' => 'nullable|numeric|min:0|max:99999',
+
+            // Power
+            'min_horse_power' => 'nullable|numeric|min:0|max:1000',
+            'max_horse_power' => 'nullable|numeric|min:0|max:1000',
 
             // Performance & condition
-            'mileage' => 'required|integer|min:0|max:9999999',
-            'speed' => 'nullable|integer|min:0|max:500',
-            'vehicle_status' => 'required|string|max:20|in:new,used,certified_pre_owned',
-            'refurbishment_status' => ['required', new Enum(RefurbishmentStatus::class)],
+            'mileage' => 'nullable|numeric|min:0|max:9999999',
+            'vehicle_status' => 'nullable',
+            'refurbishment_status' => 'nullable',
 
             // Pricing
             'price' => 'required|numeric|min:0|max:9999999999.99',
@@ -51,7 +69,28 @@ class CreateCarRequest extends FormRequest
             'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
 
             // Classification
-            'category' => 'required|string|max:50',
+            'trim' => 'nullable',
+
+            // Images upload
+            'images' => 'nullable|array',
+//            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg',
+
+            // Flags, Features, and Conditions (Array)
+            'flags' => 'nullable|array',
+            'features' => 'nullable|array',
+            'conditions' => 'nullable|array',
+
+            // Label, Value, Part, Description (Nested for dynamic input)
+            'inputLabels' => 'nullable|array',
+            'inputLabels.*' => 'nullable|string|max:100',  // For label input
+            'inputValues' => 'nullable|array',
+            'inputValues.*' => 'nullable|string|max:100',  // For value input
+            'inputConditions' => 'nullable|array',
+            'inputConditions.*' => 'nullable|string|max:100', // For condition input
+            'inputParts' => 'nullable|array',
+            'inputParts.*' => 'nullable|string|max:100', // For part input
+            'inputDescriptions' => 'nullable|array',
+            'inputDescriptions.*' => 'nullable|string|max:255', // For description input
         ];
     }
 }
