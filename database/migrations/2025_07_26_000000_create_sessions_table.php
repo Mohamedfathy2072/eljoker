@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->string('id', 191)->primary();
             $table->unsignedBigInteger('user_id', 119)->nullable();
             $table->foreignId('admin_id')->nullable()->constrained('admins')->onDelete('cascade')->index();
             $table->string('ip_address', 45)->nullable();
