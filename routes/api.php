@@ -19,12 +19,15 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('cars')->middleware('auth:api')->group(function () {
-    Route::get('/', [CarController::class, 'all']);
-    Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
-    Route::get('/{id}', [CarController::class, 'findById']);
     Route::post('/', [CarController::class, 'create']);
     Route::put('/{id}', [CarController::class, 'update']);
     Route::delete('/{id}', [CarController::class, 'delete']);
+});
+
+Route::prefix('cars')->group(function () {
+    Route::get('/', [CarController::class, 'all']);
+    Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
+    Route::get('/{id}', [CarController::class, 'findById']);
 });
 
 Route::prefix('brands')->group(function () {
