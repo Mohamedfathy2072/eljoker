@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignId('transmission_type_id')->nullable()->constrained()->onDelete('set null'); // Automatic, Manual, etc.
             $table->foreignId('drive_type_id')->nullable()->constrained()->onDelete('set null'); // FWD, RWD, AWD, etc.
             $table->foreignId('engine_type_id')->nullable()->constrained()->onDelete('set null'); // Petrol, Diesel, Electric, Hybrid
-            $table->integer('engine_capacity_cc'); // Engine capacity in cc
+            $table->integer('engine_capacity_cc')->nullable(); // Engine capacity in cc
 
             // Physical attributes
             $table->string('color', 50);

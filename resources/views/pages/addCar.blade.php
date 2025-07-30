@@ -67,7 +67,7 @@
                                         <!-- License Expiry Date -->
                                         <div class="col-md-4">
                                             <label for="inputLicenseDate" class="form-label">License Expiry Date</label>
-                                            <input type="date" class="form-control" id="inputLicenseDate" name="license_expiry_date">
+                                            <input type="date" class="form-control" id="inputLicenseDate" name="license_expire_date">
                                         </div>
 
                                         <!-- Body Style -->

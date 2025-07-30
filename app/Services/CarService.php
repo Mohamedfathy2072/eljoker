@@ -49,6 +49,7 @@ class CarService
         try {
             return $this->carRepository->insert($carData);
         } catch (QueryException $e) {
+            dd($e->getMessage(), $e->getLine(), $e->getFile());
             \Log::error('Error inserting car: ' . $e->getMessage());
             throw new \Exception('Unexpected Error happened during inserting car data.');
         }

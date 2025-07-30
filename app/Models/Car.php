@@ -10,24 +10,30 @@ class Car extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'brand',
-        'model',
+        'brand_id',
+        'car_model_id',
         'model_year',
-        'body_style',
-        'type',
-        'fuel_type',
-        'transmission_type',
-        'drive_type',
+        'license_expire_date',
+        'body_style_id',
+        'type_id',
+        'transmission_type_id',
+        'drive_type_id',
         'color',
+        'engine_type_id',
+        'engine_capacity_cc',
         'mileage',
-        'speed',
-        'vehicle_status',
+        'size_id',
+        'fuel_economy_id',
+        'horsepower_id',
+        'vehicle_status_id',
         'refurbishment_status',
         'price',
         'discount',
         'monthly_installment',
-        'category',
+        'trim_id'
     ];
+
+
 
     protected $casts = [
         'refurbishment_status' => RefurbishmentStatus::class,

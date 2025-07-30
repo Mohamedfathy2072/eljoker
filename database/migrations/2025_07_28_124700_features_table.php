@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
             $table->string('name', 119); // Feature name
-            $table->string('lable', 119); // Feature label
+            $table->string('label', 119); // Feature label
             $table->string('value', 119); // Feature value
             $table->timestamps();
         });

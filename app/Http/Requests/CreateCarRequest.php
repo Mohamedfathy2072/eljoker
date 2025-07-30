@@ -39,7 +39,7 @@ class CreateCarRequest extends FormRequest
             'color' => 'nullable|string|max:50',
 
             // License Expiry Date
-            'license_expiry_date' => 'nullable|date|after:today',
+            'license_expire_date' => 'nullable|date|after:today',
 
             // Dimensions
             'length' => 'nullable|numeric|min:0|max:99999',
