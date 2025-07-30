@@ -22,15 +22,14 @@ class PaginatedCarsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'brand' => 'nullable|string|max:100',
-            'model' => 'nullable|string|max:100',
+            'brand_id' => 'nullable|integer|in:brands,id',
+            'car_model_id' => 'nullable|integer|in:car_models,id',
             'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|required_with:min_price|numeric|min:0|gt:min_price',
-            'type' => 'nullable|string|max:50',
-            'vehicle_status' => 'nullable|string|max:20|in:new,used,certified_pre_owned',
-            'body_style' => 'nullable|string|max:50|in:SUV,Sedan,Hatchback,Coupe,Convertible,Wagon,Truck,Van,Crossover',
-            'fuel_type' => 'nullable|string|in:petrol,diesel,electric,hybrid',
+            'transmission_type_id' => 'nullable|integer|in:transmission_types,id',
+            'fuel_economy' => 'nullable|string|max:20',
+            'body_style_id' => 'nullable|integer|in:body_styles,id',
             'search' => 'nullable|string|max:255'
         ];
     }
