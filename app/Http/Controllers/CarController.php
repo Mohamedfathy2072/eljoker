@@ -31,7 +31,6 @@ class CarController extends Controller
         try {
             $carData = $request->validated();
             $newCar = $this->carService->addNewCar($carData);
-            dd($newCar);
             return response()->json(['message' => 'Car created', 'data' => $newCar]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);

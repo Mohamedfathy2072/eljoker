@@ -154,7 +154,6 @@ class CarRepository implements CarRepositoryInterface
             ]);
             }
         }
-        dd($newCar);
         return new CarResource($newCar);
     }
 
