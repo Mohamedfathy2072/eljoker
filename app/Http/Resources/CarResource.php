@@ -22,8 +22,8 @@ class CarResource extends JsonResource
             'id' => $this->resource->brand_id,
             'name' => $this->resource->brand?->name
             ] : null,
-            'model' => $this->resource->model_id ? [
-            'id' => $this->resource->model_id,
+            'model' => $this->resource->car_model_id ? [
+            'id' => $this->resource->car_model_id,
             'name' => $this->resource->model?->name,
             ] : null,
             'model_year' => $this->resource->model_year,
@@ -32,7 +32,7 @@ class CarResource extends JsonResource
             ($this->resource->model?->name ?? '') . ' ' .
             $this->resource->model_year
             ),
-            'license_valid_until' => $this->resource->license_expiry_date?->format('Y-m-d') ?? null,
+            'license_valid_until' => $this->resource->license_expire_date ?? null,
 
             // Vehicle specifications
             'specifications' => [
@@ -56,10 +56,7 @@ class CarResource extends JsonResource
 
             // Physical attributes
             'appearance' => [
-            'color' => $this->resource->color_id ? [
-                'id' => $this->resource->color_id,
-                'name' => $this->resource->color?->name
-            ] : null,
+            'color' => $this->resource->color ?? '',
             'size' => $this->resource->size ? [
                 'length' => $this->resource->size->length,
                 'width' => $this->resource->size->width,

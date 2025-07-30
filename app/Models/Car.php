@@ -51,22 +51,22 @@ class Car extends Model
 
     public function conditions()
     {
-        return $this->belongsToMany(Condition::class);
+        return $this->hasMany(Condition::class);
     }
 
     public function size()
     {
-        return $this->hasOne(Size::class);
+        return $this->belongsTo(Size::class);
     }
 
     public function horsepower()
     {
-        return $this->hasOne(Horsepower::class);
+        return $this->belongsTo(Horsepower::class);
     }
 
     public function fuelEconomy()
     {
-        return $this->hasOne(FuelEconomy::class);
+        return $this->belongsTo(FuelEconomy::class);
     }
 
     public function brand()
