@@ -26,9 +26,9 @@ class CarRepository implements CarRepositoryInterface
 
         $search = $requestData['search'] ?? '';
         if (!empty($requestData['search'])) {
-            $query->where('body_style', 'like', "%{$search}%")
-                ->orWhere('model', 'like',  "%{$search}%")
-                ->orWhere('brand', 'like',  "%{$search}%");
+            // $query->where('body_style_id', 'like', "%{$search}%")
+            //     ->orWhere('car_model_id', 'like',  "%{$search}%")
+            //     ->orWhere('brand_id', 'like',  "%{$search}%");
             unset($requestData['search']);
         }
 
