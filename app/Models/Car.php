@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\RefurbishmentStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Car extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'brand',
         'model',
@@ -31,4 +33,83 @@ class Car extends Model
         'refurbishment_status' => RefurbishmentStatus::class,
     ];
 
+    public function flags()
+    {
+        return $this->hasMany(Flag::class);
+    }
+
+    public function features()
+    {
+        return $this->hasMany(Feature::class);
+    }
+
+    public function conditions()
+    {
+        return $this->belongsToMany(Condition::class);
+    }
+
+    public function size()
+    {
+        return $this->hasOne(Size::class);
+    }
+
+    public function horsepower()
+    {
+        return $this->hasOne(Horsepower::class);
+    }
+
+    public function fuelEconomy()
+    {
+        return $this->hasOne(FuelEconomy::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function carModel()
+    {
+        return $this->belongsTo(CarModel::class);
+    }
+
+    public function bodyStyle()
+    {
+        return $this->belongsTo(BodyStyle::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    public function transmissionType()
+    {
+        return $this->belongsTo(TransmissionType::class);
+    }
+
+    public function driveType()
+    {
+        return $this->belongsTo(DriveType::class);
+    }
+
+    public function engineType()
+    {
+        return $this->belongsTo(EngineType::class);
+    }
+
+    public function trim()
+    {
+        return $this->belongsTo(Trim::class);
+    }
+
+    public function vehicleStatus()
+    {
+        return $this->belongsTo(VehicleStatus::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

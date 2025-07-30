@@ -77,20 +77,17 @@ class CreateCarRequest extends FormRequest
 
             // Flags, Features, and Conditions (Array)
             'flags' => 'nullable|array',
-            'features' => 'nullable|array',
-            'conditions' => 'nullable|array',
 
             // Label, Value, Part, Description (Nested for dynamic input)
-            'inputLabels' => 'nullable|array',
-            'inputLabels.*' => 'nullable|string|max:100',  // For label input
-            'inputValues' => 'nullable|array',
-            'inputValues.*' => 'nullable|string|max:100',  // For value input
+            'features' => 'nullable|array',
+            'features.*.name' => 'nullable|string|max:100', // For name input
+            'features.*.label' => 'nullable|required_if:features.*.name,!null|string|max:100', // For label input
+            'features.*.value' => 'nullable|required_if:features.*.name,!null|string|max:100',  // For value input
             'inputConditions' => 'nullable|array',
-            'inputConditions.*' => 'nullable|string|max:100', // For condition input
-            'inputParts' => 'nullable|array',
-            'inputParts.*' => 'nullable|string|max:100', // For part input
-            'inputDescriptions' => 'nullable|array',
-            'inputDescriptions.*' => 'nullable|string|max:255', // For description input
+            'conditions' => 'nullable|array',
+            'conditions.*.name' => 'nullable|string|max:100', // For condition input
+            'conditions.*.part' => 'nullable|required_if:conditions.*.name,!null|string|max:100', // For part input
+            'conditions.*.description' => 'nullable|required_if:conditions.*.name,!null|string|max:255', // For description input
         ];
     }
 }

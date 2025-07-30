@@ -18,50 +18,118 @@ class CarResource extends JsonResource
             'id' => $this->resource->id,
 
             // Car identification
-            'brand' => $this->resource->brand,
-            'model' => $this->resource->model,
+            'brand' => $this->resource->brand_id ? [
+            'id' => $this->resource->brand_id,
+            'name' => $this->resource->brand?->name
+            ] : null,
+            'model' => $this->resource->model_id ? [
+            'id' => $this->resource->model_id,
+            'name' => $this->resource->model?->name,
+            ] : null,
             'model_year' => $this->resource->model_year,
-            'full_name' => $this->resource->brand . ' ' . $this->resource->model . ' ' . $this->resource->model_year,
+            'full_name' => trim(
+            ($this->resource->brand?->name ?? '') . ' ' .
+            ($this->resource->model?->name ?? '') . ' ' .
+            $this->resource->model_year
+            ),
+            'license_valid_until' => $this->resource->license_expiry_date?->format('Y-m-d') ?? null,
 
             // Vehicle specifications
             'specifications' => [
-                'body_style' => $this->resource->body_style,
-                'type' => $this->resource->type,
-                'fuel_type' => $this->resource->fuel_type,
-                'transmission_type' => $this->resource->transmission_type,
-                'drive_type' => $this->resource->drive_type,
+            'body_style' => $this->resource->body_style_id ? [
+                'id' => $this->resource->body_style_id,
+                'name' => $this->resource->bodyStyle?->name,
+            ] : null,
+            'type' => $this->resource->type_id ? [
+                'id' => $this->resource->type_id,
+                'name' => $this->resource->type?->name,
+            ] : null,
+            'transmission_type' => $this->resource->transmission_type_id ? [
+                'id' => $this->resource->transmission_type_id,
+                'name' => $this->resource->transmissionType?->name,
+            ] : null,
+            'drive_type' => $this->resource->drive_type_id ? [
+                'id' => $this->resource->drive_type_id,
+                'name' => $this->resource->driveType?->name,
+            ] : null,
             ],
 
             // Physical attributes
             'appearance' => [
-                'color' => $this->resource->color,
+            'color' => $this->resource->color_id ? [
+                'id' => $this->resource->color_id,
+                'name' => $this->resource->color?->name
+            ] : null,
+            'size' => $this->resource->size ? [
+                'length' => $this->resource->size->length,
+                'width' => $this->resource->size->width,
+                'height' => $this->resource->size->height,
+                'formate' => $this->resource->size->length . ' x ' .
+                    $this->resource->size->width . ' x ' . $this->resource->size->height . ' mm',
+            ] : null,
             ],
 
             // Performance & condition
-            'condition' => [
-                'mileage' => $this->resource->mileage,
-                'mileage_formatted' => number_format($this->resource->mileage) . ' km',
-                'speed' => $this->resource->speed,
-                'vehicle_status' => $this->resource->vehicle_status,
-                'refurbishment_status' => $this->resource->refurbishment_status,
+            'performance' => [
+            'fuel_economy' => $this->resource->fuelEconomy ? [
+                'min' => $this->resource->fuelEconomy->min,
+                'max' => $this->resource->fuelEconomy->max,
+                'formate' => $this->resource->fuelEconomy->min . ' - ' .
+                    $this->resource->fuelEconomy->max . ' L/100km',
+            ] : null,
+            'engine_type' => $this->resource->engineType ? [
+                'id' => $this->resource->engineType->id,
+                'name' => $this->resource->engineType->name,
+            ] : null,
+            'engine_capacity_cc' => $this->resource->engine_capacity_cc ?? null,
+            'horsepower' => $this->resource->horsepower ? [
+                'min' => $this->resource->horsepower->min,
+                'max' => $this->resource->horsepower->max,
+                'formate' => $this->resource->horsepower->min . ' - ' .
+                    $this->resource->horsepower->max . ' HP',
+            ] : null,
+            'mileage' => $this->resource->mileage ? [
+                'value' => $this->resource->mileage,
+                'formate' => number_format($this->resource->mileage) . ' km',
+            ] : null,
+            'vehicle_status' => $this->resource->vehicle_status_id ? [
+                'id' => $this->resource->vehicle_status_id,
+                'name' => $this->resource->vehicleStatus?->name,
+            ] : null,
+            'refurbishment_status' => $this->resource->refurbishment_status,
             ],
 
             // Pricing information
             'pricing' => [
-                'original_price' => $this->resource->price,
-                'original_price_formatted' => '$' . number_format($this->resource->price, 2),
-                'discount' => $this->resource->discount,
-                'discount_formatted' => '$' . number_format($this->resource->discount, 2),
-                'final_price' => $this->resource->price - $this->resource->discount,
-                'final_price_formatted' => '$' . number_format($this->resource->price - $this->resource->discount, 2),
-                'monthly_installment' => $this->resource->monthly_installment,
-                'monthly_installment_formatted' => $this->resource->monthly_installment ?
-                    '$' . number_format($this->resource->monthly_installment, 2) . '/month' : null,
-                'has_discount' => $this->resource->discount > 0,
+            'original_price' => $this->resource->price,
+            'original_price_formatted' => '$' . number_format($this->resource->price, 2),
+            'discount' => $this->resource->discount,
+            'discount_formatted' => '$' . number_format($this->resource->discount, 2),
+            'final_price' => $this->resource->price - $this->resource->discount,
+            'final_price_formatted' => '$' . number_format($this->resource->price - $this->resource->discount, 2),
+            'monthly_installment' => $this->resource->monthly_installment,
+            'monthly_installment_formatted' => $this->resource->monthly_installment ?
+                '$' . number_format($this->resource->monthly_installment, 2) . '/month' : null,
+            'has_discount' => $this->resource->discount > 0,
             ],
 
             // Classification
-            'category' => $this->resource->category,
+            'trim' => $this->resource->trim_id ? [
+                'id' => $this->resource->trim_id,
+                'name' => $this->resource->trim?->name,
+            ] : null,
+
+            // flags
+            'flags' => $this->resource->flags ?? [],
+
+            // features
+            'features' => $this->resource->features ?? [],
+
+            // conditions
+            'conditions' => $this->resource->conditions ?? [],
+
+            // Media
+            'images' => $this->resource->images ?? [],
 
             // Timestamps
             'created_at' => $this->resource->created_at?->format('Y-m-d H:i:s'),
