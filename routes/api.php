@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\BrandController;
+use App\Http\Controllers\Admin\{
+    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
+};
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -25,5 +27,45 @@ Route::prefix('cars')->middleware('auth:api')->group(function () {
     Route::delete('/{id}', [CarController::class, 'delete']);
 });
 
+Route::prefix('brands')->group(function () {
+    Route::get('/', [BrandController::class, 'indexAPI']);
+    Route::get('/{id}', [BrandController::class, 'showAPI']);
+});
 
-Route::apiResource('brands', BrandController::class);
+Route::prefix('body_styles')->group(function () {
+    Route::get('/', [BodyStyleController::class, 'indexAPI']);
+    Route::get('/{id}', [BodyStyleController::class, 'showAPI']);
+});
+Route::prefix('models')->group(function () {
+    Route::get('/', [CarModelController::class, 'indexAPI']);
+    Route::get('/{id}', [CarModelController::class, 'showAPI']);
+});
+
+Route::prefix('drive_types')->group(function () {
+    Route::get('/', [DriveTypeController::class, 'indexAPI']);
+    Route::get('/{id}', [DriveTypeController::class, 'showAPI']);
+});
+Route::prefix('engine_types')->group(function () {
+    Route::get('/', [EngineTypeController::class, 'indexAPI']);
+    Route::get('/{id}', [EngineTypeController::class, 'showAPI']);
+});
+
+Route::prefix('transmission_types')->group(function () {
+    Route::get('/', [TransmissionTypeController::class, 'indexAPI']);
+    Route::get('/{id}', [TransmissionTypeController::class, 'showAPI']);
+});
+
+Route::prefix('trims')->group(function () {
+    Route::get('/', [TrimController::class, 'indexAPI']);
+    Route::get('/{id}', [TrimController::class, 'showAPI']);
+});
+
+Route::prefix('types')->group(function () {
+    Route::get('/', [TypeController::class, 'indexAPI']);
+    Route::get('/{id}', [TypeController::class, 'showAPI']);
+});
+
+Route::prefix('vehicle_statuses')->group(function () {
+    Route::get('/', [VehicleStatusController::class, 'indexAPI']);
+    Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
+});

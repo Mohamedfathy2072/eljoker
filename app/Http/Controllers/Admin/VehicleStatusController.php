@@ -53,4 +53,27 @@ class VehicleStatusController extends Controller
 
         return redirect()->route('admin.VehicleStatuses')->with('success', 'Vehicle Status deleted successfully.');
     }
+
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function indexAPI()
+    {
+        $brands = VehicleStatus::all();
+        return response()->json($brands, 200);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showAPI(int $id)
+    {
+        try {
+            $brand = VehicleStatus::findOrFail($id);
+            return response()->json($brand, 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'BodyStyle not found'], 404);
+        }
+    }
 }

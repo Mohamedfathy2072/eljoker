@@ -53,4 +53,28 @@ class TrimController extends Controller
 
         return redirect()->route('admin.Trim')->with('success', 'Trim deleted successfully.');
     }
+
+
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function indexAPI()
+    {
+        $brands = Trim::all();
+        return response()->json($brands, 200);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showAPI(int $id)
+    {
+        try {
+            $brand = Trim::findOrFail($id);
+            return response()->json($brand, 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'BodyStyle not found'], 404);
+        }
+    }
 }
