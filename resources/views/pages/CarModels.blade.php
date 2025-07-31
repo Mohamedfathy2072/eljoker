@@ -55,6 +55,15 @@
 
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="brand_id" class="form-label">Brand</label>
+                                    <select class="form-control" id="brand_id" name="brand_id" required>
+                                        <option value="">-- Select Brand --</option>
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Add</button>
@@ -73,6 +82,7 @@
                       <b>N</b>ame
                     </th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
+                    <th>Brand</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -81,6 +91,7 @@
                     <tr>
                         <td>{{ $model->name }}</td>
                         <td>{{ $model->created_at->format('Y/m/d') }}</td>
+                        <td>{{ $model->brand->name ?? '-' }}</td>
                         <td>
                             <!-- Edit Button triggers model -->
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editmodalmodel{{ $model->id }}">
@@ -104,6 +115,18 @@
                                                     <input type="text" class="form-control" id="editModelName{{ $model->id }}" name="name" value="{{ $model->name }}" required>
                                                 </div>
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="editBrandId{{ $model->id }}" class="form-label text-start w-100">Brand</label>
+                                                <select class="form-control" id="editBrandId{{ $model->id }}" name="brand_id" required>
+                                                    <option value="">-- Select Brand --</option>
+                                                    @foreach($brands as $brand)
+                                                        <option value="{{ $brand->id }}" {{ $model->brand_id == $brand->id ? 'selected' : '' }}>
+                                                            {{ $brand->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Update</button>

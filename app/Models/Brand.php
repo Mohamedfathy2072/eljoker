@@ -10,5 +10,5 @@ class Brand extends Model
     /** @use HasFactory<\Database\Factories\BrandFactory> */
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'image'];
 }

@@ -27,13 +27,7 @@ class LookupSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (BrandFactory::$brands as $item) {
-            Brand::firstOrCreate(['name' => $item]);
-        }
-
-        foreach (CarModelFactory::$carModels as $item) {
-            CarModel::firstOrCreate(['name' => $item]);
-        }
+        $this->seedBrandsModels();
 
         foreach (BodyStyleFactory::$bodyStyles as $item) {
             BodyStyle::firstOrCreate(['name' => $item]);
@@ -61,6 +55,46 @@ class LookupSeeder extends Seeder
 
         foreach (VehicleStatusFactory::$statuses as $item) {
             VehicleStatus::firstOrCreate(['name' => $item]);
+        }
+    }
+
+    public function seedBrandsModels()
+    {
+
+        $carModelBrandMap = [
+            'Corolla' => 'Toyota',
+            'Civic' => 'Honda',
+            'Mustang' => 'Ford',
+            'Camaro' => 'Chevrolet',
+            '3 Series' => 'BMW',
+            'Accord' => 'Honda',
+            'Elantra' => 'Hyundai',
+            'Tucson' => 'Hyundai',
+            'Model 3' => 'Tesla',
+            'CX-5' => 'Mazda',
+            'Altima' => 'Nissan',
+            'RAV4' => 'Toyota',
+            'Explorer' => 'Ford',
+            'X5' => 'BMW',
+            'A4' => 'Audi',
+            'Cherokee' => 'Jeep',
+            'Wrangler' => 'Jeep',
+            'Golf' => 'Volkswagen',
+            'Clio' => 'Renault',
+            '500' => 'Fiat',
+        ];
+
+        $brandIds = [];
+        foreach (array_unique(array_values($carModelBrandMap)) as $brandName) {
+            $brand = Brand::firstOrCreate(['name' => $brandName]);
+            $brandIds[$brandName] = $brand->id;
+        }
+
+        foreach ($carModelBrandMap as $modelName => $brandName) {
+            CarModel::firstOrCreate([
+                'name' => $modelName,
+                'brand_id' => $brandIds[$brandName],
+            ]);
         }
     }
 }

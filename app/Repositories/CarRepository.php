@@ -4,11 +4,14 @@ namespace App\Repositories;
 
 use App\Http\Resources\CarResource;
 use App\Interfaces\CarRepositoryInterface;
+use App\Models\Brand;
 use App\Models\Car;
+use App\Models\CarModel;
 use App\Models\Flag;
 use App\Models\FuelEconomy;
 use App\Models\Horsepower;
 use App\Models\Size;
+use Illuminate\Database\Eloquent\Model;
 
 class CarRepository implements CarRepositoryInterface
 {
@@ -26,19 +29,37 @@ class CarRepository implements CarRepositoryInterface
 
         $search = $requestData['search'] ?? '';
         if (!empty($requestData['search'])) {
-            // $query->where('body_style_id', 'like', "%{$search}%")
-            //     ->orWhere('car_model_id', 'like',  "%{$search}%")
-            //     ->orWhere('brand_id', 'like',  "%{$search}%");
+            $brand = Brand::where('name', 'like', "%{$search}%")->first();
+            $model = CarModel::where('name', 'like', "%{$search}%")->first();
+            if (!empty($brand)) {
+                $query->where('brand_id', $brand->id);
+            }
+            if (!empty($model)) {
+                $query->where('car_model_id', $model->id);
+            }
             unset($requestData['search']);
         }
 
-        if (isset($requestData['min_price'])) {
-            $query->where('price', '>=', $requestData['min_price']);
-            unset($requestData['min_price']);
+        if (!empty($requestData['price_range'])) {
+            if(!empty($requestData['price_range'][0]))
+                $query->where('price', '>=', $requestData['price_range'][0]);
+            if(!empty($requestData['price_range'][1]))
+                $query->where('price', '<=', $requestData['price_range'][1]);
+            unset($requestData['price_range']);
         }
-        if (isset($requestData['max_price'])) {
-            $query->where('price', '<=', $requestData['max_price']);
-            unset($requestData['max_price']);
+
+        // 🔍 Filter by fuel economy range
+        if (!empty($requestData['fuel_economy']['min']) && !empty($requestData['fuel_economy']['max'])) {
+            $fuelMin = $requestData['fuel_economy']['min'];
+            $fuelMax = $requestData['fuel_economy']['max'];
+
+            // Join with fuel_economies table
+            $query->whereHas('fuelEconomy', function ($q) use ($fuelMin, $fuelMax) {
+                $q->where('min', '<=', $fuelMin)
+                    ->where('max', '>=', $fuelMax);
+            });
+
+            unset($requestData['fuel_economy']);
         }
 
         foreach ($requestData as $key => $value) {

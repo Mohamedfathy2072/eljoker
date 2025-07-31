@@ -43,6 +43,7 @@ Route::prefix('body_styles')->group(function () {
 Route::prefix('models')->group(function () {
     Route::get('/', [CarModelController::class, 'indexAPI']);
     Route::get('/{id}', [CarModelController::class, 'showAPI']);
+    Route::post('/', [CarModelController::class, 'getModelsBrandAPI']);
 });
 
 Route::prefix('drive_types')->group(function () {

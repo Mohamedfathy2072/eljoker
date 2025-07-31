@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
@@ -18,14 +19,23 @@ class BrandController extends Controller
     public function storeBrand(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        Brand::create(['name' => $request->input('name')]);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('brands', 'public');
+        }
+
+        Brand::create([
+            'name' => $request->input('name'),
+            'image' => $imagePath,
+        ]);
 
         return redirect()->route('admin.brands')->with('success', 'Brand created successfully.');
     }
@@ -41,7 +51,26 @@ class BrandController extends Controller
         }
 
         $brand = Brand::findOrFail($id);
-        $brand->update(['name' => $request->input('name')]);
+
+        $data = [
+            'name' => $request->input('name'),
+        ];
+
+        // ✅ معالجة رفع الصورة
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إن وجدت
+            if ($brand->image && Storage::disk('public')->exists($brand->image)) {
+                Storage::disk('public')->delete($brand->image);
+            }
+
+            // رفع الصورة الجديدة
+            $file = $request->file('image');
+            $ext =  $file->getClientOriginalExtension();
+            $file->move(public_path($brand->id.'/image'),date('Y-m-d').'.'.$ext);
+            $data['image'] = $brand->id.'/image'.date('Y-m-d').'.'.$ext;
+        }
+
+        $brand->update($data);
 
         return redirect()->route('admin.brands')->with('success', 'Brand updated successfully.');
     }

@@ -22,14 +22,20 @@ class PaginatedCarsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'brand_id' => 'nullable|integer|in:brands,id',
-            'car_model_id' => 'nullable|integer|in:car_models,id',
+            'brand_id' => 'nullable|integer|exists:brands,id',
+            'car_model_id' => 'nullable|integer|exists:car_models,id',
             'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
-            'min_price' => 'nullable|numeric|min:0',
-            'max_price' => 'nullable|required_with:min_price|numeric|min:0|gt:min_price',
-            'transmission_type_id' => 'nullable|integer|in:transmission_types,id',
-            'fuel_economy' => 'nullable|string|max:20',
-            'body_style_id' => 'nullable|integer|in:body_styles,id',
+
+            'price_range' => 'nullable|array|size:2',
+            'price_range.0' => 'nullable|numeric',
+            'price_range.1' => 'nullable|numeric',
+
+            'fuel_economy' => 'nullable|array',
+            'fuel_economy.min' => 'nullable|numeric',
+            'fuel_economy.max' => 'nullable|numeric',
+
+            'transmission_type_id' => 'nullable|integer|exists:transmission_types,id',
+            'body_style_id' => 'nullable|integer|exists:body_styles,id',
             'search' => 'nullable|string|max:255'
         ];
     }

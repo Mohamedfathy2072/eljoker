@@ -24,7 +24,7 @@ class CarResource extends JsonResource
             ] : null,
             'model' => $this->resource->car_model_id ? [
             'id' => $this->resource->car_model_id,
-            'name' => $this->resource->model?->name,
+            'name' => $this->resource->carModel?->name,
             ] : null,
             'model_year' => $this->resource->model_year,
             'full_name' => trim(

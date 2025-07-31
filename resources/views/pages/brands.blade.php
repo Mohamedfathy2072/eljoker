@@ -42,13 +42,17 @@
                     <div class="modal fade" id="verticalycentered" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="{{ route('admin.brands.store') }}" method="POST">
+                            <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                 <h5 class="modal-title">Add New Brand</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="brandImage" class="form-label">Brand Image</label>
+                                        <input type="file" class="form-control" id="brandImage" name="image" accept="image/*">
+                                    </div>
                                     <div class="mb-3">
                                         <label for="brandName" class="form-label">Brand Name</label>
                                         <input type="text" class="form-control" id="brandName" name="name" required>
@@ -69,6 +73,7 @@
             <table class="table table-striped table-hover align-middle text-center">
                 <thead>
                   <tr>
+                      <th>Image</th>
                     <th>
                       <b>N</b>ame
                     </th>
@@ -79,6 +84,13 @@
                 <tbody>
                     @foreach($brands as $brand)
                     <tr>
+                        <td>
+                            @if($brand->image)
+                                <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" width="50">
+                            @else
+                                <span class="text-muted">No Image</span>
+                            @endif
+                        </td>
                         <td>{{ $brand->name }}</td>
                         <td>{{ $brand->created_at->format('Y/m/d') }}</td>
                         <td>
@@ -91,7 +103,7 @@
                             <div class="modal fade" id="editBrandModal{{ $brand->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $brand->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <form action="{{ route('admin.brands.edit', $brand->id) }}" method="POST">
+                                        <form action="{{ route('admin.brands.edit', $brand->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-header">
@@ -99,6 +111,16 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="editBrandImage{{ $brand->id }}" class="form-label">Update Image</label>
+                                                    <input type="file" class="form-control" id="editBrandImage{{ $brand->id }}" name="image" accept="image/*">
+                                                </div>
+
+                                                @if($brand->image)
+                                                    <div class="mb-3">
+                                                        <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" width="70">
+                                                    </div>
+                                                @endif
                                                 <div class="mb-3">
                                                     <label for="editBrandName{{ $brand->id }}" class="form-label">Brand Name</label>
                                                     <input type="text" class="form-control" id="editBrandName{{ $brand->id }}" name="name" value="{{ $brand->name }}" required>
