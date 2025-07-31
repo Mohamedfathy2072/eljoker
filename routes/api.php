@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\CarInstallmentController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
@@ -74,4 +74,7 @@ Route::prefix('vehicle_statuses')->group(function () {
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
 });
 
-Route::post('/calculate-car-installment', [CarInstallmentController::class, 'calculateInstallment']);
+Route::prefix('calculator')->group(function () {
+    Route::post('/car-installment', [CalculatorController::class, 'calculateInstallment']);
+    Route::post('/car-price', [CalculatorController::class, 'calculateCarPrice']);
+});
