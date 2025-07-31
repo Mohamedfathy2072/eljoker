@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\CarInstallmentController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
@@ -72,3 +73,5 @@ Route::prefix('vehicle_statuses')->group(function () {
     Route::get('/', [VehicleStatusController::class, 'indexAPI']);
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
 });
+
+Route::post('/calculate-car-installment', [CarInstallmentController::class, 'calculateInstallment']);

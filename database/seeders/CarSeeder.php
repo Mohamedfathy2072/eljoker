@@ -2,6 +2,16 @@
 
 namespace Database\Seeders;
 
+use Database\Factories\BodyStyleFactory;
+use Database\Factories\BrandFactory;
+use Database\Factories\CarModelFactory;
+use Database\Factories\DriveTypeFactory;
+use Database\Factories\EngineTypeFactory;
+use Database\Factories\TransmissionTypeFactory;
+use Database\Factories\TrimFactory;
+use Database\Factories\TypeFactory;
+use Database\Factories\VehicleStatusFactory;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use App\Models\Car;
 
@@ -9,18 +19,7 @@ class CarSeeder extends Seeder
 {
     public function run(): void
     {
-        // Seed related tables first
-        $brands = \App\Models\Brand::factory(5)->create();
-        $carModels = \App\Models\CarModel::factory(10)->create();
-        $bodyStyles = \App\Models\BodyStyle::factory(5)->create();
-        $types = \App\Models\Type::factory(5)->create();
-        $transmissions = \App\Models\TransmissionType::factory(3)->create();
-        $drives = \App\Models\DriveType::factory(3)->create();
-        $engines = \App\Models\EngineType::factory(3)->create();
-        $trims = \App\Models\Trim::factory(5)->create();
-        $statuses = \App\Models\VehicleStatus::factory(3)->create();
-
         // Now seed cars
-        Car::factory(10)->create();
+        Car::factory(15)->create();
     }
 }
