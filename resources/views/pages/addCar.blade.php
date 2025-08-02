@@ -8,7 +8,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-      <li class="breadcrumb-item active">Trim</li>
+      <li class="breadcrumb-item active">Add Car</li>
     </ol>
   </nav>
 </div>
@@ -25,6 +25,14 @@
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        <strong>There were some problems try again later or call support:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>{{ session('error') }}</li>
                         </ul>
                     </div>
                 @endif

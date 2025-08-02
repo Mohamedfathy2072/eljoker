@@ -11,6 +11,7 @@ use App\Models\Flag;
 use App\Models\FuelEconomy;
 use App\Models\Horsepower;
 use App\Models\Size;
+use App\Models\VehicleStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class CarRepository implements CarRepositoryInterface
@@ -62,6 +63,26 @@ class CarRepository implements CarRepositoryInterface
             unset($requestData['fuel_economy']);
         }
 
+        if (!empty($requestData['brand_ids'])) {
+            $query->whereIn('brand_id', $requestData['brand_ids']);
+            unset($requestData['brand_ids']);
+        }
+
+        if (!empty($requestData['body_style_ids'])) {
+            $query->whereIn('body_style_id', $requestData['body_style_ids']);
+            unset($requestData['body_style_ids']);
+        }
+
+        if (!empty($requestData['vehicle_status'])) {
+            $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
+            if ($vehicleId !== null) {
+                $query->where('vehicle_status_id', $vehicleId);
+            } else {
+                throw new \Exception("Vehicle status not found for '{$requestData['vehicle_status']}'");
+            }
+            unset($requestData['vehicle_status']);
+        }
+
         foreach ($requestData as $key => $value) {
             $query->where($key, $value);
         }
@@ -85,19 +106,19 @@ class CarRepository implements CarRepositoryInterface
         // length, width, height => insert in table sizes
         // min max fuel economy => insert in table fuel_economies
         // min max horsepower insert in table horsepower
-        $size = Size::create([
+        $size = (!empty($carData['length']) && !empty($carData['width']) && !empty($carData['height'])) ? Size::create([
             'length' => (int) $carData['length'],
             'width' => (int) $carData['width'],
             'height' => (int) $carData['height'],
-        ]);
-        $fuel = FuelEconomy::create([
+        ]) : null;
+        $fuel = (!empty($carData['min_fuel_economy']) && !empty($carData['max_fuel_economy'])) ? FuelEconomy::create([
             'min' => (int) $carData['min_fuel_economy'],
             'max' => (int) $carData['max_fuel_economy'],
-        ]);
-        $horsepower = Horsepower::create([
+        ]) : null;
+        $horsepower = (!empty($carData['min_horse_power']) && !empty($carData['max_horse_power'])) ? Horsepower::create([
             'min' => (int) $carData['min_horse_power'],
             'max' => (int) $carData['max_horse_power'],
-        ]);
+        ]) : null;
 
         // brand, model, model_year,license_expiry_date
         // body_style, type, transmission_type, drive_type, color,
@@ -105,27 +126,27 @@ class CarRepository implements CarRepositoryInterface
         // vehicle_status, refurbishment_status, price, discount, monthly_installment, trim
         // make new car
         $carDetails = [
-            'brand_id' => (int) $carData['brand'],
-            'car_model_id' => (int) $carData['model'],
-            'model_year' => (int) $carData['model_year'],
-            'license_expire_date' => $carData['license_expire_date'],
-            'body_style_id' => (int) $carData['body_style'],
-            'type_id' => (int) $carData['type'],
-            'transmission_type_id' => (int) $carData['transmission_type'],
-            'drive_type_id' => (int) $carData['drive_type'],
-            'color' => $carData['color'],
-            'engine_type_id' => (int) $carData['engine_type'],
-            'engine_capacity_cc' => (int) $carData['engine_capacity'],
-            'mileage' => (int) $carData['mileage'],
-            'size_id' => (int) $size['id'],
-            'fuel_economy_id' => (int) $fuel['id'],
-            'horsepower_id' => (int) $horsepower['id'],
-            'vehicle_status_id' => (int) $carData['vehicle_status'],
-            'refurbishment_status' => $carData['refurbishment_status'],
-            'price' => (float) $carData['price'],
-            'discount' => (float) $carData['discount'],
-            'monthly_installment' => (float) $carData['monthly_installment'],
-            'trim_id' => (int) $carData['trim'],
+            'brand_id'              => !empty($carData['brand']) ? (int) $carData['brand'] : null,
+            'car_model_id'          => !empty($carData['model']) ? (int) $carData['model'] : null,
+            'model_year'            => !empty($carData['model_year']) ? (int) $carData['model_year'] : null,
+            'license_expire_date'   => $carData['license_expire_date'] ?? null,
+            'body_style_id'         => !empty($carData['body_style']) ? (int) $carData['body_style'] : null,
+            'type_id'               => !empty($carData['type']) ? (int) $carData['type'] : null,
+            'transmission_type_id'  => !empty($carData['transmission_type']) ? (int) $carData['transmission_type'] : null,
+            'drive_type_id'         => !empty($carData['drive_type']) ? (int) $carData['drive_type'] : null,
+            'color'                 => $carData['color'] ?? null,
+            'engine_type_id'        => !empty($carData['engine_type']) ? (int) $carData['engine_type'] : null,
+            'engine_capacity_cc'    => !empty($carData['engine_capacity']) ? (int) $carData['engine_capacity'] : null,
+            'mileage'               => !empty($carData['mileage']) ? (int) $carData['mileage'] : null,
+            'size_id'               => $size?->id,
+            'fuel_economy_id'       => $fuel?->id,
+            'horsepower_id'         => $horsepower?->id,
+            'vehicle_status_id'     => !empty($carData['vehicle_status']) ? (int) $carData['vehicle_status'] : null,
+            'refurbishment_status'  => $carData['refurbishment_status'] ?? 'empty',
+            'price'                 => isset($carData['price']) ? (float) $carData['price'] : 0,
+            'discount'              => isset($carData['discount']) ? (float) $carData['discount'] : 0,
+            'monthly_installment'   => isset($carData['monthly_installment']) ? (float) $carData['monthly_installment'] : null,
+            'trim_id'               => !empty($carData['trim']) ? (int) $carData['trim'] : null,
         ];
 
         $newCar = Car::create($carDetails);
@@ -201,5 +222,11 @@ class CarRepository implements CarRepositoryInterface
     public function getCount()
     {
         return Car::count();
+    }
+
+    public function getVehicleId(string $name): ?int
+    {
+        $vehicle = VehicleStatus::where('name', 'like', "%{$name}%")->first();
+        return $vehicle?->id;
     }
 }

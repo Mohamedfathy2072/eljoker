@@ -9,6 +9,8 @@ class VehicleStatusFactory extends Factory
     public static $statuses = [
         'New',
         'Used',
+        'vip',
+        'electric',
         'Certified Pre-Owned',
         'Salvage',
         'Damaged',

@@ -96,7 +96,7 @@
                         <div id="collapseTrim" class="accordion-collapse collapse" data-bs-parent="#accordionCarDetails">
                             <div class="accordion-body">
                                 <div class="row g-3">
-                                    <div class="col-md-4"><strong>Trim:</strong> {{ $car['trim']['name'] ?? 'N/A' }}</div>
+                                    <div class="col-md-4"><strong>Trim:</strong> {{ $car['trim']['name'] ?? '-' }}</div>
                                     <div class="col-md-4"><strong>Created:</strong> {{ $car['created_at_human'] }}</div>
                                     <div class="col-md-4"><strong>Updated:</strong> {{ $car['updated_at_human'] }}</div>
                                 </div>
