@@ -121,10 +121,29 @@ class CarResource extends JsonResource
             'flags' => $this->resource->flags ?? [],
 
             // features
-            'features' => $this->resource->features ?? [],
+            'features' => $this->resource->features
+                        ? collect($this->resource->features)
+                            ->groupBy('name')
+                            ->map(function ($group) {
+                                return $group->map(fn ($feature) => [
+                                    'label' => $feature->label,
+                                    'value' => $feature->value,
+                                ])->values();
+                            })
+                        : [],
+
+
 
             // conditions
-            'conditions' => $this->resource->conditions ?? [],
+            'conditions' => $this->resource->conditions ? collect($this->resource->conditions)
+                            ->groupBy('name')
+                            ->map(function ($group) {
+                                return $group->map(fn ($condition) => [
+                                    'part' => $condition->part,
+                                    'description' => $condition->description,
+                                    'image' => $condition->image,
+                                ])->values();
+                            }) : [],
 
             // Media
             'images' => $this->resource->images ?? [],

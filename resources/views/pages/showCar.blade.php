@@ -149,26 +149,43 @@
 
                                         <strong>Features:</strong>
                                         <ul>
-                                            @foreach ($car['features'] as $feature)
+                                            @foreach ($car['features'] as $name => $featuresGroup)
                                                 <li>
-                                                    <strong>{{ $feature['label'] ?? $feature['name'] ?? 'Unknown Feature' }}:</strong>
-                                                    {{ $feature['value'] }}
-                                                    <br><small><code>{{ $feature['name'] }}</code></small>
+                                                    <strong>{{ ucfirst(str_replace('_', ' ', $name)) }}</strong>
+                                                    <ul>
+                                                        @foreach ($featuresGroup as $feature)
+                                                            <li>
+                                                                {{ $feature['label'] }}: {{ $feature['value'] }}
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </li>
                                             @endforeach
                                         </ul>
 
+
                                         <strong>Conditions:</strong>
                                         <ul>
-                                            @foreach ($car['conditions'] as $condition)
+                                            @foreach ($car['conditions'] as $name => $conditionsGroup)
                                                 <li>
-                                                    @if(isset($condition['image']))
-                                                        <img src="{{ asset('storage/' . $condition['image']) }}" alt="Condition Image" style="height: 24px; width: auto; margin-right: 8px;">
-                                                    @endif
-                                                    <strong>{{ $condition['name'] }} ({{ $condition['part'] }}):</strong> {{ $condition['description'] }}
+                                                    <strong>
+                                                        {{ \App\Enums\Condition::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $name)) }}:
+                                                    </strong>
+                                                    <ul>
+                                                        @foreach ($conditionsGroup as $condition)
+                                                            <li style="list-style-type: none; margin-left: 1rem;">
+                                                                @if (!empty($condition['image']))
+                                                                    <img src="{{ asset('storage/' . $condition['image']) }}" alt="Condition Image"
+                                                                        style="height: 24px; width: auto; margin-right: 8px;">
+                                                                @endif
+                                                                <strong>{{ $condition['part'] }}:</strong> {{ $condition['description'] }}
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </li>
                                             @endforeach
                                         </ul>
+
                                     </div>
                                 </div>
                             </div>
