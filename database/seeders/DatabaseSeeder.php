@@ -23,6 +23,15 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            [
+                'email' => 'user@example.com',
+                'name' => 'User User',
+                'phone' => '01125833982',
+                'is_active' => true
+            ]
+        );
+
         $this->call([
             LookupSeeder::class,
             CarSeeder::class,

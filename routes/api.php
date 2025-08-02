@@ -6,6 +6,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -72,4 +73,8 @@ Route::prefix('vehicle_statuses')->group(function () {
 Route::prefix('calculator')->group(function () {
     Route::post('/car-installment', [CalculatorController::class, 'calculateInstallment']);
     Route::post('/car-price', [CalculatorController::class, 'calculateCarPrice']);
+});
+
+Route::prefix('book')->group(function () {
+    Route::post('/', [BookController::class, 'makeAppointment']);
 });
