@@ -92,15 +92,6 @@ class CarRepository implements CarRepositoryInterface
             unset($requestData['vehicle_status']);
         }
 
-        if (!empty($requestData['conditions'])) {
-            $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
-            if ($vehicleId !== null) {
-                $query->whereIn('vehicle_status_id', $vehicleId);
-            } else {
-                throw new \Exception("Vehicle status not found for '{$requestData['vehicle_status']}'");
-            }
-            unset($requestData['vehicle_status']);
-        }
 
         foreach ($requestData as $key => $value) {
             $query->where($key, $value);
