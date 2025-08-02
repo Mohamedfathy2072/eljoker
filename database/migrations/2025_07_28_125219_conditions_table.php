@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 119); // Condition name
             $table->string('part', 199); // Condition part
             $table->text('description')->nullable(); // Condition description
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

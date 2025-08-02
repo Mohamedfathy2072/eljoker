@@ -23,6 +23,7 @@ class CreateCarRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this);
         return [
             // Car identification
             'brand' => 'nullable',
@@ -77,12 +78,15 @@ class CreateCarRequest extends FormRequest
 
             // Flags, Features, and Conditions (Array)
             'flags' => 'nullable|array',
+            'flags.*.name' => 'nullable|string|max:100',
+            'flags.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             // Label, Value, Part, Description (Nested for dynamic input)
             'features' => 'nullable|array',
             'features.*.name' => 'nullable|string|max:100', // For name input
             'features.*.label' => 'nullable|required_if:features.*.name,!null|string|max:100', // For label input
             'features.*.value' => 'nullable|required_if:features.*.name,!null|string|max:100',  // For value input
+            'features.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',  // For value input
             'inputConditions' => 'nullable|array',
             'conditions' => 'nullable|array',
             'conditions.*.name' => 'nullable|string|max:100', // For condition input

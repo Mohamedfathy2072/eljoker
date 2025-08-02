@@ -133,15 +133,16 @@ class CarRepository implements CarRepositoryInterface
 
         // make new flags, features, conditions for the car
         foreach ($carData['flags'] as $flag) {
-            if(empty($flag)) continue;
+            if(empty($flag) || empty($flag['name'])) continue;
             $newCar->flags()->create([
                 'car_id' => $newCar->id,
                 'value' => $flag,
+                'image' => $flag['image']
             ]);
         }
 
         for ($i=0; $i < count($carData['features']); $i+=3) {
-            if(empty($carData['features'][$i])) continue;
+            if(empty($carData['features'][$i]['name'])) continue;
             $feature = [
                 'car_id' => $newCar->id,
                 'name' => $carData['features'][$i]['name'],
@@ -152,12 +153,12 @@ class CarRepository implements CarRepositoryInterface
         }
 
         for ($i=0; $i < count($carData['conditions']); $i+=3) {
-            if(empty($carData['name'][$i])) continue;
+            if(empty($carData['conditions'][$i]['name'])) continue;
             $condition = [
                 'car_id' => $newCar->id,
-                'name' => $carData['name'][$i]['name'],
-                'part' => $carData['features'][$i + 1]['part'] ?? '',
-                'description' => $carData['features'][$i + 2]['description'] ?? '',
+                'name' => $carData['conditions'][$i]['name'],
+                'part' => $carData['conditions'][$i + 1]['part'] ?? '',
+                'description' => $carData['conditions'][$i + 2]['description'] ?? '',
             ];
             $newCar->conditions()->create($condition);
         }
@@ -168,10 +169,11 @@ class CarRepository implements CarRepositoryInterface
             if (!$img) continue;
             // Store image in 'public/cars' directory
             $path = $img->store('cars', 'public');
+
             // Save image path in images table
             $newCar->images()->create([
                 'car_id' => $newCar->id,
-                'path' => $path,
+                'location' => $path,
             ]);
             }
         }

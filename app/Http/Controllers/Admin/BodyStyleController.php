@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BodyStyle;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,14 +19,21 @@ class BodyStyleController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        BodyStyle::create(['name' => $request->input('name')]);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('brands', 'public');
+        }
+
+        BodyStyle::create(['name' => $request->input('name'),
+            'image' => $imagePath]);
 
         return redirect()->route('admin.BodyStyles')->with('success', 'Body Style created successfully.');
     }
@@ -40,8 +48,18 @@ class BodyStyleController extends Controller
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        $brand = BodyStyle::findOrFail($id);
-        $brand->update(['name' => $request->input('name')]);
+        $body = BodyStyle::findOrFail($id);
+        $data = ['name' => $request->input('name')];
+
+        if ($request->hasFile('image')) {
+            if ($body->image && Storage::disk('public')->exists($body->image)) {
+                Storage::disk('public')->delete($body->image);
+            }
+
+            $data['image'] = $request->file('image')->store('brands', 'public');
+        }
+
+        $body->update($data);
 
         return redirect()->route('admin.BodyStyles')->with('success', 'Body Style updated successfully.');
     }

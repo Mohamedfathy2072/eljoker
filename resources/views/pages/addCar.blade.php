@@ -295,15 +295,20 @@
                                         <div class="col-12">
                                             <label for="inputFlags" class="form-label">Flags</label>
                                             <div id="flagContainer">
-                                                <div class="flagInput">
-                                                    <input type="text" class="form-control" id="inputFlags" name="flags[]">
+                                                <div class="flagInput row g-2 align-items-center">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" name="flags[0][name]" placeholder="Flag Name">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="file" class="form-control" name="flags[0][image]" accept="image/*">
+                                                    </div>
                                                 </div>
                                             </div>
                                             <button type="button" class="btn btn-link" onclick="addFlagInput()">
                                                 <i class="bi bi-plus-circle"></i> Add Flag
                                             </button>
-                                        </div>
-                                    </div>
+                                            </div>
+                                            </div>
 
                                     <!-- Features Section -->
                                     <div class="row g-3">
@@ -369,6 +374,11 @@
                                                         <label for="inputDescription" class="form-label">Description</label>
                                                         <textarea class="form-control" name="conditions[][description]" rows="3"></textarea>
                                                     </div>
+
+                                                    <div class="col-12">
+                                                        <label for="inputConditionImage" class="form-label">Image</label>
+                                                        <input type="file" class="form-control" name="conditions[][image]" accept="image/*">
+                                                    </div>
                                                 </div>
                                             </div>
                                             <button type="button" class="btn btn-link" onclick="addConditionBlock()">
@@ -393,24 +403,52 @@
 </section>
 
 <script>
-    function addFlagInput() {
-        const flagContainer = document.getElementById('flagContainer');
-        const newFlagInput = document.createElement('div');
-        newFlagInput.classList.add('flagInput');
+let flagIndex = 1;
+function addFlagInput() {
+    const flagContainer = document.getElementById('flagContainer');
+    const newFlagInput = document.createElement('div');
+    newFlagInput.classList.add('flagInput', 'row', 'g-2', 'align-items-center', 'mt-2');
 
-        // Create a new input field
-        const newInput = document.createElement('input');
-        newInput.type = 'text';
-        newInput.classList.add('form-control');
-        newInput.classList.add('mt-3');
+    // Name input
+    const nameCol = document.createElement('div');
+    nameCol.classList.add('col-md-5');
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.classList.add('form-control');
+    nameInput.name = `flags[${flagIndex}][name]`;
+    nameInput.placeholder = 'Flag Name';
+    nameCol.appendChild(nameInput);
 
-        // Set a unique name for each new input
-        newInput.name = 'flags[]';
+    // Image input (single file only)
+    const imageCol = document.createElement('div');
+    imageCol.classList.add('col-md-5');
+    const imageInput = document.createElement('input');
+    imageInput.type = 'file';
+    imageInput.classList.add('form-control');
+    imageInput.name = `flags[${flagIndex}][image]`;
+    imageInput.accept = 'image/*';
+    imageCol.appendChild(imageInput);
 
-        // Append the new input to the flag container
-        flagContainer.appendChild(newFlagInput);
-        newFlagInput.appendChild(newInput);
-    }
+    // Remove button
+    const removeCol = document.createElement('div');
+    removeCol.classList.add('col-md-2', 'd-flex', 'align-items-center');
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.classList.add('btn', 'btn-link', 'text-danger', 'p-0', 'ms-2');
+    removeBtn.title = 'Remove';
+    removeBtn.innerHTML = '<i class="bi bi-x-circle" style="font-size: 1.5rem;"></i>';
+    removeBtn.onclick = function() {
+        flagContainer.removeChild(newFlagInput);
+    };
+    removeCol.appendChild(removeBtn);
+
+    newFlagInput.appendChild(nameCol);
+    newFlagInput.appendChild(imageCol);
+    newFlagInput.appendChild(removeCol);
+
+    flagContainer.appendChild(newFlagInput);
+    flagIndex++;
+}
 </script>
 <script>
     function addFeatureBlock() {
@@ -500,7 +538,7 @@
         select.innerHTML = `
             <option value='' selected>Choose...</option>
             @foreach ($conditions as $item)
-        <option value="{{ $item->value }}">{{ $item->name }}</option>
+                <option value="{{ $item->value }}">{{ $item->name }}</option>
             @endforeach
         `;
 
@@ -526,25 +564,43 @@
         descriptionInput.name = 'conditions[][description]';
         descriptionInput.rows = 3;
 
+        // Create the "Image" input and label
+        const imageLabel = document.createElement('label');
+        imageLabel.classList.add('form-label');
+        imageLabel.setAttribute('for', 'inputConditionImage');
+        imageLabel.innerText = 'Image';
+
+        const imageInput = document.createElement('input');
+        imageInput.type = 'file';
+        imageInput.classList.add('form-control');
+        imageInput.name = 'conditions[][image]';
+        imageInput.accept = 'image/*';
+
         // Append the new elements to the new block
         const col1 = document.createElement('div');
-        col1.classList.add('col-md-4');
+        col1.classList.add('col-md-3');
         col1.appendChild(conditionsLabel); // Add label before the dropdown
         col1.appendChild(select);
 
         const col2 = document.createElement('div');
-        col2.classList.add('col-md-4');
+        col2.classList.add('col-md-3');
         col2.appendChild(partLabel); // Add label before the input
         col2.appendChild(partInput);
 
         const col3 = document.createElement('div');
-        col3.classList.add('col-md-4');
+        col3.classList.add('col-md-3');
         col3.appendChild(descriptionLabel); // Add label before the textarea
         col3.appendChild(descriptionInput);
+
+        const col4 = document.createElement('div');
+        col4.classList.add('col-md-3');
+        col4.appendChild(imageLabel); // Add label before the input
+        col4.appendChild(imageInput);
 
         newBlock.appendChild(col1);
         newBlock.appendChild(col2);
         newBlock.appendChild(col3);
+        newBlock.appendChild(col4);
 
         // Append the new block to the container
         container.appendChild(newBlock);

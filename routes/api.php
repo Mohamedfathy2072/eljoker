@@ -19,12 +19,6 @@ Route::prefix('auth')->group(function () {
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
 });
 
-Route::prefix('cars')->middleware('auth:api')->group(function () {
-    Route::post('/', [CarController::class, 'create']);
-    Route::put('/{id}', [CarController::class, 'update']);
-    Route::delete('/{id}', [CarController::class, 'delete']);
-});
-
 Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);

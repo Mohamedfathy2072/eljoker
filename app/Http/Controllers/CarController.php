@@ -8,6 +8,7 @@ use App\Enums\RefurbishmentStatus;
 use App\Http\Requests\CreateCarRequest;
 use App\Http\Requests\PaginatedCarsRequest;
 use App\Http\Requests\UpdateCarRequest;
+use App\Http\Resources\CarResource;
 use App\Models\BodyStyle;
 use App\Models\Brand;
 use App\Models\CarModel;
@@ -30,10 +31,11 @@ class CarController extends Controller
     {
         try {
             $carData = $request->validated();
+            dd($carData);
             $newCar = $this->carService->addNewCar($carData);
-            return response()->json(['message' => 'Car created', 'data' => $newCar]);
+            return redirect()->route('admin.car.show', $newCar->id);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);
+            return redirect()->back()->with(['message' => 'Error creating car', 'error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -66,17 +68,6 @@ class CarController extends Controller
             return response()->json(['message' => 'Car fetched successfully', 'data' => $car]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error fetching car', 'error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function create(CreateCarRequest $request)
-    {
-        try {
-            $carData = $request->validated();
-            $newCar = $this->carService->addNewCar($carData);
-            return response()->json(['message' => 'Car created', 'data' => $newCar]);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -130,5 +121,25 @@ class CarController extends Controller
             'features' => $features,
             'conditions' => $conditions
         ]);
+    }
+
+    public function show(int $id)
+    {
+        try {
+            $car = $this->carService->getCarDetails($id);
+            return view('pages.showCar', ['car' => $this->toRecursiveArray($car)]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['message' => 'Error fetching car', 'error' => $e->getMessage()]);
+        }
+    }
+
+    public function toRecursiveArray(CarResource $car)
+    {
+        $carArray = $car->toArray(request());
+        $carArray['flags'] = $carArray['flags']->toArray(request());
+        $carArray['features'] = $carArray['features']->toArray(request());
+        $carArray['conditions'] = $carArray['conditions']->toArray(request());
+        $carArray['images'] = $carArray['images']->toArray(request());
+        return $carArray;
     }
 }

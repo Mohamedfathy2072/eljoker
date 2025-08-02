@@ -50,6 +50,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
+                                        <label for="brandImage" class="form-label">Body Styles</label>
+                                        <input type="file" class="form-control" id="brandImage" name="image" accept="image/*">
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="brandName" class="form-label">Body Styles Name</label>
                                         <input type="text" class="form-control" id="brandName" name="name" required>
 
@@ -69,6 +73,7 @@
             <table class="table table-striped table-hover align-middle text-center">
                 <thead>
                   <tr>
+                    <th>Image</th>
                     <th>
                       <b>N</b>ame
                     </th>
@@ -79,6 +84,13 @@
                 <tbody>
                     @foreach($data as $item)
                     <tr>
+                        <td>
+                            @if($item->image)
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" width="50">
+                            @else
+                                <span class="text-muted">No Image</span>
+                            @endif
+                        </td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
@@ -99,6 +111,16 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="editBodyImage{{ $item->id }}" class="form-label">Update Image</label>
+                                                    <input type="file" class="form-control" id="editBodyImage{{ $item->id }}" name="image" accept="image/*">
+                                                </div>
+
+                                                @if($item->image)
+                                                    <div class="mb-3">
+                                                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" width="70">
+                                                    </div>
+                                                @endif
                                                 <div class="mb-3">
                                                     <label for="editBrandName{{ $item->id }}" class="form-label">Body Styles Name</label>
                                                     <input type="text" class="form-control" id="editBrandName{{ $item->id }}" name="name" value="{{ $item->name }}" required>

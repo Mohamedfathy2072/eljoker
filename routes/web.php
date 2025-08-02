@@ -43,6 +43,7 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('cars')->group(function () {
             Route::get('/', [CarController::class, 'index'])->name('admin.cars');
+            Route::get('/{id}', [CarController::class, 'show'])->where(['id'=>'[0-9]+'])->name('admin.car.show');
             Route::get('/add', [CarController::class, 'add'])->name('admin.car.add');
             Route::post('/', [CarController::class, 'store'])->name('admin.car.store');
             Route::put('/{id}', [CarController::class, 'edit'])->name('admin.car.edit');

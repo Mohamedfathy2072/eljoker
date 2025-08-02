@@ -56,18 +56,12 @@ class BrandController extends Controller
             'name' => $request->input('name'),
         ];
 
-        // ✅ معالجة رفع الصورة
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمة إن وجدت
             if ($brand->image && Storage::disk('public')->exists($brand->image)) {
                 Storage::disk('public')->delete($brand->image);
             }
 
-            // رفع الصورة الجديدة
-            $file = $request->file('image');
-            $ext =  $file->getClientOriginalExtension();
-            $file->move(public_path($brand->id.'/image'),date('Y-m-d').'.'.$ext);
-            $data['image'] = $brand->id.'/image'.date('Y-m-d').'.'.$ext;
+            $data['image'] = $request->file('image')->store('brands', 'public');
         }
 
         $brand->update($data);

@@ -20,7 +20,8 @@ class CarResource extends JsonResource
             // Car identification
             'brand' => $this->resource->brand_id ? [
             'id' => $this->resource->brand_id,
-            'name' => $this->resource->brand?->name
+            'name' => $this->resource->brand?->name,
+            'image' => $this->resource->brand?->image ?? ''
             ] : null,
             'model' => $this->resource->car_model_id ? [
             'id' => $this->resource->car_model_id,
