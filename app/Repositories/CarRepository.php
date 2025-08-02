@@ -93,7 +93,6 @@ class CarRepository implements CarRepositoryInterface
         }
 
         if (!empty($requestData['conditions'])) {
-            Condition
             $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
             if ($vehicleId !== null) {
                 $query->whereIn('vehicle_status_id', $vehicleId);
