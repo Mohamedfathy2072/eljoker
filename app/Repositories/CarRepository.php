@@ -39,6 +39,7 @@ class CarRepository implements CarRepositoryInterface
             if (!empty($model)) {
                 $query->where('car_model_id', $model->id);
             }
+            if (empty($brand) && empty($model)) return ['data' => [], 'count' => 0];
         }
 
         if (!empty($requestData['price_range'])) {
