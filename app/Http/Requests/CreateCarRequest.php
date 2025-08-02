@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Enums\RefurbishmentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateCarRequest extends FormRequest
 {
@@ -23,7 +25,6 @@ class CreateCarRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this);
         return [
             // Car identification
             'brand' => 'nullable',
@@ -86,12 +87,22 @@ class CreateCarRequest extends FormRequest
             'features.*.name' => 'nullable|string|max:100', // For name input
             'features.*.label' => 'nullable|required_if:features.*.name,!null|string|max:100', // For label input
             'features.*.value' => 'nullable|required_if:features.*.name,!null|string|max:100',  // For value input
-            'features.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',  // For value input
             'inputConditions' => 'nullable|array',
             'conditions' => 'nullable|array',
             'conditions.*.name' => 'nullable|string|max:100', // For condition input
             'conditions.*.part' => 'nullable|required_if:conditions.*.name,!null|string|max:100', // For part input
             'conditions.*.description' => 'nullable|required_if:conditions.*.name,!null|string|max:255', // For description input
+            'conditions.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',  // For value input
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

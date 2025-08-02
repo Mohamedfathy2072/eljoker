@@ -11,5 +11,6 @@ class Condition extends Model
         'name',
         'part',
         'description',
+        'image'
     ];
 }

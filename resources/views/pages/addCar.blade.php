@@ -18,7 +18,16 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Add New Car</h5>
-
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>There were some problems with your input:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <!-- Multi Columns Form -->
                 <form class="row g-3" action="{{ route('admin.car.store') }}" method="post"  enctype="multipart/form-data">
                     @csrf
@@ -43,6 +52,9 @@
                                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                                 @endforeach
                                             </select>
+                                            @error('brand')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <!-- Model -->
@@ -357,7 +369,7 @@
                                                 <div class="condition-block mb-3">
                                                     <div class="col-12">
                                                         <label for="inputConditions" class="form-label">Conditions</label>
-                                                        <select class="form-select" name="conditions[][name]">
+                                                        <select class="form-select" name="conditions[0][name]">
                                                             <option value="" selected>Choose...</option>
                                                             @foreach ($conditions as $item)
                                                                 <option value="{{ $item->value }}">{{ $item->name }}</option>
@@ -367,17 +379,17 @@
 
                                                     <div class="col-12">
                                                         <label for="inputPart" class="form-label">Part</label>
-                                                        <input type="text" class="form-control" name="conditions[][part]">
+                                                        <input type="text" class="form-control" name="conditions[0][part]">
                                                     </div>
 
                                                     <div class="col-12">
                                                         <label for="inputDescription" class="form-label">Description</label>
-                                                        <textarea class="form-control" name="conditions[][description]" rows="3"></textarea>
+                                                        <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>
                                                     </div>
 
                                                     <div class="col-12">
                                                         <label for="inputConditionImage" class="form-label">Image</label>
-                                                        <input type="file" class="form-control" name="conditions[][image]" accept="image/*">
+                                                        <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,6 +533,7 @@ function addFlagInput() {
 </script>
 
 <script>
+    let conditionIndex = 1;
     function addConditionBlock() {
         const container = document.getElementById('conditionBlockContainer');
         const newBlock = document.createElement('div');
@@ -534,7 +547,7 @@ function addFlagInput() {
 
         const select = document.createElement('select');
         select.classList.add('form-select');
-        select.name = 'conditions[][name]';
+        select.name = `conditions[${conditionIndex}][name]`;
         select.innerHTML = `
             <option value='' selected>Choose...</option>
             @foreach ($conditions as $item)
@@ -551,7 +564,7 @@ function addFlagInput() {
         const partInput = document.createElement('input');
         partInput.type = 'text';
         partInput.classList.add('form-control');
-        partInput.name = 'conditions[][part]';
+        partInput.name = `conditions[${conditionIndex}][part]`;
 
         // Create the "Description" input and label
         const descriptionLabel = document.createElement('label');
@@ -561,7 +574,7 @@ function addFlagInput() {
 
         const descriptionInput = document.createElement('textarea');
         descriptionInput.classList.add('form-control');
-        descriptionInput.name = 'conditions[][description]';
+        descriptionInput.name = `conditions[${conditionIndex}][description]`;
         descriptionInput.rows = 3;
 
         // Create the "Image" input and label
@@ -573,7 +586,7 @@ function addFlagInput() {
         const imageInput = document.createElement('input');
         imageInput.type = 'file';
         imageInput.classList.add('form-control');
-        imageInput.name = 'conditions[][image]';
+        imageInput.name = `conditions[${conditionIndex}][image]`;
         imageInput.accept = 'image/*';
 
         // Append the new elements to the new block
@@ -604,6 +617,8 @@ function addFlagInput() {
 
         // Append the new block to the container
         container.appendChild(newBlock);
+
+        conditionIndex++;
     }
 </script>
 

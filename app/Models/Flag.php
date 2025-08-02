@@ -9,5 +9,6 @@ class Flag extends Model
     protected $fillable = [
         'car_id',
         'value',
+        'image'
     ];
 }

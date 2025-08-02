@@ -161,7 +161,12 @@
                                         <strong>Conditions:</strong>
                                         <ul>
                                             @foreach ($car['conditions'] as $condition)
-                                                <li><strong>{{ $condition['name'] }} ({{ $condition['part'] }}):</strong> {{ $condition['description'] }}</li>
+                                                <li>
+                                                    @if(isset($condition['image']))
+                                                        <img src="{{ asset('storage/' . $condition['image']) }}" alt="Condition Image" style="height: 24px; width: auto; margin-right: 8px;">
+                                                    @endif
+                                                    <strong>{{ $condition['name'] }} ({{ $condition['part'] }}):</strong> {{ $condition['description'] }}
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>

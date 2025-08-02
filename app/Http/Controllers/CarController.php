@@ -29,9 +29,8 @@ class CarController extends Controller
 
     public function store(CreateCarRequest $request)
     {
+        $carData = $request->validated();
         try {
-            $carData = $request->validated();
-            dd($carData);
             $newCar = $this->carService->addNewCar($carData);
             return redirect()->route('admin.car.show', $newCar->id);
         } catch (\Exception $e) {

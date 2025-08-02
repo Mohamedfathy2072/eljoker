@@ -82,7 +82,6 @@ class CarRepository implements CarRepositoryInterface
 
     public function insert(array $carData)
     {
-        // dd($carData);
         // length, width, height => insert in table sizes
         // min max fuel economy => insert in table fuel_economies
         // min max horsepower insert in table horsepower
@@ -134,10 +133,13 @@ class CarRepository implements CarRepositoryInterface
         // make new flags, features, conditions for the car
         foreach ($carData['flags'] as $flag) {
             if(empty($flag) || empty($flag['name'])) continue;
+            $path = null;
+            if(!empty($flag['image']))
+                $path = $flag['image']->store('flags', 'public');
             $newCar->flags()->create([
                 'car_id' => $newCar->id,
-                'value' => $flag,
-                'image' => $flag['image']
+                'value' => $flag['name'],
+                'image' => $path
             ]);
         }
 
@@ -152,15 +154,18 @@ class CarRepository implements CarRepositoryInterface
             $newCar->features()->create($feature);
         }
 
-        for ($i=0; $i < count($carData['conditions']); $i+=3) {
-            if(empty($carData['conditions'][$i]['name'])) continue;
-            $condition = [
+        foreach ($carData['conditions'] as $cond) {
+            if(empty($cond) || empty($cond['name'])) continue;
+            $path = null;
+            if(!empty($cond['image']))
+                $path = $cond['image']->store('conditions', 'public');
+            $newCar->conditions()->create([
                 'car_id' => $newCar->id,
-                'name' => $carData['conditions'][$i]['name'],
-                'part' => $carData['conditions'][$i + 1]['part'] ?? '',
-                'description' => $carData['conditions'][$i + 2]['description'] ?? '',
-            ];
-            $newCar->conditions()->create($condition);
+                'name' => $cond['name'],
+                'part' => $cond['part'] ?? '',
+                'description' => $cond['description'] ?? '',
+                'image' => $path
+            ]);
         }
 
         // if has images save images and save its location
