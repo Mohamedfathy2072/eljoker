@@ -7,6 +7,7 @@ use App\Interfaces\CarRepositoryInterface;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\CarModel;
+use App\Models\Condition;
 use App\Models\Flag;
 use App\Models\FuelEconomy;
 use App\Models\Horsepower;
@@ -49,6 +50,14 @@ class CarRepository implements CarRepositoryInterface
             unset($requestData['price_range']);
         }
 
+        if (!empty($requestData['engine_capacity_cc'])) {
+            if(!empty($requestData['engine_capacity_cc'][0]))
+                $query->where('engine_capacity_cc', '>=', $requestData['engine_capacity_cc'][0]);
+            if(!empty($requestData['engine_capacity_cc'][1]))
+                $query->where('engine_capacity_cc', '<=', $requestData['engine_capacity_cc'][1]);
+            unset($requestData['engine_capacity_cc']);
+        }
+
         // 🔍 Filter by fuel economy range
         if (!empty($requestData['fuel_economy']['min']) && !empty($requestData['fuel_economy']['max'])) {
             $fuelMin = $requestData['fuel_economy']['min'];
@@ -77,6 +86,17 @@ class CarRepository implements CarRepositoryInterface
             $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
             if ($vehicleId !== null) {
                 $query->where('vehicle_status_id', $vehicleId);
+            } else {
+                throw new \Exception("Vehicle status not found for '{$requestData['vehicle_status']}'");
+            }
+            unset($requestData['vehicle_status']);
+        }
+
+        if (!empty($requestData['conditions'])) {
+            Condition
+            $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
+            if ($vehicleId !== null) {
+                $query->whereIn('vehicle_status_id', $vehicleId);
             } else {
                 throw new \Exception("Vehicle status not found for '{$requestData['vehicle_status']}'");
             }

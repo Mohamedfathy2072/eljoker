@@ -42,7 +42,10 @@ class PaginatedCarsRequest extends FormRequest
             'brand_ids.*' => 'integer|exists:brands,id',
             'body_style_ids' => 'nullable|array',
             'body_style_ids.*' => 'integer|exists:body_styles,id',
-            'vehicle_status' => 'nullable|string'
+            'vehicle_status' => 'nullable|string',
+            'engine_capacity_cc' => 'nullable|array',
+            'engine_capacity_cc.0' => 'nullable|numeric',
+            'engine_capacity_cc.1' => 'nullable|numeric'
         ];
     }
 
