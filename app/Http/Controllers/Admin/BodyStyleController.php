@@ -20,20 +20,21 @@ class BodyStyleController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
-
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('brands', 'public');
+            $imagePath = $request->file('image')->store('body_style', 'public');
         }
 
-        BodyStyle::create(['name' => $request->input('name'),
-            'image' => $imagePath]);
+        BodyStyle::create([
+            'name' => $request->input('name'),
+            'image' => $imagePath
+        ]);
 
         return redirect()->route('admin.BodyStyles')->with('success', 'Body Style created successfully.');
     }
