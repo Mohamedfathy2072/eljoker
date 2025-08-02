@@ -39,7 +39,6 @@ class CarRepository implements CarRepositoryInterface
             if (!empty($model)) {
                 $query->where('car_model_id', $model->id);
             }
-            unset($requestData['search']);
         }
 
         if (!empty($requestData['price_range'])) {
@@ -47,15 +46,14 @@ class CarRepository implements CarRepositoryInterface
                 $query->where('price', '>=', $requestData['price_range'][0]);
             if(!empty($requestData['price_range'][1]))
                 $query->where('price', '<=', $requestData['price_range'][1]);
-            unset($requestData['price_range']);
         }
+
 
         if (!empty($requestData['engine_capacity_cc'])) {
             if(!empty($requestData['engine_capacity_cc'][0]))
                 $query->where('engine_capacity_cc', '>=', $requestData['engine_capacity_cc'][0]);
             if(!empty($requestData['engine_capacity_cc'][1]))
                 $query->where('engine_capacity_cc', '<=', $requestData['engine_capacity_cc'][1]);
-            unset($requestData['engine_capacity_cc']);
         }
 
         // 🔍 Filter by fuel economy range
@@ -68,18 +66,15 @@ class CarRepository implements CarRepositoryInterface
                 $q->where('min', '<=', $fuelMin)
                     ->where('max', '>=', $fuelMax);
             });
-
-            unset($requestData['fuel_economy']);
         }
+
 
         if (!empty($requestData['brand_ids'])) {
             $query->whereIn('brand_id', $requestData['brand_ids']);
-            unset($requestData['brand_ids']);
         }
 
         if (!empty($requestData['body_style_ids'])) {
             $query->whereIn('body_style_id', $requestData['body_style_ids']);
-            unset($requestData['body_style_ids']);
         }
 
         if (!empty($requestData['vehicle_status'])) {
@@ -89,9 +84,12 @@ class CarRepository implements CarRepositoryInterface
             } else {
                 throw new \Exception("Vehicle status not found for '{$requestData['vehicle_status']}'");
             }
-            unset($requestData['vehicle_status']);
         }
 
+
+        foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids', 'vehicle_status'] as $key) {
+            unset($requestData[$key]);
+        }
 
         foreach ($requestData as $key => $value) {
             $query->where($key, $value);
