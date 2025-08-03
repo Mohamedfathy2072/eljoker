@@ -75,6 +75,7 @@ Route::prefix('calculator')->group(function () {
     Route::post('/car-price', [CalculatorController::class, 'calculateCarPrice']);
 });
 
-Route::prefix('book')->group(function () {
+Route::prefix('book')->middleware('auth:api')->group(function () {
     Route::post('/', [BookController::class, 'makeAppointment']);
+    Route::get('/getBookedCars', [BookController::class, 'getBookedCars']);
 });

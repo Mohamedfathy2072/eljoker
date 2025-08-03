@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BookResource;
+use App\Http\Resources\CarResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -11,17 +13,26 @@ class BookController extends Controller
     {
         $request->validate([
             'car_id' => 'required|integer|exists:cars,id',
-            'user_id' => 'required|integer|exists:users,id',
-            'address' => 'required|string',
+            'address' => 'nullable|string',
             'appointment_date' => 'required|date|after:now',
             'appointment_time' => 'required|date_format:H:i',
         ]);
         return Book::create([
             'car_id' => $request->car_id,
-            'user_id' => $request->user_id,
-            'address' => $request->address,
+            'user_id' => auth()->user()->id,
+            'address' => $request->address ?? '-',
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
+        ]);
+    }
+
+    public function getBookedCars()
+    {
+        $books = Book::with('car')->where('user_id', auth()->id())->get();
+
+        return response()->json([
+            'message' => 'Booked cars fetched successfully.',
+            'data' => BookResource::collection($books)
         ]);
     }
 }

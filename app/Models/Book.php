@@ -13,4 +13,9 @@ class Book extends Model
         'appointment_date',
         'appointment_time'
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
 }
