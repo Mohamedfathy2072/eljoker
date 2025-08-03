@@ -31,7 +31,7 @@ class AuthController extends Controller
         ]);
 
         // send OTP to user via email or SMS here (not implemented in this example)
-        // Mail::to($email)->send(new OtpMail($otp));
+        Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'User registered successfully. Please check your email for the OTP.',
