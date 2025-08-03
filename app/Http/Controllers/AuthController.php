@@ -31,7 +31,7 @@ class AuthController extends Controller
         ]);
 
         // send OTP to user via email or SMS here (not implemented in this example)
-        Mail::to($email)->send(new OtpMail($otp));
+        // Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'User registered successfully. Please check your email for the OTP.',
@@ -82,11 +82,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email|max:255|exists:users,email'
+            'email' => 'required|string|email|max:255'
         ]);
 
         $email = $request->input('email');
-
         $user = User::where('email', $email)->first();
 
         if(!$user) return $this->register($request);
