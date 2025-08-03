@@ -21,7 +21,7 @@
             </a>
           </li>
           <li>
-            <a href="components-alerts.html">
+            <a href="{{ route('admin.cars') }}">
               <i class="bi bi-circle"></i><span>Cars</span>
             </a>
           </li>

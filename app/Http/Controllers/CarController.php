@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateCarRequest;
 use App\Http\Resources\CarResource;
 use App\Models\BodyStyle;
 use App\Models\Brand;
+use App\Models\Car;
 use App\Models\CarModel;
 use App\Models\DriveType;
 use App\Models\EngineType;
@@ -70,6 +71,14 @@ class CarController extends Controller
         }
     }
 
+    public function edit(int $id)
+    {
+        $car = $this->carService->getCarDetails($id);
+        dd($this->toRecursiveArray($car));
+        return view('pages.editCar', ['car' => $this->toRecursiveArray($car)]);
+    }
+
+
     public function update(int $id, UpdateCarRequest $request)
     {
         try {
@@ -81,13 +90,13 @@ class CarController extends Controller
         }
     }
 
-    public function delete(int $id)
+    public function destroy(int $id)
     {
         try {
             $this->carService->deleteCar($id);
-            return response()->json(['message' => 'Car deleted successfully', 'id' => $id]);
+            return redirect()->route('admin.cars')->with('success', 'Car deleted successfully');
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error deleting car', 'error' => $e->getMessage()], 500);
+            return redirect()->route('admin.cars')->with('error', $e->getMessage());
         }
     }
 
@@ -130,6 +139,24 @@ class CarController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with(['message' => 'Error fetching car', 'error' => $e->getMessage()]);
         }
+    }
+
+    public function index()
+    {
+        $paginatedCars = Car::with([
+            'brand', 'carModel', 'engineType', 'vehicleStatus', 'fuelEconomy',
+            'horsepower', 'size', 'trim', 'flags', 'features', 'conditions', 'images'
+        ])->latest()->paginate(10);
+
+        $carResources = CarResource::collection($paginatedCars);
+
+        $transformedCars = $carResources->getCollection()->map(function ($car) {
+            return $this->toRecursiveArray($car);
+        });
+
+        $carResources->setCollection($transformedCars);
+
+        return view('pages.cars', ['cars' => $carResources]);
     }
 
     public function toRecursiveArray(CarResource $car)
