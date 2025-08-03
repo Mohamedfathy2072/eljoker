@@ -62,8 +62,13 @@ class AuthController extends Controller
         $user->save();
 
 
+        // Access Token TTL: 15 minutes
+        config(['jwt.ttl' => 15]);
         $accessToken = JWTAuth::fromUser($user);
-        $refreshToken = JWTAuth::setToken($accessToken)->refresh();
+
+        // Refresh Token TTL: 14 days
+        config(['jwt.ttl' => 20160]);
+        $refreshToken = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'OTP verified successfully.',
@@ -84,8 +89,13 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
 
         if($email === 'user@example.com') {
-            $accessToken = JWTAuth::fromUser($user);
-            $refreshToken = JWTAuth::setToken($accessToken)->refresh();
+                // Access Token TTL: 15 minutes
+                config(['jwt.ttl' => 15]);
+                $accessToken = JWTAuth::fromUser($user);
+
+                // Refresh Token TTL: 14 days
+                config(['jwt.ttl' => 20160]);
+                $refreshToken = JWTAuth::fromUser($user);
 
             return response()->json([
                 'message' => 'OTP verified successfully.',
