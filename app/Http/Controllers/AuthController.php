@@ -35,7 +35,8 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User registered successfully. Please check your email for the OTP.',
-            'user' => $email
+            'user' => $email,
+            'type' => 'register'
         ], 201);
     }
 
@@ -88,6 +89,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $email)->first();
 
+        if(!$user) return $this->register($request);
         if($email === 'user@example.com') {
                 // Access Token TTL: 15 minutes
                 config(['jwt.ttl' => 15]);
@@ -101,7 +103,8 @@ class AuthController extends Controller
                 'message' => 'OTP verified successfully.',
                 'token' => $accessToken,
                 'refresh_token' => $refreshToken,
-                'user' => new UserResource($user)
+                'user' => new UserResource($user),
+                'type' => 'login'
             ]);
         }
 
@@ -114,7 +117,8 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Login successful. Please check your email for the OTP.',
-            'user' => $email
+            'user' => $email,
+            'type' => 'login'
         ]);
     }
 

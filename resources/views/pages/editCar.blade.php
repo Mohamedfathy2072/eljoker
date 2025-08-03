@@ -182,7 +182,7 @@
                                         <!-- Mileage -->
                                         <div class="col-md-4">
                                             <label for="inputMileage" class="form-label">Mileage</label>
-                                            <input type="number" class="form-control" id="inputMileage" name="mileage">
+                                            <input type="number" class="form-control" id="inputMileage" name="mileage" value="{{ old('appearance', $car['performance']['mileage']['value']) }}>
                                         </div>
 
                                         <!-- Vehicle Status -->
@@ -191,7 +191,7 @@
                                             <select class="form-select" id="inputStatus" name="vehicle_status">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($vehicleStatuses as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->id }}"   {{ old('performance', $car['performance']['vehicle_status']['id']) == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -204,7 +204,7 @@
                                             <select class="form-select" id="inputRefurbishment" name="refurbishment_status">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($refurbishmentStatuses as $item)
-                                                    <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->value }}"   {{ old('performance', $car['performance']['refurbishment_status']['value']) == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -215,7 +215,7 @@
                                             <select class="form-select" id="inputTransmission" name="transmission_type">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($transmissionTypes as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->id }}"   {{ old('specifications', $car['specifications']['transmission_type']['id']) == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -226,7 +226,7 @@
                                             <select class="form-select" id="inputDrive" name="drive_type">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($driveTypes as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->id }}"   {{ old('specifications', $car['specifications']['drive_type']['id']) == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -234,37 +234,37 @@
                                         <!-- Engine Capacity -->
                                         <div class="col-md-4">
                                             <label for="inputEngineCapacity" class="form-label">Engine Capacity (cc)</label>
-                                            <input type="number" class="form-control" id="inputEngineCapacity" name="engine_capacity">
+                                            <input type="number" class="form-control" id="inputEngineCapacity" name="engine_capacity" value="{{ old('performance', $car['performance']['engine_capacity_cc']) }}>
                                         </div>
 
                                         <!-- Min Horse Power -->
                                         <div class="col-md-4">
                                             <label for="minRangePower" class="form-label">Min Horse Power</label>
-                                            <input type="number" class="form-control" id="minRangePower" name="min_horse_power" placeholder="Min Horse Power">
+                                            <input type="number" class="form-control" id="minRangePower" name="min_horse_power" placeholder="Min Horse Power" value="{{ old('performance', $car['performance']['horsepower']['min']) }}>
                                         </div>
 
                                         <!-- Max Horse Power -->
                                         <div class="col-md-4">
                                             <label for="maxRangePower" class="form-label">Max Horse Power</label>
-                                            <input type="number" class="form-control" id="maxRangePower" name="max_horse_power" placeholder="Max Horse Power">
+                                            <input type="number" class="form-control" id="maxRangePower" name="max_horse_power" placeholder="Max Horse Power" value="{{ old('performance', $car['performance']['horsepower']['max']) }}>
                                         </div>
 
                                         <!-- Price -->
                                         <div class="col-md-4">
                                             <label for="inputPrice" class="form-label">Price</label>
-                                            <input type="number" class="form-control" id="inputPrice" name="price">
+                                            <input type="number" class="form-control" id="inputPrice" name="price" value="{{ old('pricing', $car['pricing']['original_price']) }}>
                                         </div>
 
                                         <!-- Discount -->
                                         <div class="col-md-4">
                                             <label for="inputDiscount" class="form-label">Discount</label>
-                                            <input type="number" class="form-control" id="inputDiscount" name="discount">
+                                            <input type="number" class="form-control" id="inputDiscount" name="discount" value="{{ old('pricing', $car['pricing']['discount']) }}>
                                         </div>
 
                                         <!-- Monthly Installment -->
                                         <div class="col-md-4">
                                             <label for="inputInstallment" class="form-label">Monthly Installment</label>
-                                            <input type="number" class="form-control" id="inputInstallment" name="monthly_installment">
+                                            <input type="number" class="form-control" id="inputInstallment" name="monthly_installment" value="{{ old('pricing', $car['pricing']['monthly_installment']) }}>
                                         </div>
                                     </div>
                                 </div>
