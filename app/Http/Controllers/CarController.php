@@ -74,8 +74,8 @@ class CarController extends Controller
     public function edit(int $id)
     {
         $car = $this->carService->getCarDetails($id);
-        dd($this->toRecursiveArray($car));
-        return view('pages.editCar', ['car' => $this->toRecursiveArray($car)]);
+        $data = $this->getDropDownData() + ['car' => $this->toRecursiveArray($car)];
+        return view('pages.editCar', $data);
     }
 
 
@@ -102,33 +102,25 @@ class CarController extends Controller
 
     public function add()
     {
-        // get brand list for the dropdown
-        $brands = Brand::all();
-        $carModels = CarModel::all();
-        $bodyStyles = BodyStyle::all();
-        $types = Type::all();
-        $transmissionTypes = TransmissionType::all();
-        $driveTypes = DriveType::all();
-        $engineTypes = EngineType::all();
-        $vehicleStatuses = VehicleStatus::all();
-        $refurbishmentStatuses = RefurbishmentStatus::cases();
-        $trim = Trim::all();
-        $features = Feature::cases();
-        $conditions = Condition::cases();
-        return view('pages.addCar', [
-            'brands' => $brands,
-            'carModels' => $carModels,
-            'bodyStyles' => $bodyStyles,
-            'types' => $types,
-            'transmissionTypes' => $transmissionTypes,
-            'driveTypes' => $driveTypes,
-            'engineTypes' => $engineTypes,
-            'vehicleStatuses' => $vehicleStatuses,
-            'refurbishmentStatuses' => $refurbishmentStatuses,
-            'trim' => $trim,
-            'features' => $features,
-            'conditions' => $conditions
-        ]);
+        return view('pages.addCar', $this->getDropDownData());
+    }
+
+    public function getDropDownData() : array
+    {
+        return [
+            'brands' => Brand::all(),
+            'carModels' => CarModel::all(),
+            'bodyStyles' => BodyStyle::all(),
+            'types' => Type::all(),
+            'transmissionTypes' => TransmissionType::all(),
+            'driveTypes' => DriveType::all(),
+            'engineTypes' => EngineType::all(),
+            'vehicleStatuses' => VehicleStatus::all(),
+            'refurbishmentStatuses' => RefurbishmentStatus::cases(),
+            'trim' => Trim::all(),
+            'features' => Feature::cases(),
+            'conditions' => Condition::cases()
+        ];
     }
 
     public function show(int $id)
