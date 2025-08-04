@@ -20,6 +20,7 @@ use App\Models\Trim;
 use App\Models\Type;
 use App\Models\VehicleStatus;
 use App\Services\CarService;
+use http\Env\Request;
 
 class CarController extends Controller
 {
@@ -79,8 +80,9 @@ class CarController extends Controller
     }
 
 
-    public function update(int $id, UpdateCarRequest $request)
+    public function update(int $id, \Illuminate\Http\Request $request)
     {
+        dd($request->all());
         try {
             $updatedCarData = $request->validated();
             $updatedCar = $this->carService->updateCar($id, $updatedCarData);

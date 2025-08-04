@@ -299,81 +299,127 @@
                                             <label for="formFile" class="form-label">Images Upload</label>
                                             <input class="form-control" type="file" id="formFile" name="images[]" multiple>
                                         </div>
+                                        <!-- Current Images Preview -->
+                                        <div class="col-12 mt-3">
+                                            <label class="form-label">Current Images</label>
+                                            <div class="row">
+                                                @foreach ($car['images'] as $index => $image)
+                                                    <div class="col-md-3 text-center mb-3">
+                                                        <img src="{{ asset('storage/' . $image['location']) }}" class="img-thumbnail mb-2" style="max-height: 150px;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image['id'] }}" id="deleteImage{{ $index }}">
+                                                            <label class="form-check-label" for="deleteImage{{ $index }}">Delete</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Flags and Features Section -->
-{{--                        <div class="accordion-item">--}}
-{{--                            <h2 class="accordion-header" id="headingSeven">--}}
-{{--                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">--}}
-{{--                                    Part 4--}}
-{{--                                </button>--}}
-{{--                            </h2>--}}
-{{--                            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">--}}
-{{--                                <div class="accordion-body">--}}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSeven">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                    Part 4
+                                </button>
+                            </h2>
+                            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
 
-{{--                                    <!-- Flags Section -->--}}
-{{--                                    <div class="row g-3">--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <label for="inputFlags" class="form-label">Flags</label>--}}
-{{--                                            <div id="flagContainer">--}}
-{{--                                                <div class="flagInput row g-2 align-items-center">--}}
-{{--                                                    <div class="col-md-6">--}}
-{{--                                                        <input type="text" class="form-control" name="flags[0][name]" placeholder="Flag Name">--}}
-{{--                                                    </div>--}}
-{{--                                                    <div class="col-md-6">--}}
-{{--                                                        <input type="file" class="form-control" name="flags[0][image]" accept="image/*">--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <button type="button" class="btn btn-link" onclick="addFlagInput()">--}}
-{{--                                                <i class="bi bi-plus-circle"></i> Add Flag--}}
-{{--                                            </button>--}}
-{{--                                            </div>--}}
-{{--                                            </div>--}}
+                                    <!-- Flags Section -->
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label">Flags</label>
+                                            <div id="flagContainer">
+                                                @foreach ($car['flags'] as $index => $flag)
+                                                    <div class="flagInput row g-2 align-items-center mt-2">
+                                                        <!-- Flag Name -->
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" name="flags[{{ $index }}][name]" value="{{ $flag['value'] }}" placeholder="Flag Name">
+                                                        </div>
 
-{{--                                    <!-- Features Section -->--}}
-{{--                                    <div class="row g-3">--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <div id="featureBlockContainer">--}}
-{{--                                                <!-- First Block of Fields -->--}}
-{{--                                                <div class="feature-block mb-3">--}}
-{{--                                                    <!-- Features Dropdown -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputFeatures" class="form-label">Features</label>--}}
-{{--                                                        <select class="form-select" name="features[][name]">--}}
-{{--                                                            <option value="" selected>Choose...</option>--}}
-{{--                                                            @foreach ($features as $item)--}}
-{{--                                                                <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
+                                                        <!-- Image Upload -->
+                                                        <div class="col-md-5">
+                                                            <input type="file" class="form-control" name="flags[{{ $index }}][image]" accept="image/*" onchange="previewImage(this)">
+                                                            @if (!empty($flag['image']))
+                                                                <img class="img-preview mt-2" src="{{ asset('storage/' . $flag['image']) }}" style="max-height: 80px;" />
+                                                            @else
+                                                                <img class="img-preview mt-2" style="display:none; max-height: 80px;" />
+                                                            @endif
+                                                        </div>
 
-{{--                                                    <!-- Label Input -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputLabel" class="form-label">Label</label>--}}
-{{--                                                        <input type="text" class="form-control" name="features[][label]">--}}
-{{--                                                    </div>--}}
+                                                        <!-- Remove Button -->
+                                                        <div class="col-md-2 d-flex align-items-center">
+                                                            <button type="button" class="btn btn-link text-danger p-0 ms-2" title="Remove" onclick="this.closest('.flagInput').remove()">
+                                                                <i class="bi bi-x-circle" style="font-size: 1.5rem;"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
 
-{{--                                                    <!-- Value Input -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputValue" class="form-label">Value</label>--}}
-{{--                                                        <input type="text" class="form-control" name="features[][value]">--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
+                                            <!-- Add More Button -->
+                                            <button type="button" class="btn btn-link mt-3" onclick="addFlagInput()">
+                                                <i class="bi bi-plus-circle"></i> Add Flag
+                                            </button>
+                                        </div>
+                                    </div>
 
-{{--                                            <!-- Add More Button -->--}}
-{{--                                            <button type="button" class="btn btn-link" onclick="addFeatureBlock()">--}}
-{{--                                                <i class="bi bi-plus-circle"></i> Add More--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                    <!-- Features Section -->
+                                    @php $featureIndex = 0; @endphp
+                                    <div id="featureBlockContainer">
+                                        @foreach ($car['features'] as $type => $featuresList)
+                                            @foreach ($featuresList as $item)
+                                                <div class="feature-block row g-3 mb-3 align-items-end">
+                                                    <!-- Feature Type Dropdown -->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Feature</label>
+                                                        <select class="form-select" name="features[{{ $type }}][{{ $featureIndex }}][name]">
+                                                            <option value="" disabled>Choose...</option>
+                                                            @foreach ($features as $featureOption)
+                                                                <option value="{{ $featureOption->value }}"
+                                                                    {{ $featureOption->value === $type ? 'selected' : '' }}>
+                                                                    {{ $featureOption->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Label -->
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Label</label>
+                                                        <input type="text" class="form-control" name="features[{{ $type }}][{{ $featureIndex }}][label]" value="{{ $item['label'] }}">
+                                                    </div>
+
+                                                    <!-- Value -->
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Value</label>
+                                                        <input type="text" class="form-control" name="features[{{ $type }}][{{ $featureIndex }}][value]" value="{{ $item['value'] }}">
+                                                    </div>
+
+                                                    <!-- Remove -->
+                                                    <div class="col-md-1 text-end">
+                                                        <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
+                                                            <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                @php $featureIndex++; @endphp
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Add More Button -->
+                                    <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
+                                        <i class="bi bi-plus-circle"></i> Add More
+                                    </button>
 
 
-{{--                                    <!-- Conditions Section -->--}}
+
+                                    {{--                                    <!-- Conditions Section -->--}}
 {{--                                    <div class="row g-3">--}}
 {{--                                        <div class="col-12">--}}
 {{--                                            <div id="conditionBlockContainer">--}}
@@ -411,9 +457,9 @@
 {{--                                        </div>--}}
 {{--                                    </div>--}}
 
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <div class="text-center mt-4">
@@ -426,212 +472,217 @@
     </div>
 </section>
 
-{{--<script>--}}
-{{--let flagIndex = 1;--}}
-{{--function addFlagInput() {--}}
-{{--    const flagContainer = document.getElementById('flagContainer');--}}
-{{--    const newFlagInput = document.createElement('div');--}}
-{{--    newFlagInput.classList.add('flagInput', 'row', 'g-2', 'align-items-center', 'mt-2');--}}
+<script>
+    function previewImage(input) {
+        const file = input.files[0];
+        const img = input.nextElementSibling;
 
-{{--    // Name input--}}
-{{--    const nameCol = document.createElement('div');--}}
-{{--    nameCol.classList.add('col-md-5');--}}
-{{--    const nameInput = document.createElement('input');--}}
-{{--    nameInput.type = 'text';--}}
-{{--    nameInput.classList.add('form-control');--}}
-{{--    nameInput.name = `flags[${flagIndex}][name]`;--}}
-{{--    nameInput.placeholder = 'Flag Name';--}}
-{{--    nameCol.appendChild(nameInput);--}}
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+<script>
+    let flagIndex = {{ count($car['flags']) ?? 0 }};
 
-{{--    // Image input (single file only)--}}
-{{--    const imageCol = document.createElement('div');--}}
-{{--    imageCol.classList.add('col-md-5');--}}
-{{--    const imageInput = document.createElement('input');--}}
-{{--    imageInput.type = 'file';--}}
-{{--    imageInput.classList.add('form-control');--}}
-{{--    imageInput.name = `flags[${flagIndex}][image]`;--}}
-{{--    imageInput.accept = 'image/*';--}}
-{{--    imageCol.appendChild(imageInput);--}}
+    function addFlagInput() {
+        const flagContainer = document.getElementById('flagContainer');
 
-{{--    // Remove button--}}
-{{--    const removeCol = document.createElement('div');--}}
-{{--    removeCol.classList.add('col-md-2', 'd-flex', 'align-items-center');--}}
-{{--    const removeBtn = document.createElement('button');--}}
-{{--    removeBtn.type = 'button';--}}
-{{--    removeBtn.classList.add('btn', 'btn-link', 'text-danger', 'p-0', 'ms-2');--}}
-{{--    removeBtn.title = 'Remove';--}}
-{{--    removeBtn.innerHTML = '<i class="bi bi-x-circle" style="font-size: 1.5rem;"></i>';--}}
-{{--    removeBtn.onclick = function() {--}}
-{{--        flagContainer.removeChild(newFlagInput);--}}
-{{--    };--}}
-{{--    removeCol.appendChild(removeBtn);--}}
+        const newFlagInput = document.createElement('div');
+        newFlagInput.classList.add('flagInput', 'row', 'g-2', 'align-items-center', 'mt-2');
 
-{{--    newFlagInput.appendChild(nameCol);--}}
-{{--    newFlagInput.appendChild(imageCol);--}}
-{{--    newFlagInput.appendChild(removeCol);--}}
+        // Name
+        const nameCol = document.createElement('div');
+        nameCol.classList.add('col-md-5');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.classList.add('form-control');
+        nameInput.name = `flags[${flagIndex}][name]`;
+        nameInput.placeholder = 'Flag Name';
+        nameCol.appendChild(nameInput);
 
-{{--    flagContainer.appendChild(newFlagInput);--}}
-{{--    flagIndex++;--}}
-{{--}--}}
-{{--</script>--}}
-{{--<script>--}}
-{{--    function addFeatureBlock() {--}}
-{{--        const container = document.getElementById('featureBlockContainer');--}}
-{{--        const newBlock = document.createElement('div');--}}
-{{--        newBlock.classList.add('feature-block', 'mb-3'); // Add margin-bottom to create space between blocks--}}
+        // Image
+        const imageCol = document.createElement('div');
+        imageCol.classList.add('col-md-5');
+        const imageInput = document.createElement('input');
+        imageInput.type = 'file';
+        imageInput.classList.add('form-control');
+        imageInput.name = `flags[${flagIndex}][image]`;
+        imageInput.accept = 'image/*';
+        imageInput.onchange = function() { previewImage(this); };
+        const previewImg = document.createElement('img');
+        previewImg.classList.add('img-preview', 'mt-2');
+        previewImg.style.maxHeight = '80px';
+        previewImg.style.display = 'none';
+        imageCol.appendChild(imageInput);
+        imageCol.appendChild(previewImg);
 
-{{--        // Create the "Features" dropdown and label--}}
-{{--        const featureLabel = document.createElement('label');--}}
-{{--        featureLabel.classList.add('form-label');--}}
-{{--        featureLabel.setAttribute('for', 'inputFeatures'); // Add "for" attribute to associate with the input--}}
-{{--        featureLabel.innerText = 'Features'; // Label text--}}
+        // Remove
+        const removeCol = document.createElement('div');
+        removeCol.classList.add('col-md-2', 'd-flex', 'align-items-center');
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.classList.add('btn', 'btn-link', 'text-danger', 'p-0', 'ms-2');
+        removeBtn.title = 'Remove';
+        removeBtn.innerHTML = '<i class="bi bi-x-circle" style="font-size: 1.5rem;"></i>';
+        removeBtn.onclick = function() {
+            newFlagInput.remove();
+        };
+        removeCol.appendChild(removeBtn);
 
-{{--        const select = document.createElement('select');--}}
-{{--        select.classList.add('form-select');--}}
-{{--        select.name = 'features[][name]';  // Use same format as required for array--}}
-{{--        select.innerHTML = `--}}
-{{--        <option value='' selected>Choose...</option>--}}
-{{--        @foreach ($features as $item)--}}
-{{--        <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>--}}
-{{--        @endforeach--}}
-{{--        `;--}}
+        // Append all
+        newFlagInput.appendChild(nameCol);
+        newFlagInput.appendChild(imageCol);
+        newFlagInput.appendChild(removeCol);
 
-{{--        // Create the "Label" input and label--}}
-{{--        const labelField = document.createElement('label');--}}
-{{--        labelField.classList.add('form-label');--}}
-{{--        labelField.setAttribute('for', 'inputLabel');--}}
-{{--        labelField.innerText = 'Label'; // Label text--}}
+        flagContainer.appendChild(newFlagInput);
+        flagIndex++;
+    }
 
-{{--        const labelInput = document.createElement('input');--}}
-{{--        labelInput.type = 'text';--}}
-{{--        labelInput.classList.add('form-control');--}}
-{{--        labelInput.name = 'features[][label]';  // Name format for label input--}}
+    function previewImage(input) {
+        const file = input.files[0];
+        const img = input.nextElementSibling;
 
-{{--        // Create the "Value" input and label--}}
-{{--        const valueLabel = document.createElement('label');--}}
-{{--        valueLabel.classList.add('form-label');--}}
-{{--        valueLabel.setAttribute('for', 'inputValue');--}}
-{{--        valueLabel.innerText = 'Value'; // Label text--}}
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 
-{{--        const valueInput = document.createElement('input');--}}
-{{--        valueInput.type = 'text';--}}
-{{--        valueInput.classList.add('form-control');--}}
-{{--        valueInput.name = 'features[][value]';  // Name format for value input--}}
+<script>
+    function addFeatureBlock(index = 0) {
+        const container = document.getElementById('featureBlockContainer');
+        const newBlock = document.createElement('div');
+        newBlock.classList.add('feature-block', 'row', 'g-3', 'mb-3', 'align-items-end');
 
-{{--        // Append the new elements to the new block--}}
-{{--        const col1 = document.createElement('div');--}}
-{{--        col1.classList.add('col-md-4');--}}
-{{--        col1.appendChild(featureLabel); // Add label before the dropdown--}}
-{{--        col1.appendChild(select);--}}
+        newBlock.innerHTML = `
+        <div class="col-md-4">
+            <label class="form-label">Feature</label>
+            <select class="form-select" name="features[safety][${index}][name]">
+                <option value="safety" selected>Safety</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Label</label>
+            <input type="text" class="form-control" name="features[safety][${index}][label]">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Value</label>
+            <input type="text" class="form-control" name="features[safety][${index}][value]">
+        </div>
+        <div class="col-md-1 text-end">
+            <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
+                <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
+            </button>
+        </div>
+    `;
 
-{{--        const col2 = document.createElement('div');--}}
-{{--        col2.classList.add('col-md-4');--}}
-{{--        col2.appendChild(labelField); // Add label before the input--}}
-{{--        col2.appendChild(labelInput);--}}
+        container.appendChild(newBlock);
+        featureIndex++;
+    }
 
-{{--        const col3 = document.createElement('div');--}}
-{{--        col3.classList.add('col-md-4');--}}
-{{--        col3.appendChild(valueLabel); // Add label before the input--}}
-{{--        col3.appendChild(valueInput);--}}
+    let featureIndex = {{ $featureIndex ?? 0 }};
+</script>
 
-{{--        newBlock.appendChild(col1);--}}
-{{--        newBlock.appendChild(col2);--}}
-{{--        newBlock.appendChild(col3);--}}
 
-{{--        // Append the new block to the container--}}
-{{--        container.appendChild(newBlock);--}}
-{{--    }--}}
+<script>
+    let conditionIndex = 1;
+    function addConditionBlock() {
+        const container = document.getElementById('conditionBlockContainer');
+        const newBlock = document.createElement('div');
+        newBlock.classList.add('condition-block', 'mb-3'); // Add margin-bottom to create space between blocks
 
-{{--</script>--}}
+        // Create the "Conditions" dropdown and label
+        const conditionsLabel = document.createElement('label');
+        conditionsLabel.classList.add('form-label');
+        conditionsLabel.setAttribute('for', 'inputConditions');
+        conditionsLabel.innerText = 'Conditions';
 
-{{--<script>--}}
-{{--    let conditionIndex = 1;--}}
-{{--    function addConditionBlock() {--}}
-{{--        const container = document.getElementById('conditionBlockContainer');--}}
-{{--        const newBlock = document.createElement('div');--}}
-{{--        newBlock.classList.add('condition-block', 'mb-3'); // Add margin-bottom to create space between blocks--}}
+        const select = document.createElement('select');
+        select.classList.add('form-select');
+        select.name = `conditions[${conditionIndex}][name]`;
+        select.innerHTML = `
+            <option value='' selected>Choose...</option>
+            @foreach ($conditions as $item)
+                <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>
+            @endforeach
+        `;
 
-{{--        // Create the "Conditions" dropdown and label--}}
-{{--        const conditionsLabel = document.createElement('label');--}}
-{{--        conditionsLabel.classList.add('form-label');--}}
-{{--        conditionsLabel.setAttribute('for', 'inputConditions');--}}
-{{--        conditionsLabel.innerText = 'Conditions';--}}
+        // Create the "Part" input and label
+        const partLabel = document.createElement('label');
+        partLabel.classList.add('form-label');
+        partLabel.setAttribute('for', 'inputPart');
+        partLabel.innerText = 'Part';
 
-{{--        const select = document.createElement('select');--}}
-{{--        select.classList.add('form-select');--}}
-{{--        select.name = `conditions[${conditionIndex}][name]`;--}}
-{{--        select.innerHTML = `--}}
-{{--            <option value='' selected>Choose...</option>--}}
-{{--            @foreach ($conditions as $item)--}}
-{{--                <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>--}}
-{{--            @endforeach--}}
-{{--        `;--}}
+        const partInput = document.createElement('input');
+        partInput.type = 'text';
+        partInput.classList.add('form-control');
+        partInput.name = `conditions[${conditionIndex}][part]`;
 
-{{--        // Create the "Part" input and label--}}
-{{--        const partLabel = document.createElement('label');--}}
-{{--        partLabel.classList.add('form-label');--}}
-{{--        partLabel.setAttribute('for', 'inputPart');--}}
-{{--        partLabel.innerText = 'Part';--}}
+        // Create the "Description" input and label
+        const descriptionLabel = document.createElement('label');
+        descriptionLabel.classList.add('form-label');
+        descriptionLabel.setAttribute('for', 'inputDescription');
+        descriptionLabel.innerText = 'Description';
 
-{{--        const partInput = document.createElement('input');--}}
-{{--        partInput.type = 'text';--}}
-{{--        partInput.classList.add('form-control');--}}
-{{--        partInput.name = `conditions[${conditionIndex}][part]`;--}}
+        const descriptionInput = document.createElement('textarea');
+        descriptionInput.classList.add('form-control');
+        descriptionInput.name = `conditions[${conditionIndex}][description]`;
+        descriptionInput.rows = 3;
 
-{{--        // Create the "Description" input and label--}}
-{{--        const descriptionLabel = document.createElement('label');--}}
-{{--        descriptionLabel.classList.add('form-label');--}}
-{{--        descriptionLabel.setAttribute('for', 'inputDescription');--}}
-{{--        descriptionLabel.innerText = 'Description';--}}
+        // Create the "Image" input and label
+        const imageLabel = document.createElement('label');
+        imageLabel.classList.add('form-label');
+        imageLabel.setAttribute('for', 'inputConditionImage');
+        imageLabel.innerText = 'Image';
 
-{{--        const descriptionInput = document.createElement('textarea');--}}
-{{--        descriptionInput.classList.add('form-control');--}}
-{{--        descriptionInput.name = `conditions[${conditionIndex}][description]`;--}}
-{{--        descriptionInput.rows = 3;--}}
+        const imageInput = document.createElement('input');
+        imageInput.type = 'file';
+        imageInput.classList.add('form-control');
+        imageInput.name = `conditions[${conditionIndex}][image]`;
+        imageInput.accept = 'image/*';
 
-{{--        // Create the "Image" input and label--}}
-{{--        const imageLabel = document.createElement('label');--}}
-{{--        imageLabel.classList.add('form-label');--}}
-{{--        imageLabel.setAttribute('for', 'inputConditionImage');--}}
-{{--        imageLabel.innerText = 'Image';--}}
+        // Append the new elements to the new block
+        const col1 = document.createElement('div');
+        col1.classList.add('col-md-3');
+        col1.appendChild(conditionsLabel); // Add label before the dropdown
+        col1.appendChild(select);
 
-{{--        const imageInput = document.createElement('input');--}}
-{{--        imageInput.type = 'file';--}}
-{{--        imageInput.classList.add('form-control');--}}
-{{--        imageInput.name = `conditions[${conditionIndex}][image]`;--}}
-{{--        imageInput.accept = 'image/*';--}}
+        const col2 = document.createElement('div');
+        col2.classList.add('col-md-3');
+        col2.appendChild(partLabel); // Add label before the input
+        col2.appendChild(partInput);
 
-{{--        // Append the new elements to the new block--}}
-{{--        const col1 = document.createElement('div');--}}
-{{--        col1.classList.add('col-md-3');--}}
-{{--        col1.appendChild(conditionsLabel); // Add label before the dropdown--}}
-{{--        col1.appendChild(select);--}}
+        const col3 = document.createElement('div');
+        col3.classList.add('col-md-3');
+        col3.appendChild(descriptionLabel); // Add label before the textarea
+        col3.appendChild(descriptionInput);
 
-{{--        const col2 = document.createElement('div');--}}
-{{--        col2.classList.add('col-md-3');--}}
-{{--        col2.appendChild(partLabel); // Add label before the input--}}
-{{--        col2.appendChild(partInput);--}}
+        const col4 = document.createElement('div');
+        col4.classList.add('col-md-3');
+        col4.appendChild(imageLabel); // Add label before the input
+        col4.appendChild(imageInput);
 
-{{--        const col3 = document.createElement('div');--}}
-{{--        col3.classList.add('col-md-3');--}}
-{{--        col3.appendChild(descriptionLabel); // Add label before the textarea--}}
-{{--        col3.appendChild(descriptionInput);--}}
+        newBlock.appendChild(col1);
+        newBlock.appendChild(col2);
+        newBlock.appendChild(col3);
+        newBlock.appendChild(col4);
 
-{{--        const col4 = document.createElement('div');--}}
-{{--        col4.classList.add('col-md-3');--}}
-{{--        col4.appendChild(imageLabel); // Add label before the input--}}
-{{--        col4.appendChild(imageInput);--}}
+        // Append the new block to the container
+        container.appendChild(newBlock);
 
-{{--        newBlock.appendChild(col1);--}}
-{{--        newBlock.appendChild(col2);--}}
-{{--        newBlock.appendChild(col3);--}}
-{{--        newBlock.appendChild(col4);--}}
-
-{{--        // Append the new block to the container--}}
-{{--        container.appendChild(newBlock);--}}
-
-{{--        conditionIndex++;--}}
-{{--    }--}}
-{{--</script>--}}
+        conditionIndex++;
+    }
+</script>
 
 @endsection
