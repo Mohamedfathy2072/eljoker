@@ -40,15 +40,18 @@ class UpdateCarRequest extends FormRequest
             'license_expire_date' => 'nullable|date|after:today',
 
             // Dimensions
+            'size_id' => 'nullable|integer',
             'length' => 'nullable|numeric|min:0|max:99999',
             'width' => 'nullable|numeric|min:0|max:99999',
             'height' => 'nullable|numeric|min:0|max:99999',
 
             // Engine & Performance
+            'fuel_economy_id' => 'nullable|integer',
             'min_fuel_economy' => 'nullable|numeric|min:0|max:999',
             'max_fuel_economy' => 'nullable|numeric|min:0|max:999',
             'engine_type' => 'nullable|integer',
             'engine_capacity' => 'nullable|numeric|min:0|max:99999',
+            'horsepower_id' => 'nullable|integer',
             'min_horse_power' => 'nullable|numeric|min:0|max:1000',
             'max_horse_power' => 'nullable|numeric|min:0|max:1000',
             'mileage' => 'nullable|numeric|min:0|max:9999999',
@@ -67,12 +70,14 @@ class UpdateCarRequest extends FormRequest
 
             // Flags
             'flags' => 'nullable|array',
+            'flags.*.id' => 'nullable|integer|exists:flags,id',
             'flags.*.name' => 'nullable|string|max:100',
             'flags.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             // Features (multi-dimensional)
             'features' => 'nullable|array',
             'features.*' => 'nullable|array',
+            'features.*.*.id' => 'nullable|integer|exists:features,id',
             'features.*.*.name' => 'required_with:features.*.*.label|string|max:100',
             'features.*.*.label' => 'required_with:features.*.*.name|string|max:100',
             'features.*.*.value' => 'required_with:features.*.*.name|string|max:100',
@@ -80,6 +85,7 @@ class UpdateCarRequest extends FormRequest
             // Conditions (multi-dimensional)
             'conditions' => 'nullable|array',
             'conditions.*' => 'nullable|array',
+            'conditions.*.*.id' => 'nullable|integer',
             'conditions.*.*.name' => 'required_with:conditions.*.*.part|string|max:100',
             'conditions.*.*.part' => 'required_with:conditions.*.*.name|string|max:100',
             'conditions.*.*.description' => 'nullable|string|max:255',

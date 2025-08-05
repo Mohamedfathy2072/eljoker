@@ -59,6 +59,7 @@ class CarResource extends JsonResource
             'appearance' => [
             'color' => $this->resource->color ?? '',
             'size' => $this->resource->size ? [
+                'id' => $this->resource->size->id,
                 'length' => $this->resource->size->length,
                 'width' => $this->resource->size->width,
                 'height' => $this->resource->size->height,
@@ -70,6 +71,7 @@ class CarResource extends JsonResource
             // Performance & condition
             'performance' => [
             'fuel_economy' => $this->resource->fuelEconomy ? [
+                'id' => $this->resource->fuelEconomy->id,
                 'min' => $this->resource->fuelEconomy->min,
                 'max' => $this->resource->fuelEconomy->max,
                 'formate' => $this->resource->fuelEconomy->min . ' - ' .
@@ -81,6 +83,7 @@ class CarResource extends JsonResource
             ] : null,
             'engine_capacity_cc' => $this->resource->engine_capacity_cc ?? null,
             'horsepower' => $this->resource->horsepower ? [
+                'id' => $this->resource->horsepower->id,
                 'min' => $this->resource->horsepower->min,
                 'max' => $this->resource->horsepower->max,
                 'formate' => $this->resource->horsepower->min . ' - ' .

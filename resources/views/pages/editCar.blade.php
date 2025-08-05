@@ -116,6 +116,9 @@
                                     </div>
 
                                     <div class="row g-3">
+                                        @if (!empty($car['performance']['fuel_economy']))
+                                            <input type="hidden" name="fuel_economy_id" value="{{ $car['performance']['fuel_economy']['id'] }}">
+                                        @endif
                                         <!-- Min Fuel Economy -->
                                         <div class="col-md-4">
                                             <label for="minRange" class="form-label">Min Fuel Economy</label>
@@ -136,6 +139,9 @@
                                     </div>
 
                                     <div class="row g-3">
+                                        @if (!empty($car['appearance']['size']))
+                                            <input type="hidden" name="size_id" value="{{ $car['appearance']['size']['id'] }}">
+                                        @endif
                                         <!-- Length -->
                                         <div class="col-md-4">
                                             <label for="inputLength" class="form-label">Length</label>
@@ -239,6 +245,9 @@
                                                    value="{{ old('engine_capacity', $car['performance']['engine_capacity_cc'] ?? '') }}">
                                         </div>
 
+                                        @if (!empty($car['performance']['horsepower']))
+                                            <input type="hidden" name="horsepower_id" value="{{ $car['performance']['horsepower']['id'] }}">
+                                        @endif
                                         <!-- Min Horse Power -->
                                         <div class="col-md-4">
                                             <label for="minRangePower" class="form-label">Min Horse Power</label>
@@ -378,7 +387,6 @@
                                             @foreach ($featuresList as $item)
                                                 <div class="feature-block row g-3 mb-3 align-items-end">
                                                     <div class="col-md-4">
-
                                                         <label class="form-label">Feature</label>
                                                         <select class="form-select" name="features[{{ $type }}][{{ $featureIndex }}][name]">
                                                             <option value="" disabled>Choose...</option>
@@ -388,6 +396,9 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+                                                        @if (!empty($item['id']))
+                                                            <input type="hidden" name="features[{{ $type }}][{{ $featureIndex }}][id]" value="{{ $item['id'] }}">
+                                                        @endif
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label class="form-label">Label</label>
@@ -407,6 +418,7 @@
                                             @endforeach
                                         @endforeach
                                     </div>
+
                                     <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
                                         <i class="bi bi-plus-circle"></i> Add More
                                     </button>
@@ -417,41 +429,54 @@
                                             <label class="form-label">Conditions</label>
 
                                             <!-- Existing Conditions -->
-                                            <div id="conditionBlockContainer">
                                                 @php $conditionIndex = 0; @endphp
-                                                @foreach ($car['conditions'] as $type => $items)
-                                                    @foreach ($items as $item)
-                                                        <div class="condition-block row g-3 mb-3">
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Condition Type</label>
-                                                                <select class="form-select">
-                                                                    @foreach ($conditions as $option)
-                                                                        <option value="{{ $option->value }}" {{ $type === $option->value ? 'selected' : '' }}>
-                                                                            {{ $option->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <input type="hidden" name="conditions[{{ $type }}][{{ $conditionIndex }}][name]" value="{{ $type }}">
+                                                <div id="conditionBlockContainer">
+                                                    @foreach ($car['conditions'] as $type => $items)
+                                                        @foreach ($items as $item)
+                                                            <div class="condition-block row g-3 mb-3 align-items-end">
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label">Condition Type</label>
+                                                                    <select class="form-select" disabled>
+                                                                        @foreach ($conditions as $option)
+                                                                            <option value="{{ $option->value }}" {{ $type === $option->value ? 'selected' : '' }}>
+                                                                                {{ $option->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <input type="hidden" name="conditions[{{ $type }}][{{ $conditionIndex }}][name]" value="{{ $type }}">
+                                                                    @if (!empty($item['id']))
+                                                                        <input type="hidden" name="conditions[{{ $type }}][{{ $conditionIndex }}][id]" value="{{ $item['id'] }}">
+                                                                    @endif
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label">Part</label>
+                                                                    <input type="text" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][part]" value="{{ $item['part'] }}">
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label">Description</label>
+                                                                    <textarea class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][description]" rows="1">{{ $item['description'] }}</textarea>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label class="form-label">Image</label>
+                                                                    <input type="file" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][image]" accept="image/*">
+                                                                    @if (!empty($item['image']))
+                                                                        <img src="{{ asset('storage/' . $item['image']) }}" class="img-preview mt-2" style="max-height: 80px;">
+                                                                    @endif
+                                                                </div>
+
+                                                                <div class="col-md-1 text-end">
+                                                                    <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.condition-block').remove()">
+                                                                        <i class="bi bi-x-circle" style="font-size: 1.5rem;" title="Delete Condition"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Part</label>
-                                                                <input type="text" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][part]" value="{{ $item['part'] }}">
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Description</label>
-                                                                <textarea class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][description]" rows="1">{{ $item['description'] }}</textarea>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Image</label>
-                                                                <input type="file" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][image]" accept="image/*">
-                                                                @if (!empty($item['image']))
-                                                                    <img src="{{ asset('storage/' . $item['image']) }}" class="img-preview mt-2" style="max-height: 80px;">
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                        @php $conditionIndex++; @endphp
+                                                            @php $conditionIndex++; @endphp
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
+                                                </div>
                                             </div>
 
                                             <!-- Add More Button -->
