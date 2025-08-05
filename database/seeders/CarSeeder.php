@@ -14,6 +14,7 @@ use Database\Factories\VehicleStatusFactory;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 use App\Models\Car;
+use Faker\Factory as Faker;
 
 class CarSeeder extends Seeder
 {
