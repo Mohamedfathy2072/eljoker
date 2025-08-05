@@ -85,9 +85,9 @@ class CarController extends Controller
         try {
             $updatedCarData = $request->validated();
             $updatedCar = $this->carService->updateCar($id, $updatedCarData);
-            return response()->json(['message' => 'Car updated', 'id' => $id, 'data' => $updatedCar]);
+            return redirect()->route('admin.cars')->with('success', 'Car Updated successfully');
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);
+            return redirect()->route('admin.cars')->with('error', $e->getMessage());
         }
     }
 

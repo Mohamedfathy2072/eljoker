@@ -389,7 +389,7 @@
                                                     <div class="col-md-4">
                                                         <label class="form-label">Feature</label>
                                                         <select class="form-select" name="features[{{ $type }}][{{ $featureIndex }}][name]">
-                                                            <option value="" disabled>Choose...</option>
+                                                            <option value="" >Choose...</option>
                                                             @foreach ($features as $featureOption)
                                                                 <option value="{{ $featureOption->value }}" {{ $featureOption->value === $type ? 'selected' : '' }}>
                                                                     {{ $featureOption->name }}
@@ -436,7 +436,7 @@
                                                             <div class="condition-block row g-3 mb-3 align-items-end">
                                                                 <div class="col-md-3">
                                                                     <label class="form-label">Condition Type</label>
-                                                                    <select class="form-select" disabled>
+                                                                    <select class="form-select" >
                                                                         @foreach ($conditions as $option)
                                                                             <option value="{{ $option->value }}" {{ $type === $option->value ? 'selected' : '' }}>
                                                                                 {{ $option->name }}
