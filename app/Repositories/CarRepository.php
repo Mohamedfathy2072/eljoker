@@ -46,17 +46,17 @@ class CarRepository implements CarRepositoryInterface
         }
 
         if (!empty($requestData['price_range'])) {
-            if(!empty($requestData['price_range'][0]))
+            if (!empty($requestData['price_range'][0]))
                 $query->where('price', '>=', $requestData['price_range'][0]);
-            if(!empty($requestData['price_range'][1]))
+            if (!empty($requestData['price_range'][1]))
                 $query->where('price', '<=', $requestData['price_range'][1]);
         }
 
 
         if (!empty($requestData['engine_capacity_cc'])) {
-            if(!empty($requestData['engine_capacity_cc'][0]))
+            if (!empty($requestData['engine_capacity_cc'][0]))
                 $query->where('engine_capacity_cc', '>=', $requestData['engine_capacity_cc'][0]);
-            if(!empty($requestData['engine_capacity_cc'][1]))
+            if (!empty($requestData['engine_capacity_cc'][1]))
                 $query->where('engine_capacity_cc', '<=', $requestData['engine_capacity_cc'][1]);
         }
 
@@ -102,7 +102,7 @@ class CarRepository implements CarRepositoryInterface
         $count = (clone $query)->count();
 
         $cars = $query->orderBy($sort_by, $sort_direction)
-                    ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($per_page, ['*'], 'page', $page);
 
         return ['data' => CarResource::collection($cars), 'count' => $count];
     }
@@ -165,9 +165,9 @@ class CarRepository implements CarRepositoryInterface
 
         // make new flags, features, conditions for the car
         foreach ($carData['flags'] as $flag) {
-            if(empty($flag) || empty($flag['name'])) continue;
+            if (empty($flag) || empty($flag['name'])) continue;
             $path = null;
-            if(!empty($flag['image']))
+            if (!empty($flag['image']))
                 $path = $flag['image']->store('flags', 'public');
             $newCar->flags()->create([
                 'car_id' => $newCar->id,
@@ -176,8 +176,8 @@ class CarRepository implements CarRepositoryInterface
             ]);
         }
 
-        for ($i=0; $i < count($carData['features']); $i+=3) {
-            if(empty($carData['features'][$i]['name'])) continue;
+        for ($i = 0; $i < count($carData['features']); $i += 3) {
+            if (empty($carData['features'][$i]['name'])) continue;
             $feature = [
                 'car_id' => $newCar->id,
                 'name' => $carData['features'][$i]['name'],
@@ -188,9 +188,9 @@ class CarRepository implements CarRepositoryInterface
         }
 
         foreach ($carData['conditions'] as $cond) {
-            if(empty($cond) || empty($cond['name'])) continue;
+            if (empty($cond) || empty($cond['name'])) continue;
             $path = null;
-            if(!empty($cond['image']))
+            if (!empty($cond['image']))
                 $path = $cond['image']->store('conditions', 'public');
             $newCar->conditions()->create([
                 'car_id' => $newCar->id,
@@ -204,15 +204,15 @@ class CarRepository implements CarRepositoryInterface
         // if has images save images and save its location
         if (!empty($carData['images']) && is_array($carData['images'])) {
             foreach ($carData['images'] as $img) {
-            if (!$img) continue;
-            // Store image in 'public/cars' directory
-            $path = $img->store('cars', 'public');
+                if (!$img) continue;
+                // Store image in 'public/cars' directory
+                $path = $img->store('cars', 'public');
 
-            // Save image path in images table
-            $newCar->images()->create([
-                'car_id' => $newCar->id,
-                'location' => $path,
-            ]);
+                // Save image path in images table
+                $newCar->images()->create([
+                    'car_id' => $newCar->id,
+                    'location' => $path,
+                ]);
             }
         }
         return new CarResource($newCar);
@@ -222,190 +222,17 @@ class CarRepository implements CarRepositoryInterface
     {
         $car = Car::findOrFail($carId);
 
-        // --- Update related models safely ---
-        $fuelEco = FuelEconomy::find($carData['fuel_economy_id'] ?? null);
-        if ($fuelEco) {
-            $fuelEco->update([
-                'min' => $carData['min_fuel_economy'],
-                'max' => $carData['max_fuel_economy'],
-            ]);
-        }
+        $fuelEco = $this->updateFuelEconomy($carData);
+        $horseP  = $this->updateHorsepower($carData);
+        $size    = $this->updateSize($carData);
 
-        $horseP = Horsepower::find($carData['horsepower_id'] ?? null);
-        if ($horseP) {
-            $horseP->update([
-                'min' => $carData['min_horse_power'],
-                'max' => $carData['max_horse_power'],
-            ]);
-        }
+        $this->updateCarMainAttributes($car, $carData, $fuelEco, $horseP, $size);
+        $this->syncFlags($car, $carData['flags'] ?? []);
+        $this->syncFeatures($car, $carData['features'] ?? []);
+        $this->syncConditions($car, $carData['conditions'] ?? []);
+        $this->syncImages($car, $carData);
 
-        $size = Size::find($carData['size_id'] ?? null);
-        if ($size) {
-            $size->update([
-                'height' => $carData['height'],
-                'width'  => $carData['width'],
-                'length' => $carData['length'],
-            ]);
-        }
-
-        // --- Main car data update ---
-        $car->update([
-            'brand_id'              => filled($carData['brand']) ? (int) $carData['brand'] : null,
-            'car_model_id'          => filled($carData['model']) ? (int) $carData['model'] : null,
-            'model_year'            => filled($carData['model_year']) ? (int) $carData['model_year'] : null,
-            'license_expire_date'   => $carData['license_expire_date'] ?? null,
-            'body_style_id'         => filled($carData['body_style']) ? (int) $carData['body_style'] : null,
-            'type_id'               => filled($carData['type']) ? (int) $carData['type'] : null,
-            'fuel_economy_id'       => $fuelEco?->id,
-            'transmission_type_id'  => filled($carData['transmission_type']) ? (int) $carData['transmission_type'] : null,
-            'drive_type_id'         => filled($carData['drive_type']) ? (int) $carData['drive_type'] : null,
-            'engine_type_id'        => filled($carData['engine_type']) ? (int) $carData['engine_type'] : null,
-            'engine_capacity_cc'    => filled($carData['engine_capacity']) ? (float) $carData['engine_capacity'] : null,
-            'color'                 => $carData['color'] ?? null,
-            'size_id'               => $size?->id,
-            'mileage'               => filled($carData['mileage']) ? (int) $carData['mileage'] : null,
-            'horsepower_id'         => $horseP?->id,
-            'vehicle_status_id'     => filled($carData['vehicle_status']) ? (int) $carData['vehicle_status'] : null,
-            'refurbishment_status'  => $carData['refurbishment_status'] ?? null,
-            'price'                 => filled($carData['price']) ? (float) $carData['price'] : null,
-            'discount'              => filled($carData['discount']) ? (float) $carData['discount'] : null,
-            'monthly_installment'   => filled($carData['monthly_installment']) ? (float) $carData['monthly_installment'] : null,
-            'trim_id'               => filled($carData['trim']) ? (int) $carData['trim'] : null,
-        ]);
-
-        // make new flags, features, conditions for the car
-        $submittedFlags = $carData['flags'] ?? [];
-        $submittedIds = collect($submittedFlags)->pluck('id')->filter()->toArray();
-
-        $existingFlags = Flag::where('car_id', $carId)->get();
-
-        // Delete removed flags
-        foreach ($existingFlags as $flag) {
-            if (!in_array($flag->id, $submittedIds)) {
-                $flag->delete();
-            }
-        }
-
-        // Upsert submitted flags
-        foreach ($submittedFlags as $flagInput) {
-            $flagModel = isset($flagInput['id'])
-                ? Flag::where('car_id', $carId)->where('id', $flagInput['id'])->first()
-                : new Flag(['car_id' => $carId]);
-
-            if (!$flagModel) continue;
-            $flagModel->value = $flagInput['name'] ?? null;
-
-            if (isset($flagInput['image']) && $flagInput['image'] instanceof \Illuminate\Http\UploadedFile) {
-                $flagModel->image = $flagInput['image']->store('flags', 'public');
-            }
-
-            $flagModel->save();
-        }
-
-        $submittedFeatures = $carData['features'] ?? [];
-
-        // Flatten and normalize submitted features
-        $flatFeatures = [];
-        foreach ($submittedFeatures as $type => $items) {
-            foreach ($items as $item) {
-                $item['name'] = $type;
-                $flatFeatures[] = $item;
-            }
-        }
-
-        $submittedIds = collect($flatFeatures)->pluck('id')->filter()->toArray();
-        $existingFeatures = Feature::where('car_id', $carId)->get();
-
-        // Delete removed features
-        foreach ($existingFeatures as $feature) {
-            if (!in_array($feature->id, $submittedIds)) {
-                $feature->delete();
-            }
-        }
-
-        // Upsert submitted features
-        foreach ($flatFeatures as $featureInput) {
-            if (empty($featureInput['name'])) continue;
-
-            $feature = !empty($featureInput['id'])
-                ? Feature::where('car_id', $carId)->where('id', $featureInput['id'])->first()
-                : new Feature(['car_id' => $carId]);
-
-            if (!$feature) continue;
-
-            $feature->name = $featureInput['name'];
-            $feature->label = $featureInput['label'] ?? null;
-            $feature->value = $featureInput['value'] ?? null;
-
-            $feature->save();
-        }
-
-        $submittedConditions = $carData['conditions'] ?? [];
-
-        // Flatten nested condition arrays by type
-        $flatConditions = [];
-        foreach ($submittedConditions as $type => $items) {
-            foreach ($items as $item) {
-                $item['name'] = $type; // Store the type
-                $flatConditions[] = $item;
-            }
-        }
-
-        $submittedIds = collect($flatConditions)->pluck('id')->filter()->toArray();
-        $existingConditions = Condition::where('car_id', $carId)->get();
-
-        // Delete removed conditions
-        foreach ($existingConditions as $condition) {
-            if (!in_array($condition->id, $submittedIds)) {
-                $condition->delete();
-            }
-        }
-
-        // Add/update submitted conditions
-        foreach ($flatConditions as $cond) {
-            if (empty($cond['name'])) continue;
-
-            $model = !empty($cond['id'])
-                ? Condition::where('car_id', $carId)->where('id', $cond['id'])->first()
-                : new Condition(['car_id' => $carId]);
-
-            if (!$model) continue;
-
-            $model->name = $cond['name'];
-            $model->part = $cond['part'] ?? null;
-            $model->description = $cond['description'] ?? null;
-
-            if (!empty($cond['image']) && $cond['image'] instanceof \Illuminate\Http\UploadedFile) {
-                $model->image = $cond['image']->store('conditions', 'public');
-            }
-
-            $model->save();
-        }
-
-        // 1. Delete selected old images
-        if (!empty($carData['delete_images']) && is_array($carData['delete_images'])) {
-            foreach ($carData['delete_images'] as $deleteId) {
-                $image = Image::where('car_id', $carId)->where('id', $deleteId)->first();
-                if ($image) {
-                    Storage::disk('public')->delete($image->location); // delete from storage
-                    $image->delete(); // delete from DB
-                }
-            }
-        }
-
-        // 2. Save new uploaded images
-        if (!empty($carData['images']) && is_array($carData['images'])) {
-            foreach ($carData['images'] as $img) {
-                if (!$img || !$img instanceof \Illuminate\Http\UploadedFile) continue;
-
-                $path = $img->store('cars', 'public');
-
-                $car->images()->create([
-                    'location' => $path,
-                ]);
-            }
-        }
-        return new CarResource($car);
+        return new CarResource($car->fresh());
     }
 
     public function delete($carId)
@@ -423,5 +250,189 @@ class CarRepository implements CarRepositoryInterface
     {
         $vehicle = VehicleStatus::where('name', 'like', "%{$name}%")->first();
         return $vehicle?->id;
+    }
+
+    protected function updateFuelEconomy(array $data): ?FuelEconomy
+    {
+        $model = FuelEconomy::find($data['fuel_economy_id'] ?? null);
+        if ($model) {
+            $model->update([
+                'min' => $data['min_fuel_economy'],
+                'max' => $data['max_fuel_economy'],
+            ]);
+        }
+        return $model;
+    }
+
+    protected function updateHorsepower(array $data): ?Horsepower
+    {
+        $model = Horsepower::find($data['horsepower_id'] ?? null);
+        if ($model) {
+            $model->update([
+                'min' => $data['min_horse_power'],
+                'max' => $data['max_horse_power'],
+            ]);
+        }
+        return $model;
+    }
+
+    protected function updateSize(array $data): ?Size
+    {
+        $model = Size::find($data['size_id'] ?? null);
+        if ($model) {
+            $model->update([
+                'height' => $data['height'],
+                'width'  => $data['width'],
+                'length' => $data['length'],
+            ]);
+        }
+        return $model;
+    }
+
+    protected function updateCarMainAttributes(Car $car, array $data, $fuelEco, $horseP, $size): void
+    {
+        $car->update([
+            'brand_id'              => filled($data['brand']) ? (int) $data['brand'] : null,
+            'car_model_id'          => filled($data['model']) ? (int) $data['model'] : null,
+            'model_year'            => filled($data['model_year']) ? (int) $data['model_year'] : null,
+            'license_expire_date'   => $data['license_expire_date'] ?? null,
+            'body_style_id'         => filled($data['body_style']) ? (int) $data['body_style'] : null,
+            'type_id'               => filled($data['type']) ? (int) $data['type'] : null,
+            'fuel_economy_id'       => $fuelEco?->id,
+            'transmission_type_id'  => filled($data['transmission_type']) ? (int) $data['transmission_type'] : null,
+            'drive_type_id'         => filled($data['drive_type']) ? (int) $data['drive_type'] : null,
+            'engine_type_id'        => filled($data['engine_type']) ? (int) $data['engine_type'] : null,
+            'engine_capacity_cc'    => filled($data['engine_capacity']) ? (float) $data['engine_capacity'] : null,
+            'color'                 => $data['color'] ?? null,
+            'size_id'               => $size?->id,
+            'mileage'               => filled($data['mileage']) ? (int) $data['mileage'] : null,
+            'horsepower_id'         => $horseP?->id,
+            'vehicle_status_id'     => filled($data['vehicle_status']) ? (int) $data['vehicle_status'] : null,
+            'refurbishment_status'  => $data['refurbishment_status'] ?? null,
+            'price'                 => filled($data['price']) ? (float) $data['price'] : null,
+            'discount'              => filled($data['discount']) ? (float) $data['discount'] : null,
+            'monthly_installment'   => filled($data['monthly_installment']) ? (float) $data['monthly_installment'] : null,
+            'trim_id'               => filled($data['trim']) ? (int) $data['trim'] : null,
+        ]);
+    }
+
+    protected function syncFlags(Car $car, array $submittedFlags): void
+    {
+        $submittedIds = collect($submittedFlags)->pluck('id')->filter()->toArray();
+        $existing = Flag::where('car_id', $car->id)->get();
+
+        foreach ($existing as $flag) {
+            if (!in_array($flag->id, $submittedIds)) {
+                $flag->delete();
+            }
+        }
+
+        foreach ($submittedFlags as $flagInput) {
+            $flagModel = isset($flagInput['id'])
+                ? Flag::where('car_id', $car->id)->where('id', $flagInput['id'])->first()
+                : new Flag(['car_id' => $car->id]);
+
+            if (!$flagModel) continue;
+
+            $flagModel->value = $flagInput['name'] ?? null;
+            if (isset($flagInput['image']) && $flagInput['image'] instanceof \Illuminate\Http\UploadedFile) {
+                $flagModel->image = $flagInput['image']->store('flags', 'public');
+            }
+            $flagModel->save();
+        }
+    }
+
+    protected function syncFeatures(Car $car, array $submittedFeatures): void
+    {
+        $flat = [];
+        foreach ($submittedFeatures as $type => $items) {
+            foreach ($items as $item) {
+                $item['name'] = $type;
+                $flat[] = $item;
+            }
+        }
+
+        $submittedIds = collect($flat)->pluck('id')->filter()->toArray();
+        $existing = Feature::where('car_id', $car->id)->get();
+
+        foreach ($existing as $feature) {
+            if (!in_array($feature->id, $submittedIds)) {
+                $feature->delete();
+            }
+        }
+
+        foreach ($flat as $input) {
+            if (empty($input['name'])) continue;
+
+            $feature = !empty($input['id'])
+                ? Feature::where('car_id', $car->id)->where('id', $input['id'])->first()
+                : new Feature(['car_id' => $car->id]);
+
+            if (!$feature) continue;
+
+            $feature->name = $input['name'];
+            $feature->label = $input['label'] ?? null;
+            $feature->value = $input['value'] ?? null;
+            $feature->save();
+        }
+    }
+
+    protected function syncConditions(Car $car, array $submittedConditions): void
+    {
+        $flat = [];
+        foreach ($submittedConditions as $type => $items) {
+            foreach ($items as $item) {
+                $item['name'] = $type;
+                $flat[] = $item;
+            }
+        }
+
+        $submittedIds = collect($flat)->pluck('id')->filter()->toArray();
+        $existing = Condition::where('car_id', $car->id)->get();
+
+        foreach ($existing as $condition) {
+            if (!in_array($condition->id, $submittedIds)) {
+                $condition->delete();
+            }
+        }
+
+        foreach ($flat as $cond) {
+            if (empty($cond['name'])) continue;
+
+            $model = !empty($cond['id'])
+                ? Condition::where('car_id', $car->id)->where('id', $cond['id'])->first()
+                : new Condition(['car_id' => $car->id]);
+
+            if (!$model) continue;
+
+            $model->name = $cond['name'];
+            $model->part = $cond['part'] ?? null;
+            $model->description = $cond['description'] ?? null;
+            if (!empty($cond['image']) && $cond['image'] instanceof \Illuminate\Http\UploadedFile) {
+                $model->image = $cond['image']->store('conditions', 'public');
+            }
+            $model->save();
+        }
+    }
+
+    protected function syncImages(Car $car, array $data): void
+    {
+        if (!empty($data['delete_images']) && is_array($data['delete_images'])) {
+            foreach ($data['delete_images'] as $deleteId) {
+                $image = Image::where('car_id', $car->id)->where('id', $deleteId)->first();
+                if ($image) {
+                    Storage::disk('public')->delete($image->location);
+                    $image->delete();
+                }
+            }
+        }
+
+        if (!empty($data['images']) && is_array($data['images'])) {
+            foreach ($data['images'] as $img) {
+                if (!$img instanceof \Illuminate\Http\UploadedFile) continue;
+                $path = $img->store('cars', 'public');
+                $car->images()->create(['location' => $path]);
+            }
+        }
     }
 }
