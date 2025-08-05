@@ -80,9 +80,8 @@ class CarController extends Controller
     }
 
 
-    public function update(int $id, \Illuminate\Http\Request $request)
+    public function update(int $id, UpdateCarRequest $request)
     {
-        dd($request->all());
         try {
             $updatedCarData = $request->validated();
             $updatedCar = $this->carService->updateCar($id, $updatedCarData);

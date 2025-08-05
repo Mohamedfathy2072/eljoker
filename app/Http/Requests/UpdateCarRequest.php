@@ -24,34 +24,72 @@ class UpdateCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Car identification
-            'brand' => 'nullable|string|max:100',
-            'model' => 'nullable|string|max:100',
-            'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
+            // Identification
+            'brand' => 'nullable|integer',
+            'model' => 'nullable|integer',
+            'model_year' => 'nullable|numeric|min:1900|max:' . (date('Y') + 1),
 
-            // Vehicle specifications
-            'body_style' => 'nullable|string|max:50|in:SUV,Sedan,Hatchback,Coupe,Convertible,Wagon,Truck,Van,Crossover',
-            'type' => 'nullable|string|max:50',
-            'fuel_type' => 'nullable|string|max:20|in:petrol,diesel,electric,hybrid,lpg,cng',
-            'transmission_type' => 'nullable|string|max:20|in:automatic,manual,cvt,semi-automatic',
-            'drive_type' => 'nullable|string|max:20|in:fwd,rwd,awd,4wd',
+            // Vehicle Specs
+            'body_style' => 'nullable|integer',
+            'type' => 'nullable|integer',
+            'transmission_type' => 'nullable|integer',
+            'drive_type' => 'nullable|integer',
 
-            // Physical attributes
+            // Appearance
             'color' => 'nullable|string|max:50',
+            'license_expire_date' => 'nullable|date|after:today',
 
-            // Performance & condition
-            'mileage' => 'nullable|integer|min:0|max:9999999',
-            'speed' => 'nullable|integer|min:0|max:500',
-            'vehicle_status' => 'nullable|string|max:20|in:new,used,certified_pre_owned',
-            'refurbishment_status' => ['nullable', new Enum(RefurbishmentStatus::class)],
+            // Dimensions
+            'length' => 'nullable|numeric|min:0|max:99999',
+            'width' => 'nullable|numeric|min:0|max:99999',
+            'height' => 'nullable|numeric|min:0|max:99999',
+
+            // Engine & Performance
+            'min_fuel_economy' => 'nullable|numeric|min:0|max:999',
+            'max_fuel_economy' => 'nullable|numeric|min:0|max:999',
+            'engine_type' => 'nullable|integer',
+            'engine_capacity' => 'nullable|numeric|min:0|max:99999',
+            'min_horse_power' => 'nullable|numeric|min:0|max:1000',
+            'max_horse_power' => 'nullable|numeric|min:0|max:1000',
+            'mileage' => 'nullable|numeric|min:0|max:9999999',
+
+            // Status
+            'vehicle_status' => 'nullable|string|max:50',
+            'refurbishment_status' => 'nullable|string|max:50',
 
             // Pricing
-            'price' => 'nullable|numeric|min:0|max:9999999999.99',
+            'price' => 'required|numeric|min:0|max:9999999999.99',
             'discount' => 'nullable|numeric|min:0|max:999999.99',
             'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
 
             // Classification
-            'category' => 'nullable|string|max:50',
+            'trim' => 'nullable|integer',
+
+            // Flags
+            'flags' => 'nullable|array',
+            'flags.*.name' => 'nullable|string|max:100',
+            'flags.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            // Features (multi-dimensional)
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|array',
+            'features.*.*.name' => 'required_with:features.*.*.label|string|max:100',
+            'features.*.*.label' => 'required_with:features.*.*.name|string|max:100',
+            'features.*.*.value' => 'required_with:features.*.*.name|string|max:100',
+
+            // Conditions (multi-dimensional)
+            'conditions' => 'nullable|array',
+            'conditions.*' => 'nullable|array',
+            'conditions.*.*.name' => 'required_with:conditions.*.*.part|string|max:100',
+            'conditions.*.*.part' => 'required_with:conditions.*.*.name|string|max:100',
+            'conditions.*.*.description' => 'nullable|string|max:255',
+            'conditions.*.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            // Images (optional multiple)
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'nullable|integer'
         ];
     }
 }

@@ -339,6 +339,9 @@
                                                         <!-- Flag Name -->
                                                         <div class="col-md-5">
                                                             <input type="text" class="form-control" name="flags[{{ $index }}][name]" value="{{ $flag['value'] }}" placeholder="Flag Name">
+                                                            @if (!empty($flag['id']))
+                                                                <input type="hidden" name="flags[{{ $index }}][id]" value="{{ $flag['id'] }}">
+                                                            @endif
                                                         </div>
 
                                                         <!-- Image Upload -->
@@ -368,39 +371,32 @@
                                         </div>
                                     </div>
 
-                                    <!-- Features Section -->
+                                    {{-- Features --}}
                                     @php $featureIndex = 0; @endphp
                                     <div id="featureBlockContainer">
                                         @foreach ($car['features'] as $type => $featuresList)
                                             @foreach ($featuresList as $item)
                                                 <div class="feature-block row g-3 mb-3 align-items-end">
-                                                    <!-- Feature Type Dropdown -->
                                                     <div class="col-md-4">
+
                                                         <label class="form-label">Feature</label>
                                                         <select class="form-select" name="features[{{ $type }}][{{ $featureIndex }}][name]">
                                                             <option value="" disabled>Choose...</option>
                                                             @foreach ($features as $featureOption)
-                                                                <option value="{{ $featureOption->value }}"
-                                                                    {{ $featureOption->value === $type ? 'selected' : '' }}>
+                                                                <option value="{{ $featureOption->value }}" {{ $featureOption->value === $type ? 'selected' : '' }}>
                                                                     {{ $featureOption->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
-
-                                                    <!-- Label -->
                                                     <div class="col-md-4">
                                                         <label class="form-label">Label</label>
                                                         <input type="text" class="form-control" name="features[{{ $type }}][{{ $featureIndex }}][label]" value="{{ $item['label'] }}">
                                                     </div>
-
-                                                    <!-- Value -->
                                                     <div class="col-md-3">
                                                         <label class="form-label">Value</label>
                                                         <input type="text" class="form-control" name="features[{{ $type }}][{{ $featureIndex }}][value]" value="{{ $item['value'] }}">
                                                     </div>
-
-                                                    <!-- Remove -->
                                                     <div class="col-md-1 text-end">
                                                         <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
                                                             <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
@@ -411,51 +407,59 @@
                                             @endforeach
                                         @endforeach
                                     </div>
-
-                                    <!-- Add More Button -->
                                     <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
                                         <i class="bi bi-plus-circle"></i> Add More
                                     </button>
 
+                                    {{-- Conditions --}}
+                                    <div class="row g-3 mt-4">
+                                        <div class="col-12">
+                                            <label class="form-label">Conditions</label>
 
+                                            <!-- Existing Conditions -->
+                                            <div id="conditionBlockContainer">
+                                                @php $conditionIndex = 0; @endphp
+                                                @foreach ($car['conditions'] as $type => $items)
+                                                    @foreach ($items as $item)
+                                                        <div class="condition-block row g-3 mb-3">
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Condition Type</label>
+                                                                <select class="form-select">
+                                                                    @foreach ($conditions as $option)
+                                                                        <option value="{{ $option->value }}" {{ $type === $option->value ? 'selected' : '' }}>
+                                                                            {{ $option->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <input type="hidden" name="conditions[{{ $type }}][{{ $conditionIndex }}][name]" value="{{ $type }}">
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Part</label>
+                                                                <input type="text" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][part]" value="{{ $item['part'] }}">
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Description</label>
+                                                                <textarea class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][description]" rows="1">{{ $item['description'] }}</textarea>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label">Image</label>
+                                                                <input type="file" class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][image]" accept="image/*">
+                                                                @if (!empty($item['image']))
+                                                                    <img src="{{ asset('storage/' . $item['image']) }}" class="img-preview mt-2" style="max-height: 80px;">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        @php $conditionIndex++; @endphp
+                                                    @endforeach
+                                                @endforeach
+                                            </div>
 
-                                    {{--                                    <!-- Conditions Section -->--}}
-{{--                                    <div class="row g-3">--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <div id="conditionBlockContainer">--}}
-{{--                                                <!-- First Block of Fields -->--}}
-{{--                                                <div class="condition-block mb-3">--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputConditions" class="form-label">Conditions</label>--}}
-{{--                                                        <select class="form-select" name="conditions[0][name]">--}}
-{{--                                                            <option value="" selected>Choose...</option>--}}
-{{--                                                            @foreach ($conditions as $item)--}}
-{{--                                                                <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputPart" class="form-label">Part</label>--}}
-{{--                                                        <input type="text" class="form-control" name="conditions[0][part]">--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputDescription" class="form-label">Description</label>--}}
-{{--                                                        <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputConditionImage" class="form-label">Image</label>--}}
-{{--                                                        <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <button type="button" class="btn btn-link" onclick="addConditionBlock()">--}}
-{{--                                                <i class="bi bi-plus-circle"></i> Add More--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                            <!-- Add More Button -->
+                                            <button type="button" class="btn btn-link mt-2" onclick="addConditionBlock()">
+                                                <i class="bi bi-plus-circle"></i> Add More
+                                            </button>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -560,129 +564,80 @@
 </script>
 
 <script>
-    function addFeatureBlock(index = 0) {
+    let featureIndex = {{ $featureIndex ?? 0 }};
+    function addFeatureBlock() {
         const container = document.getElementById('featureBlockContainer');
         const newBlock = document.createElement('div');
-        newBlock.classList.add('feature-block', 'row', 'g-3', 'mb-3', 'align-items-end');
-
+        newBlock.className = 'feature-block row g-3 mb-3 align-items-end';
         newBlock.innerHTML = `
-        <div class="col-md-4">
-            <label class="form-label">Feature</label>
-            <select class="form-select" name="features[safety][${index}][name]">
-                <option value="safety" selected>Safety</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Label</label>
-            <input type="text" class="form-control" name="features[safety][${index}][label]">
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Value</label>
-            <input type="text" class="form-control" name="features[safety][${index}][value]">
-        </div>
-        <div class="col-md-1 text-end">
-            <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
-                <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
-            </button>
-        </div>
-    `;
-
+            <div class="col-md-4">
+                <label class="form-label">Feature</label>
+                <select class="form-select" name="features[safety][${featureIndex}][name]">
+                    @foreach ($features as $featureOption)
+                        <option value="{{ $featureOption->value }}">{{ $featureOption->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Label</label>
+                <input type="text" class="form-control" name="features[safety][${featureIndex}][label]">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Value</label>
+                <input type="text" class="form-control" name="features[safety][${featureIndex}][value]">
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
+                    <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
+                </button>
+            </div>
+        `;
         container.appendChild(newBlock);
         featureIndex++;
     }
 
-    let featureIndex = {{ $featureIndex ?? 0 }};
-</script>
+    let conditionIndex = 0;
 
-
-<script>
-    let conditionIndex = 1;
     function addConditionBlock() {
         const container = document.getElementById('conditionBlockContainer');
-        const newBlock = document.createElement('div');
-        newBlock.classList.add('condition-block', 'mb-3'); // Add margin-bottom to create space between blocks
 
-        // Create the "Conditions" dropdown and label
-        const conditionsLabel = document.createElement('label');
-        conditionsLabel.classList.add('form-label');
-        conditionsLabel.setAttribute('for', 'inputConditions');
-        conditionsLabel.innerText = 'Conditions';
-
-        const select = document.createElement('select');
-        select.classList.add('form-select');
-        select.name = `conditions[${conditionIndex}][name]`;
-        select.innerHTML = `
-            <option value='' selected>Choose...</option>
+        const conditionTypeOptions = `
             @foreach ($conditions as $item)
-                <option value="{{ $item['value'] }}">{{ $item['name'] }}</option>
+                <option value="{{ $item->value }}">{{ $item->name }}</option>
             @endforeach
         `;
 
-        // Create the "Part" input and label
-        const partLabel = document.createElement('label');
-        partLabel.classList.add('form-label');
-        partLabel.setAttribute('for', 'inputPart');
-        partLabel.innerText = 'Part';
+        const uniqueKey = `new_${conditionIndex}`;
 
-        const partInput = document.createElement('input');
-        partInput.type = 'text';
-        partInput.classList.add('form-control');
-        partInput.name = `conditions[${conditionIndex}][part]`;
+        const block = document.createElement('div');
+        block.className = 'condition-block row g-3 mb-3';
 
-        // Create the "Description" input and label
-        const descriptionLabel = document.createElement('label');
-        descriptionLabel.classList.add('form-label');
-        descriptionLabel.setAttribute('for', 'inputDescription');
-        descriptionLabel.innerText = 'Description';
+        block.innerHTML = `
+            <div class="col-md-3">
+                <label class="form-label">Condition Type</label>
+                <select class="form-select" name="conditions[${uniqueKey}][name]">
+                    <option value="" selected>Choose...</option>
+                    ${conditionTypeOptions}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Part</label>
+                <input type="text" class="form-control" name="conditions[${uniqueKey}][part]">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" rows="1" name="conditions[${uniqueKey}][description]"></textarea>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control" name="conditions[${uniqueKey}][image]" accept="image/*">
+            </div>
+        `;
 
-        const descriptionInput = document.createElement('textarea');
-        descriptionInput.classList.add('form-control');
-        descriptionInput.name = `conditions[${conditionIndex}][description]`;
-        descriptionInput.rows = 3;
-
-        // Create the "Image" input and label
-        const imageLabel = document.createElement('label');
-        imageLabel.classList.add('form-label');
-        imageLabel.setAttribute('for', 'inputConditionImage');
-        imageLabel.innerText = 'Image';
-
-        const imageInput = document.createElement('input');
-        imageInput.type = 'file';
-        imageInput.classList.add('form-control');
-        imageInput.name = `conditions[${conditionIndex}][image]`;
-        imageInput.accept = 'image/*';
-
-        // Append the new elements to the new block
-        const col1 = document.createElement('div');
-        col1.classList.add('col-md-3');
-        col1.appendChild(conditionsLabel); // Add label before the dropdown
-        col1.appendChild(select);
-
-        const col2 = document.createElement('div');
-        col2.classList.add('col-md-3');
-        col2.appendChild(partLabel); // Add label before the input
-        col2.appendChild(partInput);
-
-        const col3 = document.createElement('div');
-        col3.classList.add('col-md-3');
-        col3.appendChild(descriptionLabel); // Add label before the textarea
-        col3.appendChild(descriptionInput);
-
-        const col4 = document.createElement('div');
-        col4.classList.add('col-md-3');
-        col4.appendChild(imageLabel); // Add label before the input
-        col4.appendChild(imageInput);
-
-        newBlock.appendChild(col1);
-        newBlock.appendChild(col2);
-        newBlock.appendChild(col3);
-        newBlock.appendChild(col4);
-
-        // Append the new block to the container
-        container.appendChild(newBlock);
-
+        container.appendChild(block);
         conditionIndex++;
     }
+
 </script>
 
 @endsection
