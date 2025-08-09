@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
                 [
                     'email' => $faker->unique()->safeEmail, // Generates a unique fake email
                     'name' => $faker->name, // Generates a random name
-                    'phone' => $faker->phoneNumber, // Generates a fake phone number
+                    'phone' => $faker->numerify('0##########'), // Generates a fake phone number
                     'is_active' => $faker->boolean(80) // Randomly set 'is_active' to 80% of true
                 ]
             );

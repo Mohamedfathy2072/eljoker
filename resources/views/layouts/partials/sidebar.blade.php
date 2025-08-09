@@ -83,11 +83,11 @@
       </li><!-- End Users Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
+        <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
           <i class="bi bi-person"></i>
-          <span>Customers</span>
+          <span>Admins</span>
         </a>
-      </li><!-- End Customers Page Nav -->
+      </li><!-- End Admins Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">

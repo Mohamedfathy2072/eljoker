@@ -11,7 +11,8 @@ use App\Http\Controllers\Admin\{
     TrimController,
     TypeController,
     VehicleStatusController,
-    AuthController
+    AuthController,
+    AdminController
 };
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
@@ -128,6 +129,13 @@ Route::prefix('admin')->group(function () {
             Route::post('/', [UserController::class, 'store'])->name('admin.User.store');
             Route::put('/{id}', [UserController::class, 'edit'])->name('admin.User.edit');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.User.destroy');
+        });
+
+        Route::prefix('Admins')->group(function () {
+            Route::get('/', [AdminController::class, 'index'])->name('admin.Admins');
+            Route::post('/', [AdminController::class, 'store'])->name('admin.Admin.store');
+            Route::put('/{id}', [AdminController::class, 'edit'])->name('admin.Admin.edit');
+            Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.Admin.destroy');
         });
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');

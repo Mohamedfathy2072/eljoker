@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'Admins')
 
 @section('content')
 <div class="pagetitle">
@@ -53,28 +53,28 @@
                     <div class="modal fade" id="verticalycentered" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="{{ route('admin.User.store') }}" method="POST">
+                            <form action="{{ route('admin.Admin.store') }}" method="POST">
                                 @csrf
                                 <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Admin</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="userName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="userName" name="name" required>
+                                        <label for="adminName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="adminName" name="name" required>
                                     </div>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="userEmail" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="userEmail" name="email" required>
+                                        <label for="adminEmail" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="adminEmail" name="email" required>
                                     </div>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="userPhone" class="form-label">Phone Number</label>
-                                        <input type="text" class="form-control" id="userPhone" name="phone">
+                                        <label for="adminPassword" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="adminPassword" name="password">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -95,7 +95,6 @@
                       <b>N</b>ame
                     </th>
                     <th>Email</th>
-                    <th>Phone</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
                     <th>Actions</th>
                   </tr>
@@ -105,7 +104,6 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->email }}</td>
-                        <td>{{ $item->phone ?? '-' }}</td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
                             <!-- Edit Button triggers modal -->
@@ -117,29 +115,29 @@
                             <div class="modal fade" id="editBrandModal{{ $item->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
-                                        <form action="{{ route('admin.User.edit', $item->id) }}" method="POST">
+                                        <form action="{{ route('admin.Admin.edit', $item->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editBrandModalLabel{{ $item->id }}">Edit Type</h5>
+                                                <h5 class="modal-title" id="editBrandModalLabel{{ $item->id }}">Edit Admin</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editUserName{{ $item->id }}" class="form-label">User Name</label>
-                                                    <input type="text" class="form-control" id="editUserName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                                                    <label for="editAdminName{{ $item->id }}" class="form-label">Admin Name</label>
+                                                    <input type="text" class="form-control" id="editAdminName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editUserEmail{{ $item->id }}" class="form-label">Email</label>
-                                                    <input type="text" class="form-control" id="editUserEmail{{ $item->id }}" name="email" value="{{ $item->email }}" required>
+                                                    <label for="editAdminEmail{{ $item->id }}" class="form-label">Email</label>
+                                                    <input type="text" class="form-control" id="editAdminEmail{{ $item->id }}" name="email" value="{{ $item->email }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editUserPhone{{ $item->id }}" class="form-label">Phone</label>
-                                                    <input type="text" class="form-control" id="editUserPhone{{ $item->id }}" name="phone" value="{{ $item->phone }}">
+                                                    <label for="editAdminPassword{{ $item->id }}" class="form-label">Password</label>
+                                                    <input type="text" class="form-control" id="editAdminPassword{{ $item->id }}" name="password">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -150,7 +148,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('admin.User.destroy', $item->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('admin.Admin.destroy', $item->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
