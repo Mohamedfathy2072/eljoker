@@ -60,37 +60,50 @@ class LookupSeeder extends Seeder
 
     public function seedBrandsModels()
     {
-
         $carModelBrandMap = [
-            'Corolla' => 'Toyota',
-            'Civic' => 'Honda',
-            'Mustang' => 'Ford',
-            'Camaro' => 'Chevrolet',
-            '3 Series' => 'BMW',
-            'Accord' => 'Honda',
-            'Elantra' => 'Hyundai',
-            'Tucson' => 'Hyundai',
-            'Model 3' => 'Tesla',
-            'CX-5' => 'Mazda',
-            'Altima' => 'Nissan',
-            'RAV4' => 'Toyota',
-            'Explorer' => 'Ford',
-            'X5' => 'BMW',
-            'A4' => 'Audi',
-            'Cherokee' => 'Jeep',
-            'Wrangler' => 'Jeep',
-            'Golf' => 'Volkswagen',
-            'Clio' => 'Renault',
-            '500' => 'Fiat',
+            'Corolla' => ['Toyota', 'brands/Toyota.png'],
+            'Civic' => ['Honda', 'brands/Honda.png'],
+            'Mustang' => ['Ford', 'brands/Ford.png'],
+            'Camaro' => ['Chevrolet', 'brands/Chevrolet.png'],
+            'Tucson' => ['Hyundai', 'brands/Hyundai.png'],
+            'Model 3' => ['Tesla', 'brands/Tesla.png'],
+            'CX-5' => ['Mazda', 'brands/Mazda.png'],
+            'Altima' => ['Nissan', 'brands/Nissan.png'],
+            'X5' => ['BMW', 'brands/BMW.png'],
+            'A4' => ['Audi', 'brands/Audi.png'],
+            'Wrangler' => ['Jeep', 'brands/Jeep.png'],
+            'Golf' => ['Volkswagen', 'brands/Volkswagen.png'],
+            '500' => ['Fiat', 'brands/Fiat.png'],
+            'Clio' => ['Renault', 'brands/Renault.png'],
+            'Mitsubishi Outlander' => ['Mitsubishi', 'brands/Mitsubishi.png'],
+            'Skoda' => ['Skoda', 'brands/Skoda.png'],
+            'Seat' => ['Seat', 'brands/Seat.png'],
+            'Peugeot' => ['Peugeot', 'brands/Peugeot.png'],
+            'MG' => ['MG', 'brands/MG.png'],
+            'Kia' => ['Kia', 'brands/Kia.png'],
+            'Citroen' => ['Citroen', 'brands/Citroen.png']
         ];
 
         $brandIds = [];
-        foreach (array_unique(array_values($carModelBrandMap)) as $brandName) {
-            $brand = Brand::firstOrCreate(['name' => $brandName]);
+
+        // Create brands if they don't exist, or update image if necessary
+        foreach ($carModelBrandMap as $modelName => [$brandName, $brandImage]) {
+            $brand = Brand::firstOrCreate(
+                ['name' => $brandName],  // Only check for the name
+                ['image' => $brandImage] // Create with image if not exists
+            );
+
+            // If the brand exists but the image is different, update it
+            if ($brand->image !== $brandImage) {
+                $brand->update(['image' => $brandImage]);
+            }
+
+            // Store brand ID
             $brandIds[$brandName] = $brand->id;
         }
 
-        foreach ($carModelBrandMap as $modelName => $brandName) {
+        // Create car models with the corresponding brand_id
+        foreach ($carModelBrandMap as $modelName => [$brandName, $brandImage]) {
             CarModel::firstOrCreate([
                 'name' => $modelName,
                 'brand_id' => $brandIds[$brandName],

@@ -22,11 +22,11 @@ class CarSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // الصور الثابتة
+
         $imageFiles = collect(range(1, 10))->map(fn($i) => "cars/{$i}.png");
 
         Car::factory(15)->create()->each(function (Car $car) use ($imageFiles, $faker) {
-            // ✅ صور السيارة
+
             $assignedImages = $imageFiles->random(rand(3, 6));
             foreach ($assignedImages as $imgPath) {
                 $car->images()->create([
@@ -34,7 +34,7 @@ class CarSeeder extends Seeder
                 ]);
             }
 
-            // ✅ Flags (1 to 3)
+
             for ($i = 0; $i < rand(1, 3); $i++) {
                 $car->flags()->create([
                     'value' => $faker->words(2, true),
@@ -42,7 +42,7 @@ class CarSeeder extends Seeder
                 ]);
             }
 
-            // ✅ Features (2 groups × 2-3 items per group)
+
             $featureGroups = ['safety', 'performance', 'dimensions_capacity', 'comfort_convenience', 'entertainment_communication', 'interiors', 'exteriors'];
             foreach ($faker->randomElements($featureGroups, rand(1, 2)) as $group) {
                 for ($i = 0; $i < rand(2, 3); $i++) {
@@ -54,7 +54,7 @@ class CarSeeder extends Seeder
                 }
             }
 
-            // ✅ Conditions (1–3 per car)
+
             $conditionTypes = ['mechanical_condition', 'exterior_condition', 'interior_condition'];
             foreach ($faker->randomElements($conditionTypes, rand(1, 2)) as $condType) {
                 $car->conditions()->create([

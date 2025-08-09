@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\{
     AuthController
 };
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -120,6 +121,13 @@ Route::prefix('admin')->group(function () {
             Route::post('/', [TrimController::class, 'store'])->name('admin.Trim.store');
             Route::put('/{id}', [TrimController::class, 'edit'])->name('admin.Trim.edit');
             Route::delete('/{id}', [TrimController::class, 'destroy'])->name('admin.Trim.destroy');
+        });
+
+        Route::prefix('Users')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('admin.Users');
+            Route::post('/', [UserController::class, 'store'])->name('admin.User.store');
+            Route::put('/{id}', [UserController::class, 'edit'])->name('admin.User.edit');
+            Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.User.destroy');
         });
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
