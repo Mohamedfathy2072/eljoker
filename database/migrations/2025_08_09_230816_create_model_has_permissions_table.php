@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('model_has_permissions', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model', 119); // Creates 'model_id' and 'model_type' for polymorphic relationship
+            $table->string('model', 119); // Creates 'model_id' and 'model_type' for polymorphic relationship
             $table->foreignId('permission_id')->constrained('permissions'); // References the permissions table
             $table->timestamps();
 

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('model_has_roles', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model', 119);  // This will create 'model_id' and 'model_type'
+            $table->string('model', 119);  // This will create 'model_id' and 'model_type'
             $table->foreignId('role_id')->constrained('roles'); // References the roles table
             $table->timestamps();
 
