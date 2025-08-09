@@ -8,7 +8,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-      <li class="breadcrumb-item active">Users</li>
+      <li class="breadcrumb-item active">Admins</li>
     </ol>
   </nav>
 </div>
@@ -21,7 +21,7 @@
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title">Users</h5>
+                    <h5 class="card-title">Admins</h5>
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <strong>There were some problems with your input:</strong>
@@ -48,7 +48,7 @@
                         </div>
                     @endsession
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
-                        Add New User
+                        Add New Admin
                     </button>
                     <div class="modal fade" id="verticalycentered" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
