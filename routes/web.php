@@ -22,18 +22,11 @@ Route::get('/', function () {
     return redirect()->route('admin.login');
 });
 
-// Route::middleware('auth:web')->group(function () {
-//     Route::get('/admin', [DashboardController::class, 'index']);
-// });
-
-// Route::post('/login', [AuthController::class, 'login'])->name('login');
-// Route::post('/register', [AuthController::class, 'register'])->name('register');
-
 Route::prefix('admin')->group(function () {
 
     // register admin routes here
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('admin.register');
-    Route::post('/register', [AuthController::class, 'register'])->name('admin.submit.register');
+    // Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('admin.register');
+    // Route::post('/register', [AuthController::class, 'register'])->name('admin.submit.register');
 
     // login route
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
