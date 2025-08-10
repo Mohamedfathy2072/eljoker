@@ -30,7 +30,8 @@ class Car extends Model
         'price',
         'discount',
         'monthly_installment',
-        'trim_id'
+        'trim_id',
+        'down_payment'
     ];
 
 

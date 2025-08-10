@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('car_model_id')->nullable()->constrained()->onDelete('set null');
             $table->year('model_year');
             $table->date('license_expire_date')->nullable(); // License Valid To
+            $table->string('location')->nullable(); // Nasr City...
+            $table->string('description')->nullable();
 
             // Vehicle specifications
             $table->foreignId('body_style_id')->nullable()->constrained()->onDelete('set null'); // SUV, Sedan, Hatchback, etc.
@@ -43,9 +45,12 @@ return new class extends Migration
             $table->decimal('price', 12, 2); // Sale price
             $table->decimal('discount', 8, 2)->default(0); // Discount amount
             $table->decimal('monthly_installment', 10, 2)->nullable(); // Monthly payment option
+            $table->decimal('down_payment', 10, 2)->nullable(); // Down payment
+            $table->enum('payment_option', ['cash', 'installment'])->nullable();
 
             // Classification
             $table->foreignId('trim_id')->nullable()->constrained()->onDelete('set null'); // 1st Category (trim/grade)
+            $table->text('fcm_token')->nullable();  // Notification token for push notifications
 
             $table->timestamps();
         });

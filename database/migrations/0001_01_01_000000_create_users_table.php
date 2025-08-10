@@ -18,7 +18,12 @@ return new class extends Migration
             $table->string('phone', 15)->unique()->nullable();
             $table->string('otp_hash')->nullable();
             $table->timestamp('otp_expires_at')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->boolean('is_active')->default(false);
+            $table->boolean('completed_registration')->default(false);
+            $table->string('fcm_token')->nullable()->after('remember_token');
+            $table->decimal('wallet', 12, 2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
