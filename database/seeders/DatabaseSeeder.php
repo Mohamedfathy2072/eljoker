@@ -23,6 +23,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LookupSeeder::class,
             CarSeeder::class,
+            GovernorateSeeder::class,
+            AreaSeeder::class,
+            UniversitySeeder::class,
+            FacultySeeder::class,
+            QuizSeeder::class
         ]);
     }
 
