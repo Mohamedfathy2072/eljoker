@@ -173,8 +173,19 @@ class AuthController extends Controller
     public function refershToken()
     {
         try {
-            $token = JWTAuth::refresh(JWTAuth::getToken());
-            return response()->json(['token' => $token]);
+            $user = auth()->user();
+             // Access Token TTL: 15 minutes
+            config(['jwt.ttl' => 15]);
+            $accessToken = JWTAuth::fromUser($user);
+
+            // Refresh Token TTL: 14 days
+            config(['jwt.ttl' => 20160]);
+            $refreshToken = JWTAuth::fromUser($user);
+
+            return response()->json([
+                'token' => $accessToken,
+                'refresh_token' => $refreshToken
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Could not refresh token'], 500);
         }
