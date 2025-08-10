@@ -327,86 +327,88 @@
                                             <button type="button" class="btn btn-link" onclick="addFlagInput()">
                                                 <i class="bi bi-plus-circle"></i> Add Flag
                                             </button>
+                                        </div>
+                                    </div>
+
+                                    {{-- features --}}
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div id="featureBlockContainer">
+                                                <!-- First Block of Fields -->
+                                                <div class="feature-block mb-3">
+                                                    <!-- Features Dropdown -->
+                                                    <div class="col-12">
+                                                        <label for="inputFeatures" class="form-label">Features</label>
+                                                        <select class="form-select" name="features[][name]">
+                                                            <option value="" selected>Choose...</option>
+                                                            @foreach ($features as $item)
+                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Label Input -->
+                                                    <div class="col-12">
+                                                        <label for="inputLabel" class="form-label">Label</label>
+                                                        <input type="text" class="form-control" name="features[][label]">
+                                                    </div>
+
+                                                    <!-- Value Input -->
+                                                    <div class="col-12">
+                                                        <label for="inputValue" class="form-label">Value</label>
+                                                        <input type="text" class="form-control" name="features[][value]">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            </div>
 
-                                    <!-- Features Section -->
-{{--                                    @dd($features);--}}
-{{--                                    <div class="row g-3">--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <div id="featureBlockContainer">--}}
-{{--                                                <!-- First Block of Fields -->--}}
-{{--                                                <div class="feature-block mb-3">--}}
-{{--                                                    <!-- Features Dropdown -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputFeatures" class="form-label">Features</label>--}}
-{{--                                                        <select class="form-select" name="features[][name]">--}}
-{{--                                                            <option value="" selected>Choose...</option>--}}
-{{--                                                            @foreach ($features as $item)--}}
-{{--                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
+                                            <!-- Add More Button -->
+                                            <button type="button" class="btn btn-link" onclick="addFeatureBlock()">
+                                                <i class="bi bi-plus-circle"></i> Add More
+                                            </button>
+                                        </div>
+                                    </div>
 
-{{--                                                    <!-- Label Input -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputLabel" class="form-label">Label</label>--}}
-{{--                                                        <input type="text" class="form-control" name="features[][label]">--}}
-{{--                                                    </div>--}}
-
-{{--                                                    <!-- Value Input -->--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputValue" class="form-label">Value</label>--}}
-{{--                                                        <input type="text" class="form-control" name="features[][value]">--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-
-{{--                                            <!-- Add More Button -->--}}
-{{--                                            <button type="button" class="btn btn-link" onclick="addFeatureBlock()">--}}
-{{--                                                <i class="bi bi-plus-circle"></i> Add More--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
 
 
                                     <!-- Conditions Section -->
-{{--                                    <div class="row g-3">--}}
-{{--                                        <div class="col-12">--}}
-{{--                                            <div id="conditionBlockContainer">--}}
-{{--                                                <!-- First Block of Fields -->--}}
-{{--                                                <div class="condition-block mb-3">--}}
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputConditions" class="form-label">Conditions</label>--}}
-{{--                                                        <select class="form-select" name="conditions[0][name]">--}}
-{{--                                                            <option value="" selected>Choose...</option>--}}
-{{--                                                            @foreach ($conditions as $item)--}}
-{{--                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div id="conditionBlockContainer">
+                                                <!-- First Block of Fields -->
+                                                <div class="condition-block mb-3">
+                                                    <div class="col-12">
+                                                        <label for="inputConditions" class="form-label">Conditions</label>
+                                                        <select class="form-select" name="conditions[0][name]">
+                                                            <option value="" selected>Choose...</option>
+                                                            @foreach ($conditions as $item)
+                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
 
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputPart" class="form-label">Part</label>--}}
-{{--                                                        <input type="text" class="form-control" name="conditions[0][part]">--}}
-{{--                                                    </div>--}}
+                                                    <div class="col-12">
+                                                        <label for="inputPart" class="form-label">Part</label>
+                                                        <input type="text" class="form-control" name="conditions[0][part]">
+                                                    </div>
 
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputDescription" class="form-label">Description</label>--}}
-{{--                                                        <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>--}}
-{{--                                                    </div>--}}
+                                                    <div class="col-12">
+                                                        <label for="inputDescription" class="form-label">Description</label>
+                                                        <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>
+                                                    </div>
 
-{{--                                                    <div class="col-12">--}}
-{{--                                                        <label for="inputConditionImage" class="form-label">Image</label>--}}
-{{--                                                        <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <button type="button" class="btn btn-link" onclick="addConditionBlock()">--}}
-{{--                                                <i class="bi bi-plus-circle"></i> Add More--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                                    <div class="col-12">
+                                                        <label for="inputConditionImage" class="form-label">Image</label>
+                                                        <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Add More Button -->
+                                            <button type="button" class="btn btn-link" onclick="addConditionBlock()">
+                                                <i class="bi bi-plus-circle"></i> Add More
+                                            </button>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -471,75 +473,71 @@ function addFlagInput() {
     flagIndex++;
 }
 </script>
-{{--<script>--}}
-{{--    function addFeatureBlock() {--}}
-{{--        const container = document.getElementById('featureBlockContainer');--}}
-{{--        const newBlock = document.createElement('div');--}}
-{{--        newBlock.classList.add('feature-block', 'mb-3'); // Add margin-bottom to create space between blocks--}}
+<script>
+function addFeatureBlock() {
+    const container = document.getElementById('featureBlockContainer');
+    const newBlock = document.createElement('div');
+    newBlock.classList.add('feature-block', 'mb-3');
 
-{{--        // Create the "Features" dropdown and label--}}
-{{--        const featureLabel = document.createElement('label');--}}
-{{--        featureLabel.classList.add('form-label');--}}
-{{--        featureLabel.setAttribute('for', 'inputFeatures'); // Add "for" attribute to associate with the input--}}
-{{--        featureLabel.innerText = 'Features'; // Label text--}}
+    const featureLabel = document.createElement('label');
+    featureLabel.classList.add('form-label');
+    featureLabel.setAttribute('for', 'inputFeatures');
+    featureLabel.innerText = 'Features';
 
-{{--        const select = document.createElement('select');--}}
-{{--        select.classList.add('form-select');--}}
-{{--        select.name = 'features[][name]';  // Use same format as required for array--}}
-{{--        select.innerHTML = `--}}
-{{--        <option value='' selected>Choose...</option>--}}
-{{--        @foreach ($features as $item)--}}
-{{--        <option value="{{ $item->value }}">{{ $item->name }}</option>--}}
-{{--        @endforeach--}}
-{{--        `;--}}
+    const select = document.createElement('select');
+    select.classList.add('form-select');
+    select.name = 'features[][name]';
+    select.innerHTML = `
+    <option value='' selected>Choose...</option>
+    @foreach ($features as $item)
+    <option value="{{ $item->value }}">{{ $item->name }}</option>
+    @endforeach
+    `;
 
-{{--        // Create the "Label" input and label--}}
-{{--        const labelField = document.createElement('label');--}}
-{{--        labelField.classList.add('form-label');--}}
-{{--        labelField.setAttribute('for', 'inputLabel');--}}
-{{--        labelField.innerText = 'Label'; // Label text--}}
+    const labelField = document.createElement('label');
+    labelField.classList.add('form-label');
+    labelField.setAttribute('for', 'inputLabel');
+    labelField.innerText = 'Label';
 
-{{--        const labelInput = document.createElement('input');--}}
-{{--        labelInput.type = 'text';--}}
-{{--        labelInput.classList.add('form-control');--}}
-{{--        labelInput.name = 'features[][label]';  // Name format for label input--}}
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.classList.add('form-control');
+    labelInput.name = 'features[][label]';
 
-{{--        // Create the "Value" input and label--}}
-{{--        const valueLabel = document.createElement('label');--}}
-{{--        valueLabel.classList.add('form-label');--}}
-{{--        valueLabel.setAttribute('for', 'inputValue');--}}
-{{--        valueLabel.innerText = 'Value'; // Label text--}}
+    const valueLabel = document.createElement('label');
+    valueLabel.classList.add('form-label');
+    valueLabel.setAttribute('for', 'inputValue');
+    valueLabel.innerText = 'Value';
 
-{{--        const valueInput = document.createElement('input');--}}
-{{--        valueInput.type = 'text';--}}
-{{--        valueInput.classList.add('form-control');--}}
-{{--        valueInput.name = 'features[][value]';  // Name format for value input--}}
+    const valueInput = document.createElement('input');
+    valueInput.type = 'text';
+    valueInput.classList.add('form-control');
+    valueInput.name = 'features[][value]';
 
-{{--        // Append the new elements to the new block--}}
-{{--        const col1 = document.createElement('div');--}}
-{{--        col1.classList.add('col-md-4');--}}
-{{--        col1.appendChild(featureLabel); // Add label before the dropdown--}}
-{{--        col1.appendChild(select);--}}
+    const col1 = document.createElement('div');
+    col1.classList.add('col-md-4');
+    col1.appendChild(featureLabel);
+    col1.appendChild(select);
 
-{{--        const col2 = document.createElement('div');--}}
-{{--        col2.classList.add('col-md-4');--}}
-{{--        col2.appendChild(labelField); // Add label before the input--}}
-{{--        col2.appendChild(labelInput);--}}
+    const col2 = document.createElement('div');
+    col2.classList.add('col-md-4');
+    col2.appendChild(labelField);
+    col2.appendChild(labelInput);
 
-{{--        const col3 = document.createElement('div');--}}
-{{--        col3.classList.add('col-md-4');--}}
-{{--        col3.appendChild(valueLabel); // Add label before the input--}}
-{{--        col3.appendChild(valueInput);--}}
+    const col3 = document.createElement('div');
+    col3.classList.add('col-md-4');
+    col3.appendChild(valueLabel);
+    col3.appendChild(valueInput);
 
-{{--        newBlock.appendChild(col1);--}}
-{{--        newBlock.appendChild(col2);--}}
-{{--        newBlock.appendChild(col3);--}}
+    newBlock.appendChild(col1);
+    newBlock.appendChild(col2);
+    newBlock.appendChild(col3);
 
-{{--        // Append the new block to the container--}}
-{{--        container.appendChild(newBlock);--}}
-{{--    }--}}
+    container.appendChild(newBlock);
+}
 
-{{--</script>--}}
+
+</script>
 
 <script>
     let conditionIndex = 1;
