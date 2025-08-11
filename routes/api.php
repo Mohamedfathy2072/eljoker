@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
@@ -7,7 +6,11 @@ use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizAnswerController;
+use App\Http\Controllers\QuizMatchController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -79,4 +82,10 @@ Route::prefix('calculator')->group(function () {
 Route::prefix('book')->middleware('auth:api')->group(function () {
     Route::post('/', [BookController::class, 'makeAppointment']);
     Route::get('/getBookedCars', [BookController::class, 'getBookedCars']);
+});
+
+Route::prefix('quizzes')->middleware('auth:api')->group(function () {
+    Route::get('/', [QuizController::class, 'index']);
+    Route::post('/answers', [QuizAnswerController::class, 'store']);
+    Route::get('/match', [QuizMatchController::class, 'match']);
 });

@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class UniversitySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+  
     public function run(): void
     {
         $file = fopen(database_path('data/universities.csv'), 'r');
-        fgetcsv($file); // skip header
+        fgetcsv($file);
 
         while ($row = fgetcsv($file)) {
             University::updateOrCreate([
