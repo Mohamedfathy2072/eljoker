@@ -95,6 +95,7 @@
                       <b>N</b>ame
                     </th>
                     <th>Email</th>
+                    <th>Roles</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
                     <th>Actions</th>
                   </tr>
@@ -104,14 +105,74 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->email }}</td>
+                        <td>
+                            @foreach($item->roles as $role)
+                                <span class="badge bg-primary me-1 mb-1">{{ $role->name }}</span>
+                            @endforeach
+                            @if($item->roles->isEmpty())
+                                <span class="text-muted">No roles assigned</span>
+                            @endif
+                        </td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
-                            <!-- Edit Button triggers modal -->
-                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBrandModal{{ $item->id }}">
-                                Edit
-                            </button>
+                            <!-- Action Buttons -->
+                            <div class="btn-group" role="group">
+                                <!-- Edit Button -->
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editBrandModal{{ $item->id }}" title="Edit Admin">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </button>
 
-                            <!-- Edit Brand Modal -->
+                                <button type="button" class="btn btn-info btn-sm text-white me-2" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#assignRoleModal{{ $item->id }}"
+                                        title="Assign Role">
+                                    <i class="bi bi-person-gear"></i> Role
+                                </button>
+
+                                <!-- Delete Button -->
+                                <form action="{{ route('admin.Admin.destroy', $item->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                            onclick="return confirm('Are you sure you want to delete this admin?')"
+                                            title="Delete Admin">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="modal fade" id="assignRoleModal{{ $item->id }}" tabindex="-1" aria-labelledby="assignRoleModalLabel{{ $item->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <form action="{{ route('admin.Admin.assign.role', $item->id) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="assignRoleModalLabel{{ $item->id }}">Assign Roles to {{ $item->name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="roles{{ $item->id }}" class="form-label">Select Roles</label>
+                                                    <select class="form-select" id="roles{{ $item->id }}" name="roles[]" multiple size="5" required>
+                                                        @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                                            <option value="{{ $role->name }}" {{ $item->hasRole($role->name) ? 'selected' : '' }}>
+                                                                {{ $role->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="form-text">Hold Ctrl (or Cmd on Mac) to select multiple roles</div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update Roles</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Admin Modal -->
                             <div class="modal fade" id="editBrandModal{{ $item->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -148,11 +209,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('admin.Admin.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
+
                             </td>
                     </tr>
                     @endforeach

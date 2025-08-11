@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+        $this->createRoles();
         $this->createUsers();
         $this->createAdmins();
 
@@ -56,10 +58,20 @@ class DatabaseSeeder extends Seeder
             );
         }
     }
+    public function createRoles(): void
+    {
+        Role::firstOrCreate(
+            [
+                'name' => 'super-admin',
+                'guard_name' => 'admin',
+            ]
+        );
+    }
+    
 
     public function createAdmins(): void
     {
-        Admin::firstOrCreate(
+       $admin = Admin::firstOrCreate(
             [
                 'email' => 'admin@example.com',
                 'name' => 'Admin User',
@@ -67,6 +79,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        $admin->assignRole('super-admin');
         // Instantiate Faker
         $faker = Faker::create();
 
