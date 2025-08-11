@@ -133,23 +133,6 @@ class RolePermissionController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified role.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $role = Role::with('permissions')->findOrFail($id);
-        $permissions = Permission::all();
-        
-        return response()->json([
-            'role' => $role,
-            'permissions' => $permissions,
-            'role_permissions' => $role->permissions->pluck('id')->toArray()
-        ]);
-    }
 
     /**
      * Display a listing of permissions.
