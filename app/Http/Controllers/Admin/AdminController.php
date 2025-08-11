@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
@@ -28,8 +28,8 @@ class AdminController extends Controller
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        Admin::create(['name' => $request->input('name')
-            , 'email' => $request->input('email'),
+        Admin::create(['name' => $request->input('name'),
+            'email' => $request->input('email'),
             'password' => Hash::make($request->input('password'))]);
 
         return redirect()->route('admin.Admins')->with('success', 'Admins created successfully.');
@@ -51,7 +51,7 @@ class AdminController extends Controller
         $data->update([
             'name' => $request->input('name'),
             'email' => $request->input('email')
-            ] + ($request->input('password') ? ['password' => $request->input('password')] : []));
+        ] + ($request->input('password') ? ['password' => $request->input('password')] : []));
 
         return redirect()->route('admin.Admins')->with('success', 'Admins updated successfully.');
     }
@@ -62,5 +62,29 @@ class AdminController extends Controller
         $data->delete();
 
         return redirect()->route('admin.Admins')->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * Assign roles to an admin user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function assignRole(Request $request, $id)
+    {
+        $request->validate([
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,name'
+        ]);
+
+        $admin = Admin::findOrFail($id);
+        
+        // Sync all selected roles (replace existing roles with the new selection)
+        $admin->syncRoles($request->roles);
+
+        return redirect()
+            ->route('admin.Admins')
+            ->with('success', 'Roles updated successfully.');
     }
 }

@@ -12,11 +12,13 @@ use App\Http\Controllers\Admin\{
     TypeController,
     VehicleStatusController,
     AuthController,
-    AdminController
+    AdminController,
+    RolePermissionController
 };
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -124,11 +126,26 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.User.destroy');
         });
 
-        Route::prefix('Admins')->group(function () {
+        Route::prefix('Admins')->middleware(['role:super-admin'])->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('admin.Admins');
             Route::post('/', [AdminController::class, 'store'])->name('admin.Admin.store');
             Route::put('/{id}', [AdminController::class, 'edit'])->name('admin.Admin.edit');
+            Route::post('/{id}/assign-role', [AdminController::class, 'assignRole'])->name('admin.Admin.assign.role');
             Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.Admin.destroy');
+        });
+
+        Route::prefix('Roles')->middleware(['role:super-admin'])->group(function () {
+            Route::get('/', [RolePermissionController::class, 'index'])->name('admin.Roles');
+            Route::post('/', [RolePermissionController::class, 'store'])->name('admin.Role.store');
+            Route::put('/{id}', [RolePermissionController::class, 'update'])->name('admin.Role.edit');
+            Route::delete('/{id}', [RolePermissionController::class, 'destroy'])->name('admin.Role.destroy');
+        });
+
+        Route::prefix('Permissions')->middleware(['role:super-admin'])->group(function () {
+            Route::get('/', [RolePermissionController::class, 'permissionsIndex'])->name('admin.Permissions');
+            Route::post('/', [RolePermissionController::class, 'permissionStore'])->name('admin.Permission.store');
+            Route::put('/{id}', [RolePermissionController::class, 'permissionUpdate'])->name('admin.Permission.update');
+            Route::delete('/{id}', [RolePermissionController::class, 'permissionDestroy'])->name('admin.Permission.destroy');
         });
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');

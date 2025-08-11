@@ -45,6 +45,7 @@ Route::prefix('drive_types')->group(function () {
     Route::get('/', [DriveTypeController::class, 'indexAPI']);
     Route::get('/{id}', [DriveTypeController::class, 'showAPI']);
 });
+
 Route::prefix('engine_types')->group(function () {
     Route::get('/', [EngineTypeController::class, 'indexAPI']);
     Route::get('/{id}', [EngineTypeController::class, 'showAPI']);
