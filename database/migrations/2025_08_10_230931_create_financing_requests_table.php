@@ -42,8 +42,8 @@ return new class extends Migration
             $table->string('medical_insurance_card')->nullable();
             $table->string('owned_car_license_front')->nullable();
             $table->string('owned_car_license_back')->nullable();
-            $table->foreignId('university_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('faculty_id')->nullable()->constrained()->onDelete('set null');
+            // $table->foreignId('university_id')->nullable()->constrained()->onDelete('set null');
+            // $table->foreignId('faculty_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('status', ['Cancelled', 'Rejected', 'Accepted', 'In process'])->default('In process');
             $table->integer('installment_plan')->default(12)->nullable(); // بالعدد: 12، 36، 60
             $table->timestamps();

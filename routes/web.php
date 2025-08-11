@@ -13,10 +13,12 @@ use App\Http\Controllers\Admin\{
     VehicleStatusController,
     AuthController,
     AdminController,
-    RolePermissionController
+    RolePermissionController,
+    QuizController
 };
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
+use App\Models\Quiz;
 use Illuminate\Support\Facades\Route;
 
 
@@ -124,6 +126,15 @@ Route::prefix('admin')->group(function () {
             Route::post('/', [UserController::class, 'store'])->name('admin.User.store');
             Route::put('/{id}', [UserController::class, 'edit'])->name('admin.User.edit');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.User.destroy');
+        });
+
+        Route::prefix('Quizzes')->group(function(){
+            Route::get('/', [QuizController::class, 'index'])->name('admin.Quizzes');
+            Route::get('/create', [QuizController::class, 'create'])->name('admin.quiz.create');
+            Route::post('/', [QuizController::class, 'store'])->name('admin.quiz.store');
+            Route::get('/{quiz}/edit', [QuizController::class, 'edit'])->name('admin.quiz.edit');
+            Route::put('/{quiz}', [QuizController::class, 'update'])->name('admin.quiz.update');
+            Route::delete('/{quiz}', [QuizController::class, 'destroy'])->name('admin.quiz.destroy');
         });
 
         Route::prefix('Admins')->middleware(['role:super-admin'])->group(function () {
