@@ -110,13 +110,19 @@
       </li><!-- End Admins Page Nav -->
       @endrole
 
-
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.Quizzes') }}">
+          <i class="bi bi-question"></i>
+          <span>Quizzes</span>
+        </a>
+      </li><!-- End Quizzes Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-faq.html">
