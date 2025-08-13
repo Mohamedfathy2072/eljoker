@@ -22,11 +22,13 @@ Route::prefix('auth')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    //financing
     Route::prefix('financing-requests')->group(function () {
         Route::post('/', [FinancingRequestController::class, 'store']);
         Route::get('/', [FinancingRequestController::class, 'index']);
         Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
     });
+    //end financing
 });
 
 Route::prefix('cars')->group(function () {
@@ -95,5 +97,3 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
-
-
