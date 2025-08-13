@@ -1,10 +1,14 @@
 <?php
+
+use App\Helpers\CarInstallmentCalculator;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
+use App\Http\Controllers\Api\CarInstallmentController;
+use App\Http\Controllers\Api\SavedSearchController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizAnswerController;
@@ -89,3 +93,14 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
+
+// SavedSearch
+Route::prefix('saved-searches')->middleware('auth:api')->group(function () {
+    Route::get('/', [SavedSearchController::class, 'index']);
+    Route::post('/', [SavedSearchController::class, 'store']);
+    Route::delete('/{id}', [SavedSearchController::class, 'destroy']);
+});
+
+// CarInstallment
+
+Route::post('calculateInstallment',[CarInstallmentController::class,'calculateInstallment'])->name('calculateInstallment');
