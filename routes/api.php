@@ -103,4 +103,5 @@ Route::prefix('saved-searches')->middleware('auth:api')->group(function () {
 
 // CarInstallment
 
-Route::post('calculateInstallment',[CarInstallmentController::class,'calculateInstallment'])->name('calculateInstallment');
+Route::post('calculateInstallment',[CalculatorController::class,'calculateInstallment'])->name('calculateInstallment');
+
