@@ -29,6 +29,8 @@ Route::prefix('cars')->group(function () {
     Route::get('/{id}', [CarController::class, 'findById']);
 });
 
+
+
 Route::prefix('brands')->group(function () {
     Route::get('/', [BrandController::class, 'indexAPI']);
     Route::get('/{id}', [BrandController::class, 'showAPI']);
