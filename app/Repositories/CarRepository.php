@@ -45,6 +45,21 @@ class CarRepository implements CarRepositoryInterface
             if (empty($brand) && empty($model)) return ['data' => [], 'count' => 0];
         }
 
+        if (!empty($requestData['years_model'][0]) && !empty($requestData['years_model'][1])) {
+            $query->whereBetween('model_year', [
+                min($requestData['years_model']),
+                max($requestData['years_model'])
+            ]);
+        }
+
+        if(!empty($requestData['transmission_type_ids'])){
+            $query->whereIn('transmission_type_id', $requestData['transmission_type_ids']);
+        }
+
+        if(!empty($requestData['kilometers'])){
+            $query->where('mileage','<=',$requestData['kilometers']);
+        }
+
         if (!empty($requestData['price_range'])) {
             if (!empty($requestData['price_range'][0]))
                 $query->where('price', '>=', $requestData['price_range'][0]);
@@ -52,6 +67,11 @@ class CarRepository implements CarRepositoryInterface
                 $query->where('price', '<=', $requestData['price_range'][1]);
         }
 
+        if (!empty($requestData['installment'][0]) || !empty($requestData['installment'][1])) {
+            $min = $requestData['installment'][0] ; 
+            $max = $requestData['installment'][1] ; 
+            $query->whereBetween('monthly_installment', [$min, $max]);
+        }
 
         if (!empty($requestData['engine_capacity_cc'])) {
             if (!empty($requestData['engine_capacity_cc'][0]))
@@ -91,7 +111,7 @@ class CarRepository implements CarRepositoryInterface
         }
 
 
-        foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids', 'vehicle_status'] as $key) {
+        foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids', 'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment'] as $key) {
             unset($requestData[$key]);
         }
 

@@ -94,7 +94,7 @@
   </div>
 </section>
 
-<!-- Add Permission Modal -->
+
 <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -124,7 +124,6 @@
     </div>
 </div>
 
-<!-- Edit Permission Modal -->
 <div class="modal fade" id="editPermissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -157,7 +156,6 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle edit modal
     const editModal = document.getElementById('editPermissionModal');
     if (editModal) {
         editModal.addEventListener('show.bs.modal', function(event) {

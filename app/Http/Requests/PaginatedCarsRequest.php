@@ -30,6 +30,19 @@ class PaginatedCarsRequest extends FormRequest
             'price_range.0' => 'nullable|numeric',
             'price_range.1' => 'nullable|numeric',
 
+            'years_model' => "nullable|array|size:2",
+            'years_model.0' => "nullable|integer|min:1900|max:" . (date('Y') + 1),
+            'years_model.1' => "nullable|integer|min:1900|max:" . (date('Y') + 1),
+
+            'transmission_type_ids' => 'nullable|array',
+            'transmission_type_ids.*' => 'integer|exists:transmission_types,id',
+
+            'kilometers' => 'nullable|numeric',
+
+            'installment' => 'nullable|array|size:2',
+            'installment.0' => 'nullable|numeric',
+            'installment.1' => 'nullable|numeric',
+
             'fuel_economy' => 'nullable|array',
             'fuel_economy.min' => 'nullable|numeric',
             'fuel_economy.max' => 'nullable|numeric',
