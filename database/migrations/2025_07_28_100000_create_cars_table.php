@@ -53,6 +53,7 @@ return new class extends Migration
             $table->text('fcm_token')->nullable();  // Notification token for push notifications
 
             $table->timestamps();
+            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null'); // User who owns the car
         });
     }
 
