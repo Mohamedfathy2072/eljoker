@@ -34,6 +34,7 @@ class CarFactory extends Factory
             'price' => $this->faker->randomFloat(2, 50000, 1000000),
             'discount' => $this->faker->randomFloat(2, 0, 10000),
             'monthly_installment' => $this->faker->optional()->randomFloat(2, 1000, 20000),
+            'down_payment' => $this->faker->optional()->randomFloat(2, 10000, 200000),
             'trim_id' => \App\Models\Trim::factory(),
         ];
     }

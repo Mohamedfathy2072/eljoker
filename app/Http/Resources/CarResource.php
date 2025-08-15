@@ -112,6 +112,9 @@ class CarResource extends JsonResource
             'monthly_installment_formatted' => $this->resource->monthly_installment ?
                 '$' . number_format($this->resource->monthly_installment, 2) . '/month' : null,
             'has_discount' => $this->resource->discount > 0,
+            'down_payment' => $this->resource->down_payment ?? null,
+            'down_payment_formatted' => $this->resource->down_payment ?
+                '$' . number_format($this->resource->down_payment, 2) : null,
             ],
 
             // Classification
@@ -129,6 +132,7 @@ class CarResource extends JsonResource
                             ->groupBy('name')
                             ->map(function ($group) {
                                 return $group->map(fn ($feature) => [
+                                    'id' => $feature->id,
                                     'label' => $feature->label,
                                     'value' => $feature->value,
                                 ])->values();
@@ -142,6 +146,7 @@ class CarResource extends JsonResource
                             ->groupBy('name')
                             ->map(function ($group) {
                                 return $group->map(fn ($condition) => [
+                                    'id' => $condition->id,
                                     'part' => $condition->part,
                                     'description' => $condition->description,
                                     'image' => $condition->image,
@@ -152,6 +157,7 @@ class CarResource extends JsonResource
             'images' => $this->resource->images ?? [],
 
             // Timestamps
+            'owner' => $this->resource->owner->name ?? '-',
             'created_at' => $this->resource->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->resource->updated_at?->format('Y-m-d H:i:s'),
             'created_at_human' => $this->resource->created_at?->diffForHumans(),

@@ -37,6 +37,22 @@ class DatabaseSeeder extends Seeder
     {
         User::firstOrCreate(
             [
+                'email' => 'admin@klaksat.com',
+                'name' => 'klaksat',
+                'phone' => '01032163233',
+                'is_active' => true
+            ]
+        );
+        // User::firstOrCreate(
+        //     [
+        //         'email' => 'admin@riftech.com',
+        //         'name' => 'RIF-Tech',
+        //         'phone' => '01125833982',
+        //         'is_active' => true
+        //     ]
+        // );
+        User::firstOrCreate(
+            [
                 'email' => 'user@example.com',
                 'name' => 'User User',
                 'phone' => '01125833982',
@@ -67,7 +83,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
     }
-    
+
 
     public function createAdmins(): void
     {

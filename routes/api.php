@@ -27,6 +27,10 @@ Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
     Route::get('/{id}', [CarController::class, 'findById']);
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/', [CarController::class, 'store']);
+        Route::put('/{id}', [CarController::class, 'update']);
+    });
 });
 
 
