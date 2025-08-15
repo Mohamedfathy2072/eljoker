@@ -58,7 +58,12 @@ class PaginatedCarsRequest extends FormRequest
             'vehicle_status' => 'nullable|string',
             'engine_capacity_cc' => 'nullable|array',
             'engine_capacity_cc.0' => 'nullable|numeric',
-            'engine_capacity_cc.1' => 'nullable|numeric'
+            'engine_capacity_cc.1' => 'nullable|numeric',
+
+            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
+            'down_payment_range' => 'nullable|array|size:2',
+            'down_payment_range.0' => 'nullable|numeric',
+            'down_payment_range.1' => 'nullable|numeric'
         ];
     }
 

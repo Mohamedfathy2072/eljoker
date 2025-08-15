@@ -34,9 +34,15 @@ class CarController extends Controller
         $carData = $request->validated();
         try {
             $newCar = $this->carService->addNewCar($carData);
-            return redirect()->route('admin.car.show', $newCar->id);
+            if (request()->expectsJson())
+                return response()->json(['message' => 'Car stored successfully', 'data' => $newCar]);
+            else
+                return redirect()->route('admin.car.show', $newCar->id);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['message' => 'Error creating car', 'error' => $e->getMessage()])->withInput();
+            if (request()->expectsJson())
+                return response()->json(['message' => 'Error creating car', 'error' => $e->getMessage()], 500);
+            else
+                return redirect()->back()->with(['message' => 'Error creating car', 'error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -82,12 +88,18 @@ class CarController extends Controller
 
     public function update(int $id, UpdateCarRequest $request)
     {
+        $updatedCarData = $request->validated();
         try {
-            $updatedCarData = $request->validated();
             $updatedCar = $this->carService->updateCar($id, $updatedCarData);
-            return redirect()->route('admin.cars')->with('success', 'Car Updated successfully');
+            if (request()->expectsJson())
+                return response()->json(['message' => 'Car Updated successfully', 'data' => $updatedCar]);
+            else
+                return redirect()->route('admin.cars')->with('success', 'Car Updated successfully');
         } catch (\Exception $e) {
-            return redirect()->route('admin.cars')->with('error', $e->getMessage());
+            if (request()->expectsJson())
+                return response()->json(['message' => 'Error Update car', 'error' => $e->getMessage()], 500);
+            else
+                return redirect()->route('admin.cars')->with('error', $e->getMessage());
         }
     }
 

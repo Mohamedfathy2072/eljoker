@@ -277,6 +277,12 @@
                                             <label for="inputInstallment" class="form-label">Monthly Installment</label>
                                             <input type="number" class="form-control" id="inputInstallment" name="monthly_installment" value="{{ old('pricing', $car['pricing']['monthly_installment']) }}">
                                         </div>
+
+                                        <!-- Down Payment -->
+                                        <div class="col-md-4">
+                                            <label for="inputDownpayment" class="form-label">Down Payment</label>
+                                            <input type="number" class="form-control" id="inputDownpayment" name="down_payment" value="{{ old('pricing', $car['pricing']['down_payment']) }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>

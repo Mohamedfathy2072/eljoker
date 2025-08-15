@@ -247,6 +247,21 @@
                                             <input type="number" class="form-control" id="maxRangePower" name="max_horse_power" placeholder="Max Horse Power">
                                         </div>
 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trim Section -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTrim">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrim" aria-expanded="false" aria-controls="collapseTrim">
+                                    Part 3
+                                </button>
+                            </h2>
+                            <div id="collapseTrim" class="accordion-collapse collapse" aria-labelledby="headingTrim" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
                                         <!-- Price -->
                                         <div class="col-md-4">
                                             <label for="inputPrice" class="form-label">Price</label>
@@ -264,21 +279,13 @@
                                             <label for="inputInstallment" class="form-label">Monthly Installment</label>
                                             <input type="number" class="form-control" id="inputInstallment" name="monthly_installment">
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Trim Section -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingTrim">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrim" aria-expanded="false" aria-controls="collapseTrim">
-                                    Part 3
-                                </button>
-                            </h2>
-                            <div id="collapseTrim" class="accordion-collapse collapse" aria-labelledby="headingTrim" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <div class="row g-3">
+                                        <!-- Down Payment -->
+                                        <div class="col-md-4">
+                                            <label for="inputDownpayment" class="form-label">Down Payment</label>
+                                            <input type="number" class="form-control" id="inputDownpayment" name="down_payment">
+                                        </div>
+
                                         <!-- Trim -->
                                         <div class="col-md-4">
                                             <label for="inputTrim" class="form-label">Trim</label>
