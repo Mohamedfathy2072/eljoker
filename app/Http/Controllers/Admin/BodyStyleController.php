@@ -68,6 +68,7 @@ class BodyStyleController extends Controller
     public function destroy($id)
     {
         $brand = BodyStyle::findOrFail($id);
+        Storage::disk('public')->delete($brand->image);
         $brand->delete();
 
         return redirect()->route('admin.BodyStyles')->with('success', 'Body Style deleted successfully.');

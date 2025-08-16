@@ -2,13 +2,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\QuizAnswerController;
-use App\Http\Controllers\QuizMatchController;
+use App\Http\Controllers\{
+    BookController, QuizController, QuizAnswerController, QuizMatchController
+};
 use Illuminate\Support\Facades\Route;
 
 
@@ -78,6 +78,11 @@ Route::prefix('types')->group(function () {
 Route::prefix('vehicle_statuses')->group(function () {
     Route::get('/', [VehicleStatusController::class, 'indexAPI']);
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
+});
+
+Route::prefix('banners')->group(function () {
+    Route::get('/', [BannerController::class, 'index']);
+    Route::get('/{id}', [BannerController::class, 'show']);
 });
 
 Route::prefix('calculator')->group(function () {

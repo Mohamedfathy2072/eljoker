@@ -16,8 +16,8 @@ use App\Http\Controllers\Admin\{
     RolePermissionController,
     QuizController
 };
-use App\Http\Controllers\CarController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\{CarController, UserController};
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +121,15 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [TrimController::class, 'destroy'])->name('admin.Trim.destroy');
         });
 
+        Route::prefix( 'Banners')->group(function () {
+            Route::get('/', [BannerController::class, 'index'])->name('admin.Banners');
+            Route::post('/', [BannerController::class, 'store'])->name('admin.Banner.store');
+            Route::put('/{id}', [BannerController::class, 'edit'])->name('admin.Banner.edit');
+            Route::delete('/{id}', [BannerController::class, 'destroy'])->name('admin.Banner.destroy');
+        });
+
+
+
         Route::prefix('Users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('admin.Users');
             Route::post('/', [UserController::class, 'store'])->name('admin.User.store');
@@ -162,4 +171,6 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
 });
+
+
 
