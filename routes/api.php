@@ -1,4 +1,5 @@
 <?php
+use App\Enums\RefurbishmentStatus;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
@@ -77,6 +78,15 @@ Route::prefix('types')->group(function () {
 
 Route::prefix('vehicle_statuses')->group(function () {
     Route::get('/', [VehicleStatusController::class, 'indexAPI']);
+    Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
+});
+
+Route::prefix('refurbishment_statuses')->group(function () {
+    Route::get('/', function () {
+        return response()->json([
+            'data' => RefurbishmentStatus::cases()
+        ]);
+    });
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
 });
 
