@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\{
 };
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\{CarController, UserController};
+use App\Http\Controllers\StartAdController;
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Route;
 
@@ -128,7 +129,12 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [BannerController::class, 'destroy'])->name('admin.Banner.destroy');
         });
 
-
+        Route::prefix('StartAds')->group(function () {
+            Route::get('/', [StartAdController::class, 'index'])->name('admin.StartAds');
+            Route::post('/', [StartAdController::class, 'store'])->name('admin.StartAd.store');
+            Route::put('/{id}', [StartAdController::class, 'edit'])->name('admin.StartAd.edit');
+            Route::delete('/{id}', [StartAdController::class, 'destroy'])->name('admin.StartAd.destroy');
+        });
 
         Route::prefix('Users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('admin.Users');

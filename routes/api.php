@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\{
 use App\Http\Controllers\{
     BookController, QuizController, QuizAnswerController, QuizMatchController
 };
+use App\Http\Controllers\StartAdController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -109,4 +110,8 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/', [QuizController::class, 'index']);
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
+});
+
+Route::prefix('start-ad')->middleware('auth:api')->group(function () {
+    Route::get('/', [StartAdController::class, 'show']);
 });

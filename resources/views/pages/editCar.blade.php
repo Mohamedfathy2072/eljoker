@@ -334,7 +334,7 @@
                             </div>
                         </div>
 
-                        <!-- Flags and Features Section -->
+                        <!-- Flags and Features and conditions Section -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingSeven">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">

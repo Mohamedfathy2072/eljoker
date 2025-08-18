@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('start_ads', function (Blueprint $table) {
             $table->id();
             $table->string('image_path');
+            $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
