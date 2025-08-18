@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Interfaces\CarRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 
 class CarService
 {
@@ -79,6 +80,59 @@ class CarService
             throw new \Exception('Car not found.');
         }
     }
+
+    public function formatCar($car)
+    {
+
+        $user = auth('api')->user();
+
+        // ✅ هل العربية مفضلة للمستخدم؟
+        if ($user) {
+            $car->is_fav = $user->favouriteCars()->where('car_id', $car->id)->exists();
+        } else {
+            $car->is_fav = false;
+        }
+        // ✅ روابط صور السيارة
+        foreach ($car->images as $image) {
+            $image->image_url = Storage::url($image->image_path);
+            unset($image->image_path);
+        }
+
+        // ✅ رابط صورة البراند
+        if ($car->brand) {
+            $car->brand->image_url = $car->brand->image_path
+                ? Storage::url($car->brand->image_path)
+                : null;
+            unset($car->brand->image_path);
+        }
+
+        // ✅ روابط صور الحالات الخارجية
+        foreach ($car->exteriorConditions as $condition) {
+            $condition->image_url = $condition->image_path
+                ? Storage::url($condition->image_path)
+                : null;
+            unset($condition->image_path);
+        }
+
+        // ✅ روابط صور الحالات الداخلية
+        foreach ($car->interiorConditions as $condition) {
+            $condition->image_url = $condition->image_path
+                ? Storage::url($condition->image_path)
+                : null;
+            unset($condition->image_path);
+        }
+
+        // ✅ روابط صور الحالات الميكانيكية
+        foreach ($car->mechanicalConditions as $condition) {
+            $condition->image_url = $condition->image_path
+                ? Storage::url($condition->image_path)
+                : null;
+            unset($condition->image_path);
+        }
+
+        return $car;
+    }
+
 
     public function getCount()
     {

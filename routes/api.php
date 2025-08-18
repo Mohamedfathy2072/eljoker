@@ -3,12 +3,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\Admin\{
-    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
+    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController 
 };
+use App\Http\Controllers\NotificationController as ApiNotificationController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizAnswerController;
 use App\Http\Controllers\QuizMatchController;
+use App\Http\Controllers\FavouriteController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,8 +23,13 @@ Route::prefix('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
+    Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite']);
+    Route::get('/favourites', [FavouriteController::class, 'myFavourites']);
+    Route::delete('/favourites/clear', [FavouriteController::class, 'clearFavourites']);
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
 });
+
+Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
 Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
