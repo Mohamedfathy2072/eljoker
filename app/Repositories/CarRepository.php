@@ -104,6 +104,10 @@ class CarRepository implements CarRepositoryInterface
 
         $count = (clone $query)->count();
 
+        if($page === -1 || $per_page === -1){
+            $cars = $query->orderBy($sort_by, $sort_direction)->get();
+            return ['data' => CarResource::collection($cars), 'count' => $count];
+        }
         $cars = $query->orderBy($sort_by, $sort_direction)
             ->paginate($per_page, ['*'], 'page', $page);
 

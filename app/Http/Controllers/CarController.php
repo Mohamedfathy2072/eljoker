@@ -58,7 +58,7 @@ class CarController extends Controller
         }
     }
 
-    public function pagination(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=1, ?int $per_page=20)
+    public function pagination(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
     {
         try {
             $cars = $this->carService->paginateCars($request->validated() + (!empty($request->input('owner_id')) ? ['owner_id' => $request->input('owner_id')] : []), $sort_direction, $sort_by, $page, $per_page);
@@ -174,7 +174,7 @@ class CarController extends Controller
         return $carArray;
     }
 
-    public function myCars(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=1, ?int $per_page=20)
+    public function myCars(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
     {
         $user = auth()->user();
         if (!$user) {

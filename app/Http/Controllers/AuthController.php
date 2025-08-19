@@ -74,18 +74,12 @@ class AuthController extends Controller
         $user->save();
 
         // Generate the JWT token
-        // Access Token TTL: 15 minutes
-        config(['jwt.ttl' => 15]);
         $accessToken = JWTAuth::fromUser($user);
-
-        // Refresh Token TTL: 14 days
-        config(['jwt.ttl' => 20160]);
-        $refreshToken = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'OTP verified successfully.',
             'token' => $accessToken,
-            'refresh_token' => $refreshToken,
+            'refresh_token' => $accessToken,
             'user' => new UserResource($user)
         ]);
     }
@@ -100,23 +94,6 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
 
         if(!$user) return $this->register($request);
-        if($email === 'user@example.com') {
-                // Access Token TTL: 15 minutes
-                config(['jwt.ttl' => 15]);
-                $accessToken = JWTAuth::fromUser($user);
-
-                // Refresh Token TTL: 14 days
-                config(['jwt.ttl' => 20160]);
-                $refreshToken = JWTAuth::fromUser($user);
-
-            return response()->json([
-                'message' => 'OTP verified successfully.',
-                'token' => $accessToken,
-                'refresh_token' => $refreshToken,
-                'user' => new UserResource($user),
-                'type' => 'login'
-            ]);
-        }
 
         // $otp = random_int(100000, 999999);
         $otp = 123456;
@@ -186,17 +163,11 @@ class AuthController extends Controller
     {
         try {
             $user = auth()->user();
-             // Access Token TTL: 15 minutes
-            config(['jwt.ttl' => 15]);
             $accessToken = JWTAuth::fromUser($user);
-
-            // Refresh Token TTL: 14 days
-            config(['jwt.ttl' => 20160]);
-            $refreshToken = JWTAuth::fromUser($user);
 
             return response()->json([
                 'token' => $accessToken,
-                'refresh_token' => $refreshToken
+                'refresh_token' => $accessToken
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Could not refresh token'], 500);
