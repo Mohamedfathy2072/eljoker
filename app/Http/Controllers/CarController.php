@@ -20,7 +20,7 @@ use App\Models\Trim;
 use App\Models\Type;
 use App\Models\VehicleStatus;
 use App\Services\CarService;
-use http\Env\Request;
+use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
@@ -61,7 +61,7 @@ class CarController extends Controller
     public function pagination(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=1, ?int $per_page=20)
     {
         try {
-            $cars = $this->carService->paginateCars($request->validated(), $sort_direction, $sort_by, $page, $per_page);
+            $cars = $this->carService->paginateCars($request->validated() + (!empty($request->input('owner_id')) ? ['owner_id' => $request->input('owner_id')] : []), $sort_direction, $sort_by, $page, $per_page);
             return response()->json(['message' => 'Cars fetched successfully', 'data' => $cars['data'], 'count' => $cars['count']]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error fetching cars', 'error' => $e->getMessage()], 500);
@@ -172,5 +172,15 @@ class CarController extends Controller
         $carArray['conditions'] = $carArray['conditions']->toArray(request());
         $carArray['images'] = $carArray['images']->toArray(request());
         return $carArray;
+    }
+
+    public function myCars(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=1, ?int $per_page=20)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $request->merge(['owner_id' => $user->id]);
+        return $this->pagination($request, $sort_direction, $sort_by, $page, $per_page);
     }
 }

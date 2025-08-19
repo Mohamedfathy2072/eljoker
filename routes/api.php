@@ -32,6 +32,7 @@ Route::prefix('cars')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('/', [CarController::class, 'store']);
         Route::put('/{id}', [CarController::class, 'update']);
+        Route::post('/my-cars/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'myCars']);
     });
 });
 
