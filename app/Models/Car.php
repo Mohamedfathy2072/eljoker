@@ -34,7 +34,8 @@ class Car extends Model
         'discount',
         'monthly_installment',
         'trim_id',
-        'down_payment'
+        'down_payment',
+        'owner_id'
     ];
 
 
@@ -136,5 +137,10 @@ class Car extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

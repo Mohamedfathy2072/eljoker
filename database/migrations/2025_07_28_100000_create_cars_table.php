@@ -42,10 +42,10 @@ return new class extends Migration
             $table->string('refurbishment_status', 50); // Refurbishment status if applicable
 
             // Pricing
-            $table->decimal('price', 12, 2); // Sale price
+            $table->decimal('price'); // Sale price
             $table->decimal('discount', 8, 2)->default(0); // Discount amount
-            $table->decimal('monthly_installment', 10, 2)->nullable(); // Monthly payment option
-            $table->decimal('down_payment', 10, 2)->nullable(); // Down payment
+            $table->decimal('monthly_installment')->nullable(); // Monthly payment option
+            $table->decimal('down_payment')->nullable(); // Down payment
             $table->enum('payment_option', ['cash', 'installment'])->nullable();
 
             // Classification
@@ -53,6 +53,7 @@ return new class extends Migration
             $table->text('fcm_token')->nullable();  // Notification token for push notifications
 
             $table->timestamps();
+            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null'); // User who owns the car
         });
     }
 

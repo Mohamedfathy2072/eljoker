@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PaginatedCarsRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class PaginatedCarsRequest extends FormRequest
             'brand_id' => 'nullable|integer|exists:brands,id',
             'car_model_id' => 'nullable|integer|exists:car_models,id',
             'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
+            'refurbishment_status' => 'nullable|string|in:' . implode(',', array_map(fn($status) => $status->value, \App\Enums\RefurbishmentStatus::cases())),
 
             'price_range' => 'nullable|array|size:2',
             'price_range.0' => 'nullable|numeric',
@@ -58,7 +60,12 @@ class PaginatedCarsRequest extends FormRequest
             'vehicle_status' => 'nullable|string',
             'engine_capacity_cc' => 'nullable|array',
             'engine_capacity_cc.0' => 'nullable|numeric',
-            'engine_capacity_cc.1' => 'nullable|numeric'
+            'engine_capacity_cc.1' => 'nullable|numeric',
+
+            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
+            'down_payment_range' => 'nullable|array|size:2',
+            'down_payment_range.0' => 'nullable|numeric',
+            'down_payment_range.1' => 'nullable|numeric'
         ];
     }
 
@@ -68,5 +75,26 @@ class PaginatedCarsRequest extends FormRequest
             'per_page.max' => 'Maximum 100 items per page allowed.',
             'max_price.gt' => 'Maximum price must be greater than minimum price.',
         ];
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        if (request()->expectsJson()) {
+            // For API requests, return JSON response with validation errors
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => $validator->errors(),
+                    'message' => 'Validation failed'
+                ], 422)
+            );
+        }
+
+        // For web requests, redirect back with validation errors
+        throw new HttpResponseException(
+            redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

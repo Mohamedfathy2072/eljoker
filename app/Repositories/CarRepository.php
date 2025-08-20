@@ -60,25 +60,7 @@ class CarRepository implements CarRepositoryInterface
             $query->where('mileage','<=',$requestData['kilometers']);
         }
 
-        if (!empty($requestData['price_range'])) {
-            if (!empty($requestData['price_range'][0]))
-                $query->where('price', '>=', $requestData['price_range'][0]);
-            if (!empty($requestData['price_range'][1]))
-                $query->where('price', '<=', $requestData['price_range'][1]);
-        }
-
-        if (!empty($requestData['installment'][0]) || !empty($requestData['installment'][1])) {
-            $min = $requestData['installment'][0] ; 
-            $max = $requestData['installment'][1] ; 
-            $query->whereBetween('monthly_installment', [$min, $max]);
-        }
-
-        if (!empty($requestData['engine_capacity_cc'])) {
-            if (!empty($requestData['engine_capacity_cc'][0]))
-                $query->where('engine_capacity_cc', '>=', $requestData['engine_capacity_cc'][0]);
-            if (!empty($requestData['engine_capacity_cc'][1]))
-                $query->where('engine_capacity_cc', '<=', $requestData['engine_capacity_cc'][1]);
-        }
+        $this->filterByRange($query, $requestData);
 
         // 🔍 Filter by fuel economy range
         if (!empty($requestData['fuel_economy']['min']) && !empty($requestData['fuel_economy']['max'])) {
@@ -111,7 +93,8 @@ class CarRepository implements CarRepositoryInterface
         }
 
 
-        foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids', 'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment'] as $key) {
+        foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids',
+        'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment','down_payment_range'] as $key) {
             unset($requestData[$key]);
         }
 
@@ -121,10 +104,28 @@ class CarRepository implements CarRepositoryInterface
 
         $count = (clone $query)->count();
 
+        if($page === -1 || $per_page === -1){
+            $cars = $query->orderBy($sort_by, $sort_direction)->get();
+            return ['data' => CarResource::collection($cars), 'count' => $count];
+        }
         $cars = $query->orderBy($sort_by, $sort_direction)
             ->paginate($per_page, ['*'], 'page', $page);
 
         return ['data' => CarResource::collection($cars), 'count' => $count];
+    }
+
+    public function filterByRange(&$query, $requestData)
+    {
+        $filters = ['price_range'=>'price', 'down_payment_range'=>'down_payment',
+        'installment'=>'monthly_installment', 'engine_capacity_cc'=>'engine_capacity_cc'];
+        foreach($filters as $req => $db){
+            if (!empty($requestData[$req])) {
+                if (!empty($requestData[$req][0]))
+                    $query->where($db, '>=', $requestData[$req][0]);
+                if (!empty($requestData[$req][1]))
+                    $query->where($db, '<=', $requestData[$req][1]);
+            }
+        }
     }
 
     public function get($carId)
@@ -178,11 +179,12 @@ class CarRepository implements CarRepositoryInterface
             'price'                 => isset($carData['price']) ? (float) $carData['price'] : 0,
             'discount'              => isset($carData['discount']) ? (float) $carData['discount'] : 0,
             'monthly_installment'   => isset($carData['monthly_installment']) ? (float) $carData['monthly_installment'] : null,
+            'down_payment'          => isset($carData['down_payment']) ? (float) $carData['down_payment'] : null,
             'trim_id'               => !empty($carData['trim']) ? (int) $carData['trim'] : null,
+            'owner_id'              => auth()->user() instanceof Admin ? 1 : auth()->user()->id
         ];
 
         $newCar = Car::create($carDetails);
-
         // make new flags, features, conditions for the car
         foreach ($carData['flags'] as $flag) {
             if (empty($flag) || empty($flag['name'])) continue;
@@ -332,6 +334,7 @@ class CarRepository implements CarRepositoryInterface
             'price'                 => filled($data['price']) ? (float) $data['price'] : null,
             'discount'              => filled($data['discount']) ? (float) $data['discount'] : null,
             'monthly_installment'   => filled($data['monthly_installment']) ? (float) $data['monthly_installment'] : null,
+            'down_payment'          => filled($data['down_payment']) ? (float) $data['down_payment'] : null,
             'trim_id'               => filled($data['trim']) ? (int) $data['trim'] : null,
         ]);
     }

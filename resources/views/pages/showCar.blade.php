@@ -81,6 +81,7 @@
                                     <div class="col-md-4"><strong>Discount:</strong> {{ $car['pricing']['discount_formatted'] }}</div>
                                     <div class="col-md-4"><strong>Final Price:</strong> {{ $car['pricing']['final_price_formatted'] }}</div>
                                     <div class="col-md-4"><strong>Monthly Installment:</strong> {{ $car['pricing']['monthly_installment_formatted'] ?? 'N/A' }}</div>
+                                    <div class="col-md-4"><strong>Down Payment:</strong> {{ $car['pricing']['down_payment'] ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -99,6 +100,7 @@
                                     <div class="col-md-4"><strong>Trim:</strong> {{ $car['trim']['name'] ?? '-' }}</div>
                                     <div class="col-md-4"><strong>Created:</strong> {{ $car['created_at_human'] }}</div>
                                     <div class="col-md-4"><strong>Updated:</strong> {{ $car['updated_at_human'] }}</div>
+                                    <div class="col-md-4"><strong>Owner:</strong> {{ $car['owner'] }}</div>
                                 </div>
                             </div>
                         </div>

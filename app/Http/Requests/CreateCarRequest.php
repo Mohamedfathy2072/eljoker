@@ -69,6 +69,7 @@ class CreateCarRequest extends FormRequest
             'price' => 'required|numeric|min:0|max:9999999999.99',
             'discount' => 'nullable|numeric|min:0|max:999999.99',
             'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
+            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
 
             // Classification
             'trim' => 'nullable',
@@ -98,6 +99,17 @@ class CreateCarRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
+        if (request()->expectsJson()) {
+            // For API requests, return JSON response with validation errors
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => $validator->errors(),
+                    'message' => 'Validation failed'
+                ], 422)
+            );
+        }
+
+        // For web requests, redirect back with validation errors
         throw new HttpResponseException(
             redirect()
                 ->back()
