@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
 
-use App\Http\Controllers\Api\SavedSearchController;
+use App\Http\Controllers\SavedSearchController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizAnswerController;
@@ -25,6 +25,9 @@ Route::prefix('auth')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    Route::get('saved-searches', [SavedSearchController::class, 'index'])->middleware('auth:api');;
+    Route::post('saved-searches', [SavedSearchController::class, 'store'])->middleware('auth:api');;
+    Route::delete('saved-searches/{id}', [SavedSearchController::class, 'destroy'])->middleware('auth:api');
 });
 
 Route::prefix('cars')->group(function () {
@@ -94,12 +97,6 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
 
-// SavedSearch
-Route::prefix('saved-searches')->middleware('auth:api')->group(function () {
-    Route::get('/', [SavedSearchController::class, 'index']);
-    Route::post('/', [SavedSearchController::class, 'store']);
-    Route::delete('/{id}', [SavedSearchController::class, 'destroy']);
-});
 
 // CarInstallment
 
