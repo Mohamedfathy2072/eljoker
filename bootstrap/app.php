@@ -28,7 +28,7 @@ use Illuminate\Foundation\Configuration\Middleware;
             $message = $e->getMessage();
             return response()->view('errors.403', compact('message'), 403);
         });
-        
+
         $exceptions->renderable(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([

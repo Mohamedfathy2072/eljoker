@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Enums\RefurbishmentStatus;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rules\Enum;
 
 class UpdateCarRequest extends FormRequest
@@ -64,6 +66,7 @@ class UpdateCarRequest extends FormRequest
             'price' => 'required|numeric|min:0|max:9999999999.99',
             'discount' => 'nullable|numeric|min:0|max:999999.99',
             'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
+            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
 
             // Classification
             'trim' => 'nullable|integer',
@@ -97,5 +100,23 @@ class UpdateCarRequest extends FormRequest
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'nullable|integer'
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        if(request()->expectsJson()){
+            throw new HttpResponseException (
+                response()->json([
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422));
+        }
+
+        throw new HttpResponseException(
+            redirect()
+            ->back()
+            ->withErrors($validator)
+            ->withInput()
+        );
     }
 }

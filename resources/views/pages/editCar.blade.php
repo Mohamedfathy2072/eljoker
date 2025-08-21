@@ -277,6 +277,12 @@
                                             <label for="inputInstallment" class="form-label">Monthly Installment</label>
                                             <input type="number" class="form-control" id="inputInstallment" name="monthly_installment" value="{{ old('pricing', $car['pricing']['monthly_installment']) }}">
                                         </div>
+
+                                        <!-- Down Payment -->
+                                        <div class="col-md-4">
+                                            <label for="inputDownpayment" class="form-label">Down Payment</label>
+                                            <input type="number" class="form-control" id="inputDownpayment" name="down_payment" value="{{ old('pricing', $car['pricing']['down_payment']) }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -328,7 +334,7 @@
                             </div>
                         </div>
 
-                        <!-- Flags and Features Section -->
+                        <!-- Flags and Features and conditions Section -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingSeven">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
