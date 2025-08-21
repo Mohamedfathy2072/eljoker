@@ -6,6 +6,8 @@ use App\Http\Requests\StoreFinancingRequest;
 use App\Models\FinancingRequest;
 use Illuminate\Http\Request;
 
+
+
 class FinancingRequestController extends Controller
 {
 

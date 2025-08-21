@@ -10,6 +10,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizAnswerController;
 use App\Http\Controllers\QuizMatchController;
+use App\Http\Controllers\GovernorateController;
+use App\Http\Controllers\AreaController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,7 +30,7 @@ Route::prefix('auth')->group(function () {
         Route::get('/', [FinancingRequestController::class, 'index']);
         Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
     });
-    //end financing
+ 
 });
 
 Route::prefix('cars')->group(function () {
@@ -96,4 +98,14 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/', [QuizController::class, 'index']);
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
+});
+
+Route::get('/governorates', [GovernorateController::class, 'index']);
+Route::get('/areas', [AreaController::class, 'index']);
+
+
+Route::prefix('auth')->middleware('auth:api')->group(function () {
+    Route::post('/financing-requests', [FinancingRequestController::class, 'store']);
+    Route::get('/requests', [FinancingRequestController::class, 'index']);
+    Route::post('/cancel-requests', [FinancingRequestController::class, 'cancel']);
 });

@@ -101,6 +101,12 @@
           <span>Users</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
+          <i class="bi bi-person"></i>
+          <span>Financing Requests</span>
+        </a>
+      </li>
       @role('super-admin')
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
