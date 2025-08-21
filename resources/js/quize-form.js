@@ -4,8 +4,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const optionsList = document.getElementById('options-list');
     const addOptionBtn = document.getElementById('add-option');
 
+    function handleRemoveOption(button) {
+        const optionRow = button.closest('.option-row');
+        const allRows = document.querySelectorAll('.option-row');
+        
+        if (allRows.length > 1) {
+            optionRow.remove();
+        } else {
+            optionRow.querySelector('input').value = '';
+        }
+    }
 
-
+    function setupRemoveListeners() {
+        document.querySelectorAll('.remove-option').forEach(button => {
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', function() {
+                handleRemoveOption(this);
+            });
+        });
+    }
 
     function toggleOptions() {
         if (['select', 'radio', 'checkbox'].includes(typeSelect.value)) {
@@ -13,10 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             optionsContainer.style.display = 'none';
         }
-    }
-
-    function removeOption(option){
-        document.remove(option);
     }
 
     function addOption(value = '') {
@@ -29,32 +44,24 @@ document.addEventListener('DOMContentLoaded', function () {
             </button>
         `;
         optionsList.appendChild(optionRow);
-
-
+        
         const removeBtn = optionRow.querySelector('.remove-option');
-
-
-
-        removeBtn.addEventListener('click', function () {
-            if (document.querySelectorAll('.option-row').length > 1) {
-                optionRow.remove();
-            } else {
-                optionRow.querySelector('input').value = '';
-            }
+        new bootstrap.Tooltip(removeBtn);
+        
+        removeBtn.addEventListener('click', function() {
+            handleRemoveOption(this);
         });
     }
-
-
     typeSelect.addEventListener('change', toggleOptions);
-
-    addOptionBtn.addEventListener('click', function () {
+    
+    addOptionBtn.addEventListener('click', function() {
         addOption();
     });
 
-
     toggleOptions();
-
-
+    
+    setupRemoveListeners();
+    
     if (document.querySelectorAll('.option-row').length === 0) {
         addOption();
     }

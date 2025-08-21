@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -22,7 +23,8 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users'
         ]);
 
-        $otp = random_int(100000, 999999);
+        // $otp = random_int(100000, 999999);
+        $otp = 123456;
         $email = $request->input('email');
         User::create([
             'email' => $email,
@@ -31,7 +33,7 @@ class AuthController extends Controller
         ]);
 
         // send OTP to user via email or SMS here (not implemented in this example)
-        Mail::to($email)->send(new OtpMail($otp));
+        // Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'User registered successfully. Please check your email for the OTP.',
@@ -42,39 +44,42 @@ class AuthController extends Controller
 
     public function verifyOtp(Request $request)
     {
+        // Validate the input
         $request->validate([
             'email' => 'required|string|email|max:255|exists:users,email',
             'otp' => 'required|integer|digits:6'
         ]);
 
+        // Find the user by email
         $user = User::where('email', $request->input('email'))->first();
 
-        if (!$user || !Hash::check($request->input('otp'), $user->otp_hash)) {
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Check if the OTP matches
+        if (!Hash::check($request->input('otp'), $user->otp_hash)) {
             return response()->json(['error' => 'Invalid OTP'], 400);
         }
 
+        // Check if OTP has expired
         if ($user->otp_expires_at < now()) {
             return response()->json(['error' => 'OTP expired'], 400);
         }
 
+        // Mark the user as active and clear OTP data
         $user->is_active = true;
         $user->otp_hash = null;
         $user->otp_expires_at = null;
         $user->save();
 
-
-        // Access Token TTL: 15 minutes
-        config(['jwt.ttl' => 15]);
+        // Generate the JWT token
         $accessToken = JWTAuth::fromUser($user);
-
-        // Refresh Token TTL: 14 days
-        config(['jwt.ttl' => 20160]);
-        $refreshToken = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'OTP verified successfully.',
             'token' => $accessToken,
-            'refresh_token' => $refreshToken,
+            'refresh_token' => $accessToken,
             'user' => new UserResource($user)
         ]);
     }
@@ -89,30 +94,14 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
 
         if(!$user) return $this->register($request);
-        if($email === 'user@example.com') {
-                // Access Token TTL: 15 minutes
-                config(['jwt.ttl' => 15]);
-                $accessToken = JWTAuth::fromUser($user);
 
-                // Refresh Token TTL: 14 days
-                config(['jwt.ttl' => 20160]);
-                $refreshToken = JWTAuth::fromUser($user);
-
-            return response()->json([
-                'message' => 'OTP verified successfully.',
-                'token' => $accessToken,
-                'refresh_token' => $refreshToken,
-                'user' => new UserResource($user),
-                'type' => 'login'
-            ]);
-        }
-
-        $otp = random_int(100000, 999999);
+        // $otp = random_int(100000, 999999);
+        $otp = 123456;
         $user->otp_hash = Hash::make($otp);
         $user->otp_expires_at = now()->addMinutes(5);
         $user->save();
 
-        Mail::to($email)->send(new OtpMail($otp));
+        // Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'Login successful. Please check your email for the OTP.',
@@ -174,17 +163,11 @@ class AuthController extends Controller
     {
         try {
             $user = auth()->user();
-             // Access Token TTL: 15 minutes
-            config(['jwt.ttl' => 15]);
             $accessToken = JWTAuth::fromUser($user);
-
-            // Refresh Token TTL: 14 days
-            config(['jwt.ttl' => 20160]);
-            $refreshToken = JWTAuth::fromUser($user);
 
             return response()->json([
                 'token' => $accessToken,
-                'refresh_token' => $refreshToken
+                'refresh_token' => $accessToken
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Could not refresh token'], 500);

@@ -1,18 +1,21 @@
 <?php
 
+use App\Enums\RefurbishmentStatus;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
 
-use App\Http\Controllers\SavedSearchController;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\QuizAnswerController;
-use App\Http\Controllers\QuizMatchController;
+
+use App\Http\Controllers\{
+    BookController, QuizController, QuizAnswerController, QuizMatchController ,SavedSearchController
+};
+use App\Http\Controllers\StartAdController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,7 +37,14 @@ Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
     Route::get('/{id}', [CarController::class, 'findById']);
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/', [CarController::class, 'store']);
+        Route::put('/{id}', [CarController::class, 'update']);
+        Route::post('/my-cars/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'myCars']);
+    });
 });
+
+
 
 Route::prefix('brands')->group(function () {
     Route::get('/', [BrandController::class, 'indexAPI']);
@@ -81,6 +91,20 @@ Route::prefix('vehicle_statuses')->group(function () {
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
 });
 
+Route::prefix('refurbishment_statuses')->group(function () {
+    Route::get('/', function () {
+        return response()->json([
+            'data' => RefurbishmentStatus::cases()
+        ]);
+    });
+    Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
+});
+
+Route::prefix('banners')->group(function () {
+    Route::get('/', [BannerController::class, 'index']);
+    Route::get('/{id}', [BannerController::class, 'show']);
+});
+
 Route::prefix('calculator')->group(function () {
     Route::post('/car-installment', [CalculatorController::class, 'calculateInstallment']);
     Route::post('/car-price', [CalculatorController::class, 'calculateCarPrice']);
@@ -98,7 +122,9 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
 });
 
 
-// CarInstallment
-
 Route::post('calculateInstallment',[CalculatorController::class,'calculateInstallment'])->name('calculateInstallment');
+
+Route::prefix('start-ad')->middleware('auth:api')->group(function () {
+    Route::get('/', [StartAdController::class, 'show']);
+});
 
