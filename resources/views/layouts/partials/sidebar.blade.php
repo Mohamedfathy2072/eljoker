@@ -152,11 +152,34 @@
 
           <li class="nav-item">
 
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.Users') }}">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
+          <i class="bi bi-person"></i>
+          <span>Financing Requests</span>
+        </a>
+      </li>
+      @role('super-admin')
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
+          <i class="bi bi-person"></i>
+          <span>Admins</span>
+        </a>
+      </li><!-- End Admins Page Nav -->
+      @endrole
+
               <a class="nav-link collapsed" href="{{ route('admin.Quizzes') }}">
                   <i class="bi bi-question"></i>
                   <span>Quizzes</span>
               </a>
           </li><!-- End Quizzes Page Nav -->
+
 
           <li class="nav-item">
               <a class="nav-link collapsed" href="pages-faq.html">

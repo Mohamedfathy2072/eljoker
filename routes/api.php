@@ -3,6 +3,15 @@ use App\Enums\RefurbishmentStatus;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
+
+use App\Http\Controllers\FinancingRequestController;
+use App\Http\Controllers\Admin\{
+    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
+};
+
+use App\Http\Controllers\GovernorateController;
+use App\Http\Controllers\AreaController;
+
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController 
@@ -11,6 +20,7 @@ use App\Http\Controllers\NotificationController as ApiNotificationController;
 use App\Http\Controllers\{
     BookController, QuizController, QuizAnswerController, QuizMatchController , FavouriteController ,StartAdController
 };
+use App\Http\Controllers\StartAdController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,6 +36,13 @@ Route::prefix('auth')->group(function () {
     Route::get('/favourites', [FavouriteController::class, 'myFavourites']);
     Route::delete('/favourites/clear', [FavouriteController::class, 'clearFavourites']);
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    //financing
+    Route::prefix('financing-requests')->group(function () {
+        Route::post('/', [FinancingRequestController::class, 'store']);
+        Route::get('/', [FinancingRequestController::class, 'index']);
+        Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
+    });
+ 
 });
 
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
@@ -118,6 +135,18 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
 
+
+Route::get('/governorates', [GovernorateController::class, 'index']);
+Route::get('/areas', [AreaController::class, 'index']);
+
+
+Route::prefix('auth')->middleware('auth:api')->group(function () {
+    Route::post('/financing-requests', [FinancingRequestController::class, 'store']);
+    Route::get('/requests', [FinancingRequestController::class, 'index']);
+    Route::post('/cancel-requests', [FinancingRequestController::class, 'cancel']);
+});
+
 Route::prefix('start-ad')->middleware('auth:api')->group(function () {
     Route::get('/', [StartAdController::class, 'show']);
 });
+

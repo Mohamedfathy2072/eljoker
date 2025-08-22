@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\{
     DashboardController,
     DriveTypeController,
     EngineTypeController,
+    FinancingRequestController,
     TransmissionTypeController,
     TrimController,
     TypeController,
@@ -54,6 +55,19 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        
+        // Financing Requests
+        Route::resource('financing-requests', FinancingRequestController::class, [
+            'names' => [
+                'index' => 'admin.financing-requests.index',
+                'show' => 'admin.financing-requests.show',
+                'update' => 'admin.financing-requests.update',
+                'destroy' => 'admin.financing-requests.destroy'
+            ]
+        ])->except(['create', 'edit', 'store']);
+        
+        Route::patch('financing-requests/{financingRequest}/status', [FinancingRequestController::class, 'updateStatus'])
+            ->name('admin.financing-requests.update-status');
 
 
         Route::prefix('cars')->group(function () {
