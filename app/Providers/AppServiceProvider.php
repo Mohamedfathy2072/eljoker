@@ -17,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             \App\Interfaces\CarRepositoryInterface::class,
-            \App\Repositories\CarRepository::class
+            \App\Repositories\CarRepository::class,
+            \Spatie\Permission\PermissionServiceProvider::class,
+
         );
 
         $this->app->bind(
