@@ -129,12 +129,26 @@
               </li><!-- End Admins Page Nav -->
           @endrole
 
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.notifications.index') }}">
+          <i class="bi bi-bell"></i>
+          <span>Notifications</span>
+          @if($unreadCount = \App\Models\Notification::unread()->count())
+            <span class="badge bg-danger rounded-pill ms-auto">{{ $unreadCount }}</span>
+          @endif
+        </a>
+      </li>
+
+      <li class="nav-heading">Pages</li>
+
           <li class="nav-item">
               <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
                   <i class="bi bi-person"></i>
                   <span>Profile</span>
               </a>
           </li><!-- End Profile Page Nav -->
+
 
           <li class="nav-item">
 

@@ -17,9 +17,14 @@ use App\Http\Controllers\Admin\{
     RolePermissionController,
     QuizController
 };
+
+
+use App\Http\Controllers\Admin\NotificationController;
+
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\{CarController, UserController};
 use App\Http\Controllers\StartAdController;
+
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +34,16 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->group(function () {
+    // Notification routes - protected by admin middleware
+    Route::middleware('auth:admin')->group(function () {
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('admin.notifications.index');
+            Route::get('/create', [NotificationController::class, 'create'])->name('admin.notifications.create');
+            Route::post('/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
+        });
+    });
+    
+    // Other admin routes
 
     // register admin routes here
     // Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('admin.register');

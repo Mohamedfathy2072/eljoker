@@ -14,13 +14,13 @@ use App\Http\Controllers\AreaController;
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\{
-    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
+    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController 
 };
+use App\Http\Controllers\NotificationController as ApiNotificationController;
 use App\Http\Controllers\{
-    BookController, QuizController, QuizAnswerController, QuizMatchController
+    BookController, QuizController, QuizAnswerController, QuizMatchController , FavouriteController ,StartAdController
 };
 use App\Http\Controllers\StartAdController;
-
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,6 +32,9 @@ Route::prefix('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
+    Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite']);
+    Route::get('/favourites', [FavouriteController::class, 'myFavourites']);
+    Route::delete('/favourites/clear', [FavouriteController::class, 'clearFavourites']);
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
     //financing
     Route::prefix('financing-requests')->group(function () {
@@ -41,6 +44,8 @@ Route::prefix('auth')->group(function () {
     });
  
 });
+
+Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
 Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
@@ -140,7 +145,7 @@ Route::prefix('auth')->middleware('auth:api')->group(function () {
     Route::get('/requests', [FinancingRequestController::class, 'index']);
     Route::post('/cancel-requests', [FinancingRequestController::class, 'cancel']);
 });
-=======
+
 Route::prefix('start-ad')->middleware('auth:api')->group(function () {
     Route::get('/', [StartAdController::class, 'show']);
 });
