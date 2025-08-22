@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Enums\RefurbishmentStatus;
+use App\Models\CarExteriorCondition;
+use App\Models\CarInteriorCondition;
+use App\Models\CarMechanicalCondition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -99,6 +102,21 @@ class Car extends Model
     public function driveType()
     {
         return $this->belongsTo(DriveType::class);
+    }
+
+    public function exteriorConditions()
+    {
+        return $this->hasMany(CarExteriorCondition::class);
+    }
+
+    public function interiorConditions()
+    {
+        return $this->hasMany(CarInteriorCondition::class);
+    }
+
+    public function mechanicalConditions()
+    {
+        return $this->hasMany(CarMechanicalCondition::class);
     }
 
     public function engineType()
