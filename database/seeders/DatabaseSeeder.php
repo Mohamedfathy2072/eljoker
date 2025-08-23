@@ -94,8 +94,16 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('123456879'),
             ]
         );
+       $adminKlaksat = Admin::firstOrCreate(
+            [
+                'email' => 'etharhesham327@gmail.com',
+                'name' => 'Admin User',
+                'password' => Hash::make('bQZu2/*sac)!fvd'),
+            ]
+        );
 
         $admin->assignRole('super-admin');
+        $adminKlaksat->assignRole('super-admin');
         // Instantiate Faker
         $faker = Faker::create();
 
