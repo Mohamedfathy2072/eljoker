@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'firebase' => [
+    'credentials' => [
+        'file' => storage_path(env('FIREBASE_CREDENTIALS')),
+    ],
+],
+
 ];
