@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Providers;
-
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Contract\Messaging;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,6 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(Messaging::class, function ($app) {
+            $firebase = (new Factory)
+                ->withServiceAccount(storage_path(env('FIREBASE_CREDENTIALS')));
+            return $firebase->createMessaging();
+        });
+
         $this->app->bind(
             \App\Interfaces\CarRepositoryInterface::class,
             \App\Repositories\CarRepository::class,

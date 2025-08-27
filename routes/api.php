@@ -27,6 +27,7 @@ Route::prefix('auth')->group(function () {
     Route::get('/favourites', [FavouriteController::class, 'myFavourites']);
     Route::delete('/favourites/clear', [FavouriteController::class, 'clearFavourites']);
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
 });
 
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');

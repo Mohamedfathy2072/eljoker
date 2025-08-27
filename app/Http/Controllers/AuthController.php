@@ -190,4 +190,13 @@ class AuthController extends Controller
             return response()->json(['error' => 'Could not refresh token'], 500);
         }
     }
+
+
+    public function deleteAccount()
+    {
+        $user = auth()->user();
+        $user->delete();
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Account deleted successfully.']);
+    }
 }

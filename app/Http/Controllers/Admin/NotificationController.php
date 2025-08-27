@@ -26,7 +26,6 @@ class NotificationController extends Controller
     public function create()
     {
         $users = User::select('id', 'name', 'email')
-            ->where('id', '!=', Auth::id())
             ->orderBy('name')
             ->get();
             
