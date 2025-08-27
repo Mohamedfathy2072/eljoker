@@ -22,6 +22,7 @@ Route::prefix('auth')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
 });
 
 Route::prefix('cars')->group(function () {
