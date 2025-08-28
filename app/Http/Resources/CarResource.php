@@ -103,18 +103,18 @@ class CarResource extends JsonResource
             // Pricing information
             'pricing' => [
             'original_price' => $this->resource->price,
-            'original_price_formatted' => '$' . number_format($this->resource->price, 2),
+            'original_price_formatted' => ' EGP ' . number_format($this->resource->price, 2),
             'discount' => $this->resource->discount,
-            'discount_formatted' => '$' . number_format($this->resource->discount, 2),
+            'discount_formatted' => ' EGP ' . number_format($this->resource->discount, 2),
             'final_price' => $this->resource->price - $this->resource->discount,
-            'final_price_formatted' => '$' . number_format($this->resource->price - $this->resource->discount, 2),
+            'final_price_formatted' => ' EGP ' . number_format($this->resource->price - $this->resource->discount, 2),
             'monthly_installment' => $this->resource->monthly_installment,
             'monthly_installment_formatted' => $this->resource->monthly_installment ?
-                '$' . number_format($this->resource->monthly_installment, 2) . '/month' : null,
+                ' EGP ' . number_format($this->resource->monthly_installment, 2) . '/month' : null,
             'has_discount' => $this->resource->discount > 0,
             'down_payment' => $this->resource->down_payment ?? null,
             'down_payment_formatted' => $this->resource->down_payment ?
-                '$' . number_format($this->resource->down_payment, 2) : null,
+                ' EGP ' . number_format($this->resource->down_payment, 2) : null,
             ],
 
             // Classification

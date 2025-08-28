@@ -52,6 +52,9 @@ class PaginatedCarsRequest extends FormRequest
             'transmission_type_id' => 'nullable|integer|exists:transmission_types,id',
             'body_style_id' => 'nullable|integer|exists:body_styles,id',
             'search' => 'nullable|string|max:255',
+            
+            'car_types_ids'=>'nullable|array',
+            'car_types_ids.*'=>'integer|exists:types,id',
 
             'brand_ids' => 'nullable|array',
             'brand_ids.*' => 'integer|exists:brands,id',

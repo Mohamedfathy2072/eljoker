@@ -1,8 +1,11 @@
 <?php
 use App\Enums\RefurbishmentStatus;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\NotificationController as ApiNotificationController;
+
 use App\Http\Controllers\Admin\{
     BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
 };
@@ -22,7 +25,10 @@ Route::prefix('auth')->group(function () {
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+    Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
 });
+
+Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
 Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'all']);
