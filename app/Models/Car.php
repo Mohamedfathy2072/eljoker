@@ -35,7 +35,7 @@ class Car extends Model
         'monthly_installment',
         'trim_id',
         'down_payment',
-        'owner_id'
+        'owner_id',
     ];
 
 

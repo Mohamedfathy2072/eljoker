@@ -15,6 +15,7 @@ use App\Models\Horsepower;
 use App\Models\Image;
 use App\Models\Size;
 use App\Models\VehicleStatus;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,6 +51,10 @@ class CarRepository implements CarRepositoryInterface
                 min($requestData['years_model']),
                 max($requestData['years_model'])
             ]);
+        }
+
+        if(!empty($requestData['car_types_ids'])){
+            $query->whereIn('type_id', $requestData['car_types_ids']);
         }
 
         if(!empty($requestData['transmission_type_ids'])){
@@ -94,7 +99,7 @@ class CarRepository implements CarRepositoryInterface
 
 
         foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids',
-        'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment','down_payment_range'] as $key) {
+        'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment','down_payment_range','car_types_ids'] as $key) {
             unset($requestData[$key]);
         }
 
