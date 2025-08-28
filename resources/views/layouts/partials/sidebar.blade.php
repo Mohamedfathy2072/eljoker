@@ -147,7 +147,7 @@
                   <i class="bi bi-person"></i>
                   <span>Profile</span>
               </a>
-          </li><!-- End Profile Page Nav -->
+          </li>
 
 
           <li class="nav-item">

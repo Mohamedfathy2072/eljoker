@@ -24,7 +24,7 @@
           <ul class="nav nav-tabs" id="notificationTabs" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active" id="topic-tab" data-bs-toggle="tab" data-bs-target="#topic-tab-pane" type="button" role="tab" aria-controls="topic-tab-pane" aria-selected="true">
-                Send to Topic
+                Send to all
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Send to Topic</button>
+                  <button type="submit" class="btn btn-primary">Send to all</button>
                 </div>
               </form>
             </div>
