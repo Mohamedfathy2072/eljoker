@@ -39,16 +39,8 @@
               <form id="topicForm" action="{{ route('admin.notifications.send') }}" method="POST">
                 @csrf
                 <input type="hidden" name="send_type" value="topic">
+                <input type="hidden" name="topic" value="all">
                 
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Topic</label>
-                  <div class="col-sm-10">
-                    <select class="form-select" name="topic" required>
-                      <option value="">Select a topic</option>
-                      <option value="all">All</option>
-                    </select>
-                  </div>
-                </div>
 
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Title</label>
