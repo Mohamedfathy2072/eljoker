@@ -23,8 +23,8 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users'
         ]);
 
-        // $otp = random_int(100000, 999999);
-        $otp = 123456;
+        $otp = random_int(100000, 999999);
+        // $otp = 123456;
         $email = $request->input('email');
         User::create([
             'email' => $email,
@@ -33,7 +33,7 @@ class AuthController extends Controller
         ]);
 
         // send OTP to user via email or SMS here (not implemented in this example)
-        // Mail::to($email)->send(new OtpMail($otp));
+        Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'User registered successfully. Please check your email for the OTP.',
@@ -95,13 +95,13 @@ class AuthController extends Controller
 
         if(!$user) return $this->register($request);
 
-        // $otp = random_int(100000, 999999);
-        $otp = 123456;
+        $otp = random_int(100000, 999999);
+        // $otp = 123456;
         $user->otp_hash = Hash::make($otp);
         $user->otp_expires_at = now()->addMinutes(5);
         $user->save();
 
-        // Mail::to($email)->send(new OtpMail($otp));
+        Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'Login successful. Please check your email for the OTP.',
