@@ -118,6 +118,6 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
 
-
-Route::get('start-ad', [StartAdController::class, 'show']);
-
+Route::prefix('start-ad')->group(function () {
+    Route::get('/', [StartAdController::class, 'show']);
+});
