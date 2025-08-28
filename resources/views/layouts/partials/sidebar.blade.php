@@ -131,12 +131,12 @@
 
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.notifications.index') }}">
-          <i class="bi bi-bell"></i>
-          <span>Notifications</span>
-          @if($unreadCount = \App\Models\Notification::unread()->count())
+        <a class="nav-link {{ request()->routeIs('admin.notifications.*') ? '' : 'collapsed' }}" href="{{ route('admin.notifications.index') }}">
+            <i class="bi bi-bell"></i>
+            <span>Notifications</span>
+            @if($unreadCount = \App\Models\Notification::unread()->count())
             <span class="badge bg-danger rounded-pill ms-auto">{{ $unreadCount }}</span>
-          @endif
+            @endif
         </a>
       </li>
 
