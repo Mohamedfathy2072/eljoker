@@ -1,19 +1,31 @@
 <?php
-use App\Enums\RefurbishmentStatus;
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CalculatorController;
-use App\Http\Controllers\CarController;
-use App\Http\Controllers\NotificationController as ApiNotificationController;
-
-use App\Http\Controllers\Admin\{
-    BrandController, BodyStyleController, CarModelController, DriveTypeController, EngineTypeController, TransmissionTypeController, TrimController, TypeController, VehicleStatusController
-};
-use App\Http\Controllers\{
-    BookController, QuizController, QuizAnswerController, QuizMatchController
-};
-use App\Http\Controllers\StartAdController;
 use Illuminate\Support\Facades\Route;
+use App\Enums\RefurbishmentStatus;
+
+use App\Http\Controllers\{
+    AuthController,
+    CarController,
+    CalculatorController,
+    BookController,
+    QuizController,
+    QuizAnswerController,
+    QuizMatchController,
+    StartAdController,
+    FinancingRequestController,
+    NotificationController as ApiNotificationController
+};
+use App\Http\Controllers\Admin\{
+    BannerController,
+    BrandController,
+    BodyStyleController,
+    CarModelController,
+    DriveTypeController,
+    EngineTypeController,
+    TransmissionTypeController,
+    TrimController,
+    TypeController,
+    VehicleStatusController
+};
 
 
 Route::prefix('auth')->group(function () {
