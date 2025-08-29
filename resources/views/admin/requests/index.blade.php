@@ -69,7 +69,7 @@
                 @forelse($requests as $request)
                   <tr>
                     <td>{{ $request->id }}</td>
-                    <td>{{ $request->user->name ?? 'N/A' }}</td>
+                    <td>{{ $request->first_name }} {{ $request->second_name }}</td>
                     <td>{{ $request->email }}</td>
                     <td>
                       <span class="badge bg-{{ 
