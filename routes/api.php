@@ -26,7 +26,15 @@ Route::prefix('auth')->group(function () {
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
     Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
+    
+
 });
+
+    Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
+        Route::post('/', [FinancingRequestController::class, 'store']);
+        Route::get('/', [FinancingRequestController::class, 'index']);
+        Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
+    });
 
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
