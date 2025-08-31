@@ -12,11 +12,9 @@
     </ol>
   </nav>
 </div>
-
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
-
           <div class="card">
             <div class="card-body">
 
@@ -61,8 +59,14 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="adminName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="adminName" name="name" required>
+                                        <label for="adminName" class="form-label">Full Name (Ar)</label>
+                                        <input type="text" class="form-control" id="adminName" name="name_ar" required>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="adminName" class="form-label">Full Name (En)</label>
+                                        <input type="text" class="form-control" id="adminName" name="name_en" required>
                                     </div>
                                 </div>
                                 <div class="modal-body">
@@ -92,8 +96,9 @@
                 <thead>
                   <tr>
                     <th>
-                      <b>N</b>ame
+                      <b>N</b>ame (Ar)
                     </th>
+                    <th>Name (En)</th>
                     <th>Email</th>
                     <th>Roles</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
@@ -103,7 +108,8 @@
                 <tbody>
                     @foreach($data as $item)
                     <tr>
-                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->name_ar }}</td>
+                        <td>{{ $item->name_en }}</td>
                         <td>{{ $item->email }}</td>
                         <td>
                             @foreach($item->roles as $role)
@@ -171,8 +177,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Edit Admin Modal -->
                             <div class="modal fade" id="editBrandModal{{ $item->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -185,8 +189,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editAdminName{{ $item->id }}" class="form-label">Admin Name</label>
-                                                    <input type="text" class="form-control" id="editAdminName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                                                    <label for="editAdminNameAr{{ $item->id }}" class="form-label">Admin Name (Ar)</label>
+                                                    <input type="text" class="form-control" id="editAdminNameAr{{ $item->id }}" name="name_ar" value="{{ $item->name_ar }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="editAdminNameEn{{ $item->id }}" class="form-label">Admin Name (En)</label>
+                                                    <input type="text" class="form-control" id="editAdminNameEn{{ $item->id }}" name="name_en" value="{{ $item->name_en }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-body">
