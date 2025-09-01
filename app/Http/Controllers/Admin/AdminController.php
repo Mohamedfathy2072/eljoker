@@ -19,7 +19,8 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'password' => 'required|string|min:8'
         ]);
@@ -28,7 +29,8 @@ class AdminController extends Controller
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        Admin::create(['name' => $request->input('name'),
+        Admin::create(['name_ar' => $request->input('name_ar'),
+            'name_en' => $request->input('name_en'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password'))]);
 
@@ -38,7 +40,8 @@ class AdminController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'password' => 'nullable|string|max:15'
         ]);
@@ -49,7 +52,8 @@ class AdminController extends Controller
 
         $data = Admin::findOrFail($id);
         $data->update([
-            'name' => $request->input('name'),
+            'name_ar' => $request->input('name_ar'),
+            'name_en' => $request->input('name_en'),
             'email' => $request->input('email')
         ] + ($request->input('password') ? ['password' => $request->input('password')] : []));
 

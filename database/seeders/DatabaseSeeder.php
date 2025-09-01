@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
+use Faker\Factory;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -38,7 +39,8 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             [
                 'email' => 'admin@klaksat.com',
-                'name' => 'klaksat',
+                'name_ar' => 'كلاكسات',
+                'name_en' => 'klaksat',
                 'phone' => '01032163233',
                 'is_active' => true
             ]
@@ -54,22 +56,24 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             [
                 'email' => 'user@example.com',
-                'name' => 'User User',
+                'name_en' => 'User User',
+                'name_ar' => 'المستخدم الافتراضي',
                 'phone' => '01125833982',
                 'is_active' => true
             ]
         );
-        // Instantiate Faker
-        $faker = Faker::create();
+      
+        $fakerAr = Faker::create('ar_EG');
+        $fakerEn = Faker::create('en_US');
 
-        // Create 10 fake users
         foreach (range(1, 10) as $index) {
             User::firstOrCreate(
                 [
-                    'email' => $faker->unique()->safeEmail, // Generates a unique fake email
-                    'name' => $faker->name, // Generates a random name
-                    'phone' => $faker->numerify('0##########'), // Generates a fake phone number
-                    'is_active' => $faker->boolean(80) // Randomly set 'is_active' to 80% of true
+                    'email' => $fakerEn->unique()->safeEmail, // Generates a unique fake email
+                    'name_en' => $fakerEn->name, // Generates an English name
+                    'name_ar' => $fakerAr->name, // Generates an Arabic name
+                    'phone' => $fakerAr->numerify('0##########'), // Generates a fake phone number
+                    'is_active' => $fakerEn->boolean(80) // Randomly set 'is_active' to 80% of true
                 ]
             );
         }
@@ -90,29 +94,33 @@ class DatabaseSeeder extends Seeder
        $admin = Admin::firstOrCreate(
             [
                 'email' => 'admin@example.com',
-                'name' => 'Admin User',
+                'name_en' => 'Admin User',
+                'name_ar' => 'الادمن الافتراضي',
                 'password' => Hash::make('123456879'),
             ]
         );
        $adminKlaksat = Admin::firstOrCreate(
             [
                 'email' => 'etharhesham327@gmail.com',
-                'name' => 'Admin User',
+                'name_ar' => 'Admin User',
+                'name_en' => 'Admin User',
                 'password' => Hash::make('bQZu2/*sac)!fvd'),
             ]
         );
 
         $admin->assignRole('super-admin');
         $adminKlaksat->assignRole('super-admin');
-        // Instantiate Faker
-        $faker = Faker::create();
+        // Instantiate Faker with Arabic (Egypt) and English locales
+        $fakerAr = Faker::create('ar_EG');
+        $fakerEn = Faker::create('en_US');
 
         // Create 5 fake admins
         foreach (range(1, 5) as $index) {
             Admin::firstOrCreate(
                 [
-                    'email' => $faker->unique()->safeEmail, // Generates a unique fake email
-                    'name' => $faker->name, // Generates a random name
+                    'email' => $fakerEn->unique()->safeEmail, // Generates a unique fake email
+                    'name_ar' => $fakerAr->name, // Generates an Arabic name
+                    'name_en' => $fakerEn->name, // Generates an English name
                     'password' => Hash::make('123456879'), // Password is always the same and hashed
                 ]
             );

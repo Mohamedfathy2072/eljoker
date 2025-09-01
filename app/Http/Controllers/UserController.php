@@ -17,7 +17,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:15|unique:users,phone'
         ]);
@@ -26,8 +27,9 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        User::create(['name' => $request->input('name')
-            , 'email' => $request->input('email'),
+        User::create(['name_ar' => $request->input('name_ar')
+            , 'name_en' => $request->input('name_en'),
+            'email' => $request->input('email'),
             'phone' => $request->input('phone') ?? null,
             'is_active' => true]);
 
@@ -37,7 +39,8 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:15'
         ]);
@@ -47,7 +50,8 @@ class UserController extends Controller
         }
 
         $data = User::findOrFail($id);
-        $data->update(['name' => $request->input('name'),
+        $data->update(['name_ar' => $request->input('name_ar'),
+            'name_en' => $request->input('name_en'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'is_active' => true]);

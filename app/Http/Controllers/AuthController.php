@@ -8,19 +8,22 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
         User::where('email', $request->input('email'))
-                ->where('is_active', false)
-                ->delete(); // Clear any existing inactive user with the same email
+            ->where('is_active', false)
+            ->delete();  // Clear any existing inactive user with the same email
 
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users'
+        ],[
+            'email.required'=>__('validation.required',['attribute'=>'email']),
+            'email.unique'=>__('validation.unique',['attribute'=>'email']),
         ]);
 
         // $otp = random_int(100000, 999999);
@@ -36,7 +39,7 @@ class AuthController extends Controller
         // Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
-            'message' => 'User registered successfully. Please check your email for the OTP.',
+            'message' => __('auth.register_success'),
             'user' => $email,
             'type' => 'register'
         ], 201);
@@ -77,10 +80,11 @@ class AuthController extends Controller
         $accessToken = JWTAuth::fromUser($user);
 
         return response()->json([
-            'message' => 'OTP verified successfully.',
+            'message' => __('auth.otp_success'),
             'token' => $accessToken,
             'refresh_token' => $accessToken,
             'user' => new UserResource($user)
+
         ]);
     }
 
@@ -93,7 +97,8 @@ class AuthController extends Controller
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
 
-        if(!$user) return $this->register($request);
+        if (!$user)
+            return $this->register($request);
 
         // $otp = random_int(100000, 999999);
         $otp = 123456;
@@ -104,7 +109,7 @@ class AuthController extends Controller
         // Mail::to($email)->send(new OtpMail($otp));
 
         return response()->json([
-            'message' => 'Login successful. Please check your email for the OTP.',
+            'message' => __('auth.login_success'),
             'user' => $email,
             'type' => 'login'
         ]);
@@ -119,7 +124,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->input('email'))->first();
 
         if (!$user || !$user->otp_hash) {
-            return response()->json(['error' => 'No OTP found for this user'], 400);
+            return response()->json(['error' => __('auth.otp_resend_failed')], 400);
         }
 
         $otp = random_int(100000, 999999);
@@ -129,13 +134,13 @@ class AuthController extends Controller
 
         Mail::to($user->email)->send(new OtpMail($otp));
 
-        return response()->json(['message' => 'OTP resent successfully.']);
+        return response()->json(['message' => __('auth.otp_resend_success')]);
     }
 
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
-        return response()->json(['message' => 'User logged out successfully.']);
+        return response()->json(['message' => __('auth.logout')]);
     }
 
     public function me()
@@ -149,14 +154,20 @@ class AuthController extends Controller
 
         $request->validate([
             'phone' => 'nullable|string|regex:/^\+?[0-9]{7,15}$/|unique:users,phone,' . $user->id,
-            'name' => 'nullable|string|max:119'
+            'name_en' => 'nullable|string|max:119',
+            'name_ar' => 'nullable|string|max:119'
         ]);
 
         $user->phone = $request->input('phone', $user->phone);
-        $user->name = $request->input('name', $user->name);
+        $user->name_ar = $request->input('name_ar', $user->name_ar);
+        $user->name_en = $request->input('name_en', $user->name_en);
         $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully.', 'user' => new UserResource($user)]);
+        return response()->json(
+            [
+                'message' => __('auth.profile_update'),
+                 'user' => new UserResource($user)
+            ]);
     }
 
     public function refershToken()
@@ -174,7 +185,6 @@ class AuthController extends Controller
         }
     }
 
-    
     public function deleteAccount()
     {
         $user = auth()->user();

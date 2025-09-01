@@ -59,7 +59,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         
-        // Financing Requests
+        
         Route::resource('financing-requests', FinancingRequestController::class, [
             'names' => [
                 'index' => 'admin.financing-requests.index',

@@ -19,13 +19,26 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'name_en',
+        'name_ar',
         'email',
         'otp_hash',
         'otp_expires_at',
         'is_active',
         'phone'
     ];
+    
+    /**
+     * Get the user's name based on current application locale
+     *
+     * @return string|null
+     */
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        $nameField = 'name_' . $locale;
+        return $this->attributes[$nameField] ?? $this->attributes['name_en'] ?? null;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

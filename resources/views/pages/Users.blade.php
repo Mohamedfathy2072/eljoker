@@ -61,8 +61,14 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="userName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="userName" name="name" required>
+                                        <label for="userName" class="form-label">Full Name (Ar)</label>
+                                        <input type="text" class="form-control" id="userName" name="name_ar" required>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="userName" class="form-label">Full Name (En)</label>
+                                        <input type="text" class="form-control" id="userName" name="name_en" required>
                                     </div>
                                 </div>
                                 <div class="modal-body">
@@ -92,8 +98,9 @@
                 <thead>
                   <tr>
                     <th>
-                      <b>N</b>ame
+                      <b>Name</b> (Ar)
                     </th>
+                    <th>Name (En)</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
@@ -103,7 +110,8 @@
                 <tbody>
                     @foreach($data as $item)
                     <tr>
-                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->name_ar }}</td>
+                        <td>{{ $item->name_en }}</td>
                         <td>{{ $item->email }}</td>
                         <td>{{ $item->phone ?? '-' }}</td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
@@ -126,8 +134,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editUserName{{ $item->id }}" class="form-label">User Name</label>
-                                                    <input type="text" class="form-control" id="editUserName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                                                    <label for="editUserName{{ $item->id }}" class="form-label">User Name (Ar)</label>
+                                                    <input type="text" class="form-control" id="editUserName{{ $item->id }}" name="name_ar" value="{{ $item->name_ar }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="editUserName{{ $item->id }}" class="form-label">User Name (En)</label>
+                                                    <input type="text" class="form-control" id="editUserName{{ $item->id }}" name="name_en" value="{{ $item->name_en }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-body">

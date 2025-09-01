@@ -14,9 +14,12 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $local = app()->getLocale() ;
+
+        
         return [
             'id' => $this->resource->id ?? null,
-            'name' => $this->resource->name ?? '',
+            'name' => $this->resource->{'name_'.$local} ?? '',
             'email' => $this->resource->email ?? null,
             'phone' => $this->resource->phone ?? '',
             'is_active' => $this->resource->is_active ?? false,

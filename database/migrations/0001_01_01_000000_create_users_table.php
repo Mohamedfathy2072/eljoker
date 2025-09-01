@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 191)->nullable();
+            $table->string('name_en', 191)->nullable();
+            $table->string('name_ar', 191)->nullable();
             $table->string('email', 191)->unique();
             $table->string('phone', 15)->unique()->nullable();
             $table->string('otp_hash')->nullable();
