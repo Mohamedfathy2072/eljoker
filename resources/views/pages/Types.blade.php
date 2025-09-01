@@ -50,9 +50,12 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="brandName" class="form-label">Type Name</label>
-                                        <input type="text" class="form-control" id="brandName" name="name" required>
-
+                                        <label for="brandName" class="form-label">Type Name (En)</label>
+                                        <input type="text" class="form-control" id="brandName" name="name_en" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="brandName" class="form-label">Type Name (Ar)</label>
+                                        <input type="text" class="form-control" id="brandName" name="name_ar" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -70,7 +73,10 @@
                 <thead>
                   <tr>
                     <th>
-                      <b>N</b>ame
+                      <b>N</b>ame (En)
+                    </th>
+                    <th>
+                      <b>N</b>ame (Ar)
                     </th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
                     <th>Actions</th>
@@ -79,7 +85,8 @@
                 <tbody>
                     @foreach($data as $item)
                     <tr>
-                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->getTranslation('name', 'en') }}</td>
+                        <td>{{ $item->getTranslation('name', 'ar') }}</td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
                             <!-- Edit Button triggers modal -->
@@ -87,7 +94,7 @@
                                 Edit
                             </button>
 
-                            <!-- Edit Brand Modal -->
+
                             <div class="modal fade" id="editBrandModal{{ $item->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -100,8 +107,12 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editBrandName{{ $item->id }}" class="form-label">Type Name</label>
-                                                    <input type="text" class="form-control" id="editBrandName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                                                    <label for="editBrandNameEn{{ $item->id }}" class="form-label">Type Name (En)</label>
+                                                    <input type="text" class="form-control" id="editBrandNameEn{{ $item->id }}" name="name_en" value="{{ $item->getTranslation('name', 'en') }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editBrandNameAr{{ $item->id }}" class="form-label">Type Name (Ar)</label>
+                                                    <input type="text" class="form-control" id="editBrandNameAr{{ $item->id }}" name="name_ar" value="{{ $item->getTranslation('name', 'ar') }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BodyStyleResource;
 use App\Models\BodyStyle;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -19,20 +20,25 @@ class BodyStyleController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
+
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('body_style', 'public');
         }
 
         BodyStyle::create([
-            'name' => $request->input('name'),
+            'name' => [
+                'ar' => $request->input('name_ar'),
+                'en' => $request->input('name_en')
+            ],
             'image' => $imagePath
         ]);
 
@@ -42,25 +48,33 @@ class BodyStyleController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        $body = BodyStyle::findOrFail($id);
-        $data = ['name' => $request->input('name')];
+        $bodyStyle = BodyStyle::findOrFail($id);
+        
+        $data = [
+            'name' => [
+                'ar' => $request->input('name_ar'),
+                'en' => $request->input('name_en')
+            ]
+        ];
 
         if ($request->hasFile('image')) {
-            if ($body->image && Storage::disk('public')->exists($body->image)) {
-                Storage::disk('public')->delete($body->image);
+            // Delete old image if exists
+            if ($bodyStyle->image) {
+                Storage::disk('public')->delete($bodyStyle->image);
             }
-
-            $data['image'] = $request->file('image')->store('brands', 'public');
+            $data['image'] = $request->file('image')->store('body_style', 'public');
         }
 
-        $body->update($data);
+        $bodyStyle->update($data);
 
         return redirect()->route('admin.BodyStyles')->with('success', 'Body Style updated successfully.');
     }
@@ -79,8 +93,8 @@ class BodyStyleController extends Controller
      */
     public function indexAPI()
     {
-        $brands = BodyStyle::all();
-        return response()->json($brands, 200);
+        $bodyStyles = BodyStyle::all();
+        return BodyStyleResource::collection($bodyStyles);
     }
 
     /**
@@ -89,8 +103,8 @@ class BodyStyleController extends Controller
     public function showAPI(int $id)
     {
         try {
-            $brand = BodyStyle::findOrFail($id);
-            return response()->json($brand, 200);
+            $bodyStyle = BodyStyle::findOrFail($id);
+            return new BodyStyleResource($bodyStyle);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'BodyStyle not found'], 404);
         }

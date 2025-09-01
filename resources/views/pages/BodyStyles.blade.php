@@ -54,9 +54,10 @@
                                         <input type="file" class="form-control" id="brandImage" name="image" accept="image/*">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="brandName" class="form-label">Body Styles Name</label>
-                                        <input type="text" class="form-control" id="brandName" name="name" required>
-
+                                        <label for="brandName" class="form-label">Body Styles Name (Ar)</label>
+                                        <input type="text" class="form-control" id="brandName" name="name_ar" required>
+                                        <label for="brandName" class="form-label">Body Styles Name (En)</label>
+                                        <input type="text" class="form-control" id="brandName" name="name_en" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -75,8 +76,11 @@
                   <tr>
                     <th>Image</th>
                     <th>
-                      <b>N</b>ame
+                      <b>N</b>ame (Ar)
                     </th>
+                    <th>
+                        <b>N</b>ame (En)
+                      </th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
                     <th>Actions</th>
                   </tr>
@@ -91,7 +95,8 @@
                                 <span class="text-muted">No Image</span>
                             @endif
                         </td>
-                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->getTranslation('name', 'ar') }}</td>
+                        <td>{{ $item->getTranslation('name', 'en') }}</td>
                         <td>{{ $item->created_at->format('Y/m/d') }}</td>
                         <td>
                             <!-- Edit Button triggers modal -->
@@ -122,8 +127,10 @@
                                                     </div>
                                                 @endif
                                                 <div class="mb-3">
-                                                    <label for="editBrandName{{ $item->id }}" class="form-label">Body Styles Name</label>
-                                                    <input type="text" class="form-control" id="editBrandName{{ $item->id }}" name="name" value="{{ $item->name }}" required>
+                                                    <label for="editBrandNameAr{{ $item->id }}" class="form-label">Body Styles Name (Ar)</label>
+                                                    <input type="text" class="form-control" id="editBrandNameAr{{ $item->id }}" name="name_ar" value="{{ $item->getTranslation('name', 'ar') }}" required>
+                                                    <label for="editBrandNameEn{{ $item->id }}" class="form-label">Body Styles Name (En)</label>
+                                                    <input type="text" class="form-control" id="editBrandNameEn{{ $item->id }}" name="name_en" value="{{ $item->getTranslation('name', 'en') }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

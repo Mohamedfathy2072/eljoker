@@ -9,17 +9,39 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class BrandFactory extends Factory
 {
-    public static $brands = [
-        'Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW',
-        'Mercedes-Benz', 'Nissan', 'Hyundai', 'Kia', 'Volkswagen',
-        'Audi', 'Lexus', 'Mazda', 'Subaru', 'Tesla',
-        'Porsche', 'Jeep', 'Renault', 'Peugeot', 'Fiat'
+    public static array $brands = [
+        ['en' => 'Toyota', 'ar' => 'تويوتا'],
+        ['en' => 'Honda', 'ar' => 'هوندا'],
+        ['en' => 'Ford', 'ar' => 'فورد'],
+        ['en' => 'Chevrolet', 'ar' => 'شفروليه'],
+        ['en' => 'BMW', 'ar' => 'بي ام دبليو'],
+        ['en' => 'Mercedes-Benz', 'ar' => 'مرسيدس بنز'],
+        ['en' => 'Nissan', 'ar' => 'نيسان'],
+        ['en' => 'Hyundai', 'ar' => 'هيونداي'],
+        ['en' => 'Kia', 'ar' => 'كيا'],
+        ['en' => 'Volkswagen', 'ar' => 'فولكس فاجن'],
+        ['en' => 'Audi', 'ar' => 'أودي'],
+        ['en' => 'Lexus', 'ar' => 'لكزس'],
+        ['en' => 'Mazda', 'ar' => 'مازدا'],
+        ['en' => 'Subaru', 'ar' => 'سوبارو'],
+        ['en' => 'Tesla', 'ar' => 'تسلا'],
+        ['en' => 'Porsche', 'ar' => 'بورش'],
+        ['en' => 'Jeep', 'ar' => 'جيب'],
+        ['en' => 'Renault', 'ar' => 'رينو'],
+        ['en' => 'Peugeot', 'ar' => 'بيجو'],
+        ['en' => 'Fiat', 'ar' => 'فيات']
     ];
 
     public function definition(): array
     {
+        $brand = $this->faker->randomElement(self::$brands);
+        
         return [
-            'name' => $this->faker->randomElement(self::$brands),
+            'name' => [
+                'en' => $brand['en'],
+                'ar' => $brand['ar']
+            ],
+            'image' => 'brands/' . strtolower($brand['en']) . '.png',
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Enums\RefurbishmentStatus;
 use App\Http\Requests\CreateCarRequest;
 use App\Http\Requests\PaginatedCarsRequest;
 use App\Http\Requests\UpdateCarRequest;
+use App\Http\Resources\BodyStyleResource;
 use App\Http\Resources\CarResource;
 use App\Models\BodyStyle;
 use App\Models\Brand;
@@ -123,7 +124,7 @@ class CarController extends Controller
         return [
             'brands' => Brand::all(),
             'carModels' => CarModel::all(),
-            'bodyStyles' => BodyStyle::all(),
+            'bodyStyles' => BodyStyleResource::collection(BodyStyle::all()),
             'types' => Type::all(),
             'transmissionTypes' => TransmissionType::all(),
             'driveTypes' => DriveType::all(),
