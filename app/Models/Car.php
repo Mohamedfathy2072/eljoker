@@ -8,10 +8,11 @@ use App\Models\CarInteriorCondition;
 use App\Models\CarMechanicalCondition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class Car extends Model
 {
-    use HasFactory;
+    use HasFactory,HasTranslations;
     protected $fillable = [
         'brand_id',
         'car_model_id',
@@ -38,11 +39,11 @@ class Car extends Model
         'owner_id',
     ];
 
+    public $translatable = ['color','refurbishment_status'];
 
-
-    protected $casts = [
-        'refurbishment_status' => RefurbishmentStatus::class,
-    ];
+    // protected $casts = [
+    //     'refurbishment_status' => RefurbishmentStatus::class,
+    // ];
 
     public function flags()
     {

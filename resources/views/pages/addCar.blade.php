@@ -128,8 +128,12 @@
 
                                         <!-- Color -->
                                         <div class="col-md-4">
-                                            <label for="inputColor" class="form-label">Color</label>
-                                            <input type="text" class="form-control" id="exampleColorInput" name="color" title="Choose your color">
+                                            <label for="inputColorAR" class="form-label">Color (AR)</label>
+                                            <input type="text" class="form-control" id="exampleColorInputAR" name="color_ar" title="Choose your color ar">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="inputColorEN" class="form-label">Color (EN)</label>
+                                            <input type="text" class="form-control" id="exampleColorInputEN" name="color_en" title="Choose your color en">
                                         </div>
                                     </div>
 
@@ -324,7 +328,10 @@
                                             <div id="flagContainer">
                                                 <div class="flagInput row g-2 align-items-center">
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="flags[0][name]" placeholder="Flag Name">
+                                                        <input type="text" class="form-control" name="flags[0][name_ar]" placeholder="Flag Name (Ar)">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" name="flags[0][name_en]" placeholder="Flag Name (En)">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <input type="file" class="form-control" name="flags[0][image]" accept="image/*">
@@ -343,27 +350,41 @@
                                             <div id="featureBlockContainer">
                                                 <!-- First Block of Fields -->
                                                 <div class="feature-block mb-3">
-                                                    <!-- Features Dropdown -->
-                                                    <div class="col-12">
-                                                        <label for="inputFeatures" class="form-label">Features</label>
-                                                        <select class="form-select" name="features[][name]">
+                                                    <!-- Feature Selection -->
+                                                    <div class="col-12 mb-3">
+                                                        <label class="form-label">Feature</label>
+                                                        <select class="form-select" name="features[0][name]">
                                                             <option value="" selected>Choose...</option>
-                                                            @foreach ($features as $item)
-                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                                            @foreach($features as $feature)
+                                                                <option value="{{ $feature->value }}">
+                                                                    {{ $feature->name }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
 
-                                                    <!-- Label Input -->
-                                                    <div class="col-12">
-                                                        <label for="inputLabel" class="form-label">Label</label>
-                                                        <input type="text" class="form-control" name="features[][label]">
+                                                    <!-- Label (English) -->
+                                                    <div class="col-12 mb-3">
+                                                        <label class="form-label">Label (English)</label>
+                                                        <input type="text" class="form-control" name="features[0][label][en]" placeholder="Enter label in English">
                                                     </div>
 
-                                                    <!-- Value Input -->
-                                                    <div class="col-12">
-                                                        <label for="inputValue" class="form-label">Value</label>
-                                                        <input type="text" class="form-control" name="features[][value]">
+                                                    <!-- Label (Arabic) -->
+                                                    <div class="col-12 mb-3">
+                                                        <label class="form-label">Label (Arabic)</label>
+                                                        <input type="text" class="form-control" name="features[0][label][ar]" placeholder="Enter label in Arabic" dir="rtl">
+                                                    </div>
+
+                                                    <!-- Value (English) -->
+                                                    <div class="col-12 mb-3">
+                                                        <label class="form-label">Value (English)</label>
+                                                        <input type="text" class="form-control" name="features[0][value][en]" placeholder="Enter value in English">
+                                                    </div>
+
+                                                    <!-- Value (Arabic) -->
+                                                    <div class="col-12 mb-3">
+                                                        <label class="form-label">Value (Arabic)</label>
+                                                        <input type="text" class="form-control" name="features[0][value][ar]" placeholder="Enter value in Arabic" dir="rtl">
                                                     </div>
                                                 </div>
                                             </div>
@@ -388,7 +409,9 @@
                                                         <select class="form-select" name="conditions[0][name]">
                                                             <option value="" selected>Choose...</option>
                                                             @foreach ($conditions as $item)
-                                                                <option value="{{ $item->value }}">{{ $item->name }}</option>
+                                                                <option value="{{ $item->value }}">
+                                                                    {{ $item->name }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -481,69 +504,101 @@ function addFlagInput() {
 }
 </script>
 <script>
+let featureIndex = 1; // Start from 1 since we have the initial block at index 0
+
 function addFeatureBlock() {
     const container = document.getElementById('featureBlockContainer');
     const newBlock = document.createElement('div');
-    newBlock.classList.add('feature-block', 'mb-3');
-
-    const featureLabel = document.createElement('label');
-    featureLabel.classList.add('form-label');
-    featureLabel.setAttribute('for', 'inputFeatures');
-    featureLabel.innerText = 'Features';
-
-    const select = document.createElement('select');
-    select.classList.add('form-select');
-    select.name = 'features[][name]';
-    select.innerHTML = `
-    <option value='' selected>Choose...</option>
-    @foreach ($features as $item)
-    <option value="{{ $item->value }}">{{ $item->name }}</option>
-    @endforeach
+    newBlock.className = 'feature-block mb-3 border p-3';
+    
+    // Get the current index and increment for next time
+    const currentIndex = featureIndex++;
+    
+    // Feature Selection
+    const featureSelectGroup = document.createElement('div');
+    featureSelectGroup.className = 'col-12 mb-3';
+    featureSelectGroup.innerHTML = `
+        <label class="form-label">Feature</label>
+        <select class="form-select" name="features[${currentIndex}][name]">
+            <option value="" selected>Choose...</option>
+            @foreach($features as $feature)
+                <option value="{{ $feature->value }}">
+                    {{ $feature->name }}
+                </option>
+            @endforeach
+        </select>
     `;
-
-    const labelField = document.createElement('label');
-    labelField.classList.add('form-label');
-    labelField.setAttribute('for', 'inputLabel');
-    labelField.innerText = 'Label';
-
-    const labelInput = document.createElement('input');
-    labelInput.type = 'text';
-    labelInput.classList.add('form-control');
-    labelInput.name = 'features[][label]';
-
-    const valueLabel = document.createElement('label');
-    valueLabel.classList.add('form-label');
-    valueLabel.setAttribute('for', 'inputValue');
-    valueLabel.innerText = 'Value';
-
-    const valueInput = document.createElement('input');
-    valueInput.type = 'text';
-    valueInput.classList.add('form-control');
-    valueInput.name = 'features[][value]';
-
-    const col1 = document.createElement('div');
-    col1.classList.add('col-md-4');
-    col1.appendChild(featureLabel);
-    col1.appendChild(select);
-
-    const col2 = document.createElement('div');
-    col2.classList.add('col-md-4');
-    col2.appendChild(labelField);
-    col2.appendChild(labelInput);
-
-    const col3 = document.createElement('div');
-    col3.classList.add('col-md-4');
-    col3.appendChild(valueLabel);
-    col3.appendChild(valueInput);
-
-    newBlock.appendChild(col1);
-    newBlock.appendChild(col2);
-    newBlock.appendChild(col3);
-
+    
+    // Label (English)
+    const labelEnGroup = document.createElement('div');
+    labelEnGroup.className = 'col-12 mb-3';
+    labelEnGroup.innerHTML = `
+        <label class="form-label">Label (English)</label>
+        <input type="text" class="form-control" name="features[${currentIndex}][label][en]" placeholder="Enter label in English">
+    `;
+    
+    // Label (Arabic)
+    const labelArGroup = document.createElement('div');
+    labelArGroup.className = 'col-12 mb-3';
+    labelArGroup.innerHTML = `
+        <label class="form-label">Label (Arabic)</label>
+        <input type="text" class="form-control" name="features[${currentIndex}][label][ar]" placeholder="Enter label in Arabic" dir="rtl">
+    `;
+    
+    // Value (English)
+    const valueEnGroup = document.createElement('div');
+    valueEnGroup.className = 'col-12 mb-3';
+    valueEnGroup.innerHTML = `
+        <label class="form-label">Value (English)</label>
+        <input type="text" class="form-control" name="features[${currentIndex}][value][en]" placeholder="Enter value in English">
+    `;
+    
+    // Value (Arabic)
+    const valueArGroup = document.createElement('div');
+    valueArGroup.className = 'col-12 mb-3';
+    valueArGroup.innerHTML = `
+        <label class="form-label">Value (Arabic)</label>
+        <input type="text" class="form-control" name="features[${currentIndex}][value][ar]" placeholder="Enter value in Arabic" dir="rtl">
+    `;
+    
+    // Remove button
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-sm btn-danger mt-2';
+    removeButton.innerHTML = '<i class="bi bi-trash"></i> Remove';
+    removeButton.onclick = function() {
+        container.removeChild(newBlock);
+        // Re-index remaining feature blocks
+        reindexFeatureBlocks();
+    };
+    
+    // Append all elements to the new block
+    newBlock.appendChild(featureSelectGroup);
+    newBlock.appendChild(labelEnGroup);
+    newBlock.appendChild(labelArGroup);
+    newBlock.appendChild(valueEnGroup);
+    newBlock.appendChild(valueArGroup);
+    newBlock.appendChild(removeButton);
+    
+    // Add the new block to the container
     container.appendChild(newBlock);
 }
 
-
+function reindexFeatureBlocks() {
+    const blocks = document.querySelectorAll('.feature-block');
+    blocks.forEach((block, index) => {
+        // Update all input/select names with the new index
+        const inputs = block.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            const name = input.name;
+            // Match the index in features[0][...]
+            const newName = name.replace(/features\[(\d+)\]/, `features[${index}]`);
+            input.name = newName;
+        });
+    });
+    // Update the featureIndex to be one more than the last index
+    featureIndex = blocks.length;
+}
 </script>
 
 <script>
@@ -565,7 +620,9 @@ function addFeatureBlock() {
         select.innerHTML = `
             <option value='' selected>Choose...</option>
             @foreach ($conditions as $item)
-                <option value="{{ $item->value }}">{{ $item->name }}</option>
+                <option value="{{ $item->value }}">
+                    {{ $item->name }}
+                </option>
             @endforeach
         `;
 

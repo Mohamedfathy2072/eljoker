@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class Flag extends Model
 {
+    use HasTranslations;
     protected $fillable = [
         'car_id',
         'value',
         'image'
     ];
+
+    public $translatable = ['value'];
 }

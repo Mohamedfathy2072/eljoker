@@ -32,14 +32,14 @@ return new class extends Migration
             $table->integer('engine_capacity_cc')->nullable(); // Engine capacity in cc
 
             // Physical attributes
-            $table->string('color', 50);
+            $table->json('color');
             $table->foreignId('size_id')->nullable()->constrained()->onDelete('set null'); // Size Long, Width, Height
 
             // Performance & condition
             $table->unsignedInteger('mileage'); // Total kilometers driven
             $table->foreignId('horsepower_id')->nullable()->constrained()->onDelete('set null'); // Speed
             $table->foreignId('vehicle_status_id')->nullable()->constrained()->onDelete('set null'); // New, Used, etc.
-            $table->string('refurbishment_status', 50); // Refurbishment status if applicable
+            $table->json('refurbishment_status'); // Refurbishment status if applicable
 
             // Pricing
             $table->decimal('price'); // Sale price

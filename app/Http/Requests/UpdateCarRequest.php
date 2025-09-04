@@ -74,7 +74,8 @@ class UpdateCarRequest extends FormRequest
             // Flags
             'flags' => 'nullable|array',
             'flags.*.id' => 'nullable|integer|exists:flags,id',
-            'flags.*.name' => 'nullable|string|max:100',
+            'flags.*.name_ar' => 'nullable|string|max:100',
+            'flags.*.name_en' => 'nullable|string|max:100',
             'flags.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             // Features (multi-dimensional)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TransmissionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\TransmissionTypeResource;
 
 class TransmissionTypeController extends Controller
 {
@@ -18,14 +19,20 @@ class TransmissionTypeController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        TransmissionType::create(['name' => $request->input('name')]);
+        TransmissionType::create([
+            'name' => [
+                'ar' => $request->input('name_ar'),
+                'en' => $request->input('name_en')
+            ]
+        ]);
 
         return redirect()->route('admin.TransmissionTypes')->with('success', 'Transmission Type created successfully.');
     }
@@ -33,7 +40,8 @@ class TransmissionTypeController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
@@ -41,8 +49,9 @@ class TransmissionTypeController extends Controller
         }
 
         $data = TransmissionType::findOrFail($id);
-        $data->update(['name' => $request->input('name')]);
-
+        $data->setTranslation('name', 'ar', $request->input('name_ar'));
+        $data->setTranslation('name', 'en', $request->input('name_en'));
+        $data->save();
         return redirect()->route('admin.TransmissionTypes')->with('success', 'Transmission Type updated successfully.');
     }
 
@@ -62,6 +71,7 @@ class TransmissionTypeController extends Controller
     public function indexAPI()
     {
         $brands = TransmissionType::all();
+        $brands = TransmissionTypeResource::collection($brands);
         return response()->json($brands, 200);
     }
 
@@ -72,6 +82,7 @@ class TransmissionTypeController extends Controller
     {
         try {
             $brand = TransmissionType::findOrFail($id);
+            $brand = new TransmissionTypeResource($brand);
             return response()->json($brand, 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'BodyStyle not found'], 404);

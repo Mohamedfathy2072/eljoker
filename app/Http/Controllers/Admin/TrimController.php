@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Trim;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\TrimResource;
 
 class TrimController extends Controller
 {
@@ -18,14 +19,20 @@ class TrimController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        Trim::create(['name' => $request->input('name')]);
+        Trim::create([
+            'name' => [
+                'ar' => $request->input('name_ar'),
+                'en' => $request->input('name_en')
+            ]
+        ]);
 
         return redirect()->route('admin.Trim')->with('success', 'Trim created successfully.');
     }
@@ -33,7 +40,8 @@ class TrimController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
@@ -41,8 +49,9 @@ class TrimController extends Controller
         }
 
         $data = Trim::findOrFail($id);
-        $data->update(['name' => $request->input('name')]);
-
+        $data->setTranslation('name', 'ar', $request->input('name_ar'));
+        $data->setTranslation('name', 'en', $request->input('name_en'));
+        $data->save(); 
         return redirect()->route('admin.Trim')->with('success', 'Trim updated successfully.');
     }
 
@@ -62,6 +71,7 @@ class TrimController extends Controller
     public function indexAPI()
     {
         $brands = Trim::all();
+        $brands = TrimResource::collection($brands);
         return response()->json($brands, 200);
     }
 
@@ -72,9 +82,10 @@ class TrimController extends Controller
     {
         try {
             $brand = Trim::findOrFail($id);
+            $brand = new TrimResource($brand);
             return response()->json($brand, 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'BodyStyle not found'], 404);
+            return response()->json(['error' => 'Trim not found'], 404);
         }
     }
 }

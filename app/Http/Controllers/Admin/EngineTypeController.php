@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EngineType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\EngineTypeResource;
 
 class EngineTypeController extends Controller
 {
@@ -18,14 +19,18 @@ class EngineTypeController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
 
-        EngineType::create(['name' => $request->input('name')]);
+        EngineType::create(['name' => [
+            'ar'=>request()->input('name_ar'),
+            'en'=>request()->input('name_en')
+        ]]);
 
         return redirect()->route('admin.EngineTypes')->with('success', 'Engine Type created successfully.');
     }
@@ -33,7 +38,8 @@ class EngineTypeController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255'
         ]);
 
         if ($validate->fails()) {
@@ -41,8 +47,9 @@ class EngineTypeController extends Controller
         }
 
         $data = EngineType::findOrFail($id);
-        $data->update(['name' => $request->input('name')]);
-
+        $data->setTranslation('name', 'ar', $request->input('name_ar'));
+        $data->setTranslation('name', 'en', $request->input('name_en'));
+        $data->save();
         return redirect()->route('admin.EngineTypes')->with('success', 'Engine Type updated successfully.');
     }
 
@@ -62,7 +69,7 @@ class EngineTypeController extends Controller
     public function indexAPI()
     {
         $brands = EngineType::all();
-        return response()->json($brands, 200);
+        return EngineTypeResource::collection($brands);
     }
 
     /**
@@ -72,9 +79,9 @@ class EngineTypeController extends Controller
     {
         try {
             $brand = EngineType::findOrFail($id);
-            return response()->json($brand, 200);
+            return new EngineTypeResource($brand);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'BodyStyle not found'], 404);
+            return response()->json(['error' => 'EngineType not found'], 404);
         }
     }
 }
