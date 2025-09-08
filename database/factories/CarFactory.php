@@ -26,10 +26,22 @@ class CarFactory extends Factory
             'horsepower_id' => \App\Models\Horsepower::factory(),
             'vehicle_status_id' => \App\Models\VehicleStatus::inRandomOrder()->first()->id,  // جلب حالة السيارة عشوائيًا
             'refurbishment_status' => $this->faker->randomElement([
-                'empty',
-                'limited_offer',
-                'fully_refurbished',
-                'certified_refurbished',
+                [
+                    'en' => 'empty',
+                    'ar' => 'empty'
+                ],
+                [
+                    'en' => 'limited_offer',
+                    'ar' => 'limited_offer'
+                ],
+                [
+                    'en' => 'fully_refurbished',
+                    'ar' => 'fully_refurbished'
+                ],
+                [
+                    'en' => 'certified_refurbished',
+                    'ar' => 'certified_refurbished'
+                ],
             ]),
             'price' => $this->faker->randomFloat(2, 50000, 1000000),
             'discount' => $this->faker->randomFloat(2, 0, 10000),

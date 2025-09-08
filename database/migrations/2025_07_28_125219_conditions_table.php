@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
-            $table->string('name', 119); // Condition name
-            $table->string('part', 199); // Condition part
-            $table->text('description')->nullable(); // Condition description
+            $table->json('name'); // Condition name
+            $table->json('part'); // Condition part
+            $table->json('description')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

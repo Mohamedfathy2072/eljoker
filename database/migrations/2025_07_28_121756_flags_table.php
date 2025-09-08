@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('flags', function (Blueprint $table) {
             $table->id();
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
-            $table->string('value', 119);
+            $table->json('value', 119);
             $table->string('image')->nullable();
             $table->timestamps();
         });

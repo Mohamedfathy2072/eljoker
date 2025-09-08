@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('features', function (Blueprint $table) {
             $table->id();
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
-            $table->string('name', 119); // Feature name
-            $table->string('label', 119); // Feature label
-            $table->string('value', 119); // Feature value
+            $table->json('name'); 
+            $table->json('label'); 
+            $table->json('value'); 
             $table->timestamps();
         });
     }

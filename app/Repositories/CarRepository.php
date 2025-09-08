@@ -15,6 +15,7 @@ use App\Models\Horsepower;
 use App\Models\Image;
 use App\Models\Size;
 use App\Models\VehicleStatus;
+use App\Enums\RefurbishmentStatus;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -141,6 +142,7 @@ class CarRepository implements CarRepositoryInterface
 
     public function insert(array $carData)
     {
+
         // length, width, height => insert in table sizes
         // min max fuel economy => insert in table fuel_economies
         // min max horsepower insert in table horsepower
@@ -172,7 +174,10 @@ class CarRepository implements CarRepositoryInterface
             'type_id'               => !empty($carData['type']) ? (int) $carData['type'] : null,
             'transmission_type_id'  => !empty($carData['transmission_type']) ? (int) $carData['transmission_type'] : null,
             'drive_type_id'         => !empty($carData['drive_type']) ? (int) $carData['drive_type'] : null,
-            'color'                 => $carData['color'] ?? null,
+            'color'                 => !empty($carData['color_en']) ? [
+                'en' => $carData['color_en'],
+                'ar' => $carData['color_ar']
+            ] : [],
             'engine_type_id'        => !empty($carData['engine_type']) ? (int) $carData['engine_type'] : null,
             'engine_capacity_cc'    => !empty($carData['engine_capacity']) ? (int) $carData['engine_capacity'] : null,
             'mileage'               => !empty($carData['mileage']) ? (int) $carData['mileage'] : null,
@@ -180,7 +185,10 @@ class CarRepository implements CarRepositoryInterface
             'fuel_economy_id'       => $fuel?->id,
             'horsepower_id'         => $horsepower?->id,
             'vehicle_status_id'     => !empty($carData['vehicle_status']) ? (int) $carData['vehicle_status'] : null,
-            'refurbishment_status'  => $carData['refurbishment_status'] ?? 'empty',
+            'refurbishment_status'  =>  !empty($carData['refurbishment_status']) ? [
+                'en' => $carData['refurbishment_status'],
+                'ar' => RefurbishmentStatus::from($carData['refurbishment_status'])->label('ar')
+            ] : [],
             'price'                 => isset($carData['price']) ? (float) $carData['price'] : 0,
             'discount'              => isset($carData['discount']) ? (float) $carData['discount'] : 0,
             'monthly_installment'   => isset($carData['monthly_installment']) ? (float) $carData['monthly_installment'] : null,
@@ -190,28 +198,39 @@ class CarRepository implements CarRepositoryInterface
         ];
 
         $newCar = Car::create($carDetails);
-        // make new flags, features, conditions for the car
+        // Handle features
+        if (!empty($carData['features'])) {
+            foreach ($carData['features'] as $feature) {
+                if (empty($feature['name'])) continue;
+                
+                $newCar->features()->create([
+                    'name' => $feature['name'],
+                    'label' => [
+                        'en' => $feature['label']['en'] ?? '',
+                        'ar' => $feature['label']['ar'] ?? ''
+                    ],
+                    'value' => [
+                        'en' => $feature['value']['en'] ?? '',
+                        'ar' => $feature['value']['ar'] ?? ''
+                    ]
+                ]);
+            }
+        }
+
+        // make new flags, conditions for the car
         foreach ($carData['flags'] as $flag) {
-            if (empty($flag) || empty($flag['name'])) continue;
+            if (empty($flag) || empty(($flag['name_ar'] || $flag['name_en']))) continue;
             $path = null;
             if (!empty($flag['image']))
                 $path = $flag['image']->store('flags', 'public');
             $newCar->flags()->create([
                 'car_id' => $newCar->id,
-                'value' => $flag['name'],
+                'value' => [
+                    'ar' => $flag['name_ar'],
+                    'en' => $flag['name_en']
+                ],
                 'image' => $path
             ]);
-        }
-
-        for ($i = 0; $i < count($carData['features']); $i += 3) {
-            if (empty($carData['features'][$i]['name'])) continue;
-            $feature = [
-                'car_id' => $newCar->id,
-                'name' => $carData['features'][$i]['name'],
-                'label' => $carData['features'][$i + 1]['label'] ?? '',
-                'value' => $carData['features'][$i + 2]['value'] ?? '',
-            ];
-            $newCar->features()->create($feature);
         }
 
         foreach ($carData['conditions'] as $cond) {
@@ -247,6 +266,7 @@ class CarRepository implements CarRepositoryInterface
 
     public function update($carId, $carData)
     {
+        dd($carData);
         $car = Car::findOrFail($carId);
 
         $fuelEco = $this->updateFuelEconomy($carData);
@@ -288,6 +308,7 @@ class CarRepository implements CarRepositoryInterface
                 'max' => $data['max_fuel_economy'],
             ]);
         }
+
         return $model;
     }
 

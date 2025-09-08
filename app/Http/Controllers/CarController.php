@@ -32,7 +32,9 @@ class CarController extends Controller
 
     public function store(CreateCarRequest $request)
     {
+        // dd($request) ;
         $carData = $request->validated();
+        
         try {
             $newCar = $this->carService->addNewCar($carData);
             if (request()->expectsJson())
@@ -169,9 +171,10 @@ class CarController extends Controller
     {
         $carArray = $car->toArray(request());
         $carArray['flags'] = $carArray['flags']->toArray(request());
-        $carArray['features'] = $carArray['features']->toArray(request());
+        $carArray['features'] = $carArray['features'];
         $carArray['conditions'] = $carArray['conditions']->toArray(request());
         $carArray['images'] = $carArray['images']->toArray(request());
+
         return $carArray;
     }
 

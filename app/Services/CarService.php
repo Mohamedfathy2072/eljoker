@@ -47,6 +47,7 @@ class CarService
 
     public function addNewCar(array $carData)
     {
+
         try {
             return $this->carRepository->insert($carData);
         } catch (QueryException $e) {

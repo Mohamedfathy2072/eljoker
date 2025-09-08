@@ -38,11 +38,21 @@ class LookupSeeder extends Seeder
         }
 
         foreach (DriveTypeFactory::$models as $item) {
-            DriveType::firstOrCreate(['name' => $item]);
+            DriveType::firstOrCreate([
+                'name' => [
+                    'en' => $item,
+                    'ar' => $item
+                ]
+            ]);
         }
 
         foreach (EngineTypeFactory::$engineTypes as $item) {
-            EngineType::firstOrCreate(['name' => $item]);
+            EngineType::firstOrCreate([
+                'name' => [
+                    'en' => $item,
+                    'ar' => $item
+                ]
+            ]);
         }
 
         foreach (TrimFactory::$trims as $item) {
