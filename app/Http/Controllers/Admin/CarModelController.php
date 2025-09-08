@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\CarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ModelsResource;
 
 class CarModelController extends Controller
 {
@@ -21,7 +22,8 @@ class CarModelController extends Controller
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'brand_id' => 'required|exists:brands,id',
         ]);
 
@@ -30,7 +32,10 @@ class CarModelController extends Controller
         }
 
         CarModel::create([
-            'name' => $request->input('name'),
+            'name'=>[
+                'ar'=> $request->input('name_ar'),
+                'en'=> $request->input('name_en'),
+            ],
             'brand_id' => $request->input('brand_id'),
         ]);
 
@@ -40,7 +45,8 @@ class CarModelController extends Controller
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'brand_id' => 'required|exists:brands,id',
         ]);
 
@@ -49,10 +55,10 @@ class CarModelController extends Controller
         }
 
         $CarModel = CarModel::findOrFail($id);
-        $CarModel->update([
-            'name' => $request->input('name'),
-            'brand_id' => $request->input('brand_id'),
-        ]);
+        $CarModel->setTranslation('name', 'ar', $request->input('name_ar'));
+        $CarModel->setTranslation('name', 'en', $request->input('name_en'));
+        $CarModel->brand_id = $request->input('brand_id');
+        $CarModel->save() ;
 
         return redirect()->route('admin.CarModels')->with('success', 'Model updated successfully.');
     }
@@ -71,14 +77,14 @@ class CarModelController extends Controller
      */
     public function indexAPI()
     {
-        $data = CarModel::with('brand')->get();
-        return response()->json($data, 200);
+        $models = CarModel::with('brand')->get();
+        return ModelsResource::collection($models);
     }
 
     public function showAPI(int $id)
     {
         try {
-            $data = CarModel::with('brand')->findOrFail($id);
+            $data = new ModelsResource(CarModel::with('brand')->findOrFail($id));
             return response()->json($data, 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'CarModel not found'], 404);

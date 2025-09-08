@@ -22,7 +22,14 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title">Model</h5>
-                    @error('name')
+                    @error('name_ar')
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-octagon me-1"></i>
+                            {{ $message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @enderror
+                    @error('name_en')
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="bi bi-exclamation-octagon me-1"></i>
                             {{ $message }}
@@ -50,9 +57,12 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="modelName" class="form-label">Model Name</label>
-                                        <input type="text" class="form-control" id="modelName" name="name" required>
-
+                                        <label for="name_ar" class="form-label">Arabic Name</label>
+                                        <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="name_en" class="form-label">English Name</label>
+                                        <input type="text" class="form-control" id="name_en" name="name_en" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -78,9 +88,8 @@
             <table class="table table-striped table-hover align-middle text-center">
                 <thead>
                   <tr>
-                    <th>
-                      <b>N</b>ame
-                    </th>
+                    <th>Arabic Name</th>
+                    <th>English Name</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
                     <th>Brand</th>
                     <th>Actions</th>
@@ -89,7 +98,8 @@
                 <tbody>
                     @foreach($CarModels as $model)
                     <tr>
-                        <td>{{ $model->name }}</td>
+                        <td>{{ $model->getTranslation('name','ar') }}</td>
+                        <td>{{ $model->getTranslation('name','en') }}</td>
                         <td>{{ $model->created_at->format('Y/m/d') }}</td>
                         <td>{{ $model->brand->name ?? '-' }}</td>
                         <td>
@@ -111,8 +121,12 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="editModelName{{ $model->id }}" class="form-label text-start w-100">Model Name</label>
-                                                    <input type="text" class="form-control" id="editModelName{{ $model->id }}" name="name" value="{{ $model->name }}" required>
+                                                    <label for="editModelName_ar{{ $model->id }}" class="form-label text-start w-100">Arabic Name</label>
+                                                    <input type="text" class="form-control" id="editModelName_ar{{ $model->id }}" name="name_ar" value="{{ $model->getTranslation('name','ar') }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editModelName_en{{ $model->id }}" class="form-label text-start w-100">English Name</label>
+                                                    <input type="text" class="form-control" id="editModelName_en{{ $model->id }}" name="name_en" value="{{ $model->getTranslation('name','en') }}" required>
                                                 </div>
                                             </div>
                                             <div class="mb-3">

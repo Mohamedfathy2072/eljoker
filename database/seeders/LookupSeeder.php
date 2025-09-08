@@ -29,13 +29,9 @@ class LookupSeeder extends Seeder
     {
         $this->seedBrandsModels();
 
-        foreach (BodyStyleFactory::$bodyStyles as $item) {
-            BodyStyle::firstOrCreate(['name' => $item]);
-        }
+        $this->seedBodyStyles();
 
-        foreach (TypeFactory::$vehicleTypes as $item) {
-            Type::firstOrCreate(['name' => $item]);
-        }
+        $this->seedTypes();
 
         foreach (TransmissionTypeFactory::$transmissionTypes as $item) {
             TransmissionType::firstOrCreate(['name' => $item]);
@@ -61,35 +57,38 @@ class LookupSeeder extends Seeder
     public function seedBrandsModels()
     {
         $carModelBrandMap = [
-            'Corolla' => ['Toyota', 'brands/Toyota.png'],
-            'Civic' => ['Honda', 'brands/Honda.png'],
-            'Mustang' => ['Ford', 'brands/Ford.png'],
-            'Camaro' => ['Chevrolet', 'brands/Chevrolet.png'],
-            'Tucson' => ['Hyundai', 'brands/Hyundai.png'],
-            'Model 3' => ['Tesla', 'brands/Tesla.png'],
-            'CX-5' => ['Mazda', 'brands/Mazda.png'],
-            'Altima' => ['Nissan', 'brands/Nissan.png'],
-            'X5' => ['BMW', 'brands/BMW.png'],
-            'A4' => ['Audi', 'brands/Audi.png'],
-            'Wrangler' => ['Jeep', 'brands/Jeep.png'],
-            'Golf' => ['Volkswagen', 'brands/Volkswagen.png'],
-            '500' => ['Fiat', 'brands/Fiat.png'],
-            'Clio' => ['Renault', 'brands/Renault.png'],
-            'Mitsubishi Outlander' => ['Mitsubishi', 'brands/Mitsubishi.png'],
-            'Skoda' => ['Skoda', 'brands/Skoda.png'],
-            'Seat' => ['Seat', 'brands/Seat.png'],
-            'Peugeot' => ['Peugeot', 'brands/Peugeot.png'],
-            'MG' => ['MG', 'brands/MG.png'],
-            'Kia' => ['Kia', 'brands/Kia.png'],
-            'Citroen' => ['Citroen', 'brands/Citroen.png']
+            'Corolla' => ['Toyota','تويتا', 'brands/Toyota.png'],
+            'Civic' => ['Honda','هوندا', 'brands/Honda.png'],
+            'Mustang' => ['Ford','فورد', 'brands/Ford.png'],
+            'Camaro' => ['Chevrolet','تشيفورلي', 'brands/Chevrolet.png'],
+            'Tucson' => ['Hyundai','هوندا', 'brands/Hyundai.png'],
+            'Model 3' => ['Tesla','تيسلا', 'brands/Tesla.png'],
+            'CX-5' => ['Mazda','مازدا', 'brands/Mazda.png'],
+            'Altima' => ['Nissan','نيسان', 'brands/Nissan.png'],
+            'X5' => ['BMW','بم', 'brands/BMW.png'],
+            'A4' => ['Audi','أودي', 'brands/Audi.png'],
+            'Wrangler' => ['Jeep','جيب', 'brands/Jeep.png'],
+            'Golf' => ['Volkswagen','فولكswagen', 'brands/Volkswagen.png'],
+            '500' => ['Fiat','فيت', 'brands/Fiat.png'],
+            'Clio' => ['Renault','رينالوت', 'brands/Renault.png'],
+            'Mitsubishi Outlander' => ['Mitsubishi','ميتسبوبي', 'brands/Mitsubishi.png'],
+            'Skoda' => ['Skoda','سكودا', 'brands/Skoda.png'],
+            'Seat' => ['Seat','سيت', 'brands/Seat.png'],
+            'Peugeot' => ['Peugeot','بيوتوغ', 'brands/Peugeot.png'],
+            'MG' => ['MG','ميج', 'brands/MG.png'],
+            'Kia' => ['Kia','كيا', 'brands/Kia.png'],
+            'Citroen' => ['Citroen','سيترون', 'brands/Citroen.png']
         ];
 
         $brandIds = [];
 
         // Create brands if they don't exist, or update image if necessary
-        foreach ($carModelBrandMap as $modelName => [$brandName, $brandImage]) {
+        foreach ($carModelBrandMap as $modelName => [$brandName_en,$brandName_ar, $brandImage]) {
             $brand = Brand::firstOrCreate(
-                ['name' => $brandName],  // Only check for the name
+                ['name' =>[
+                    'en' => $brandName_en,
+                    'ar' => $brandName_ar
+                ]],
                 ['image' => $brandImage] // Create with image if not exists
             );
 
@@ -99,15 +98,67 @@ class LookupSeeder extends Seeder
             }
 
             // Store brand ID
-            $brandIds[$brandName] = $brand->id;
+            $brandIds[$brandName_en] = $brand->id;
         }
 
         // Create car models with the corresponding brand_id
-        foreach ($carModelBrandMap as $modelName => [$brandName, $brandImage]) {
+        foreach ($carModelBrandMap as $modelName => [$brandName_en, $brandName_ar, $brandImage]) {
             CarModel::firstOrCreate([
-                'name' => $modelName,
-                'brand_id' => $brandIds[$brandName],
+                'name' => [
+                    'en' => $brandName_en,
+                    'ar' => $brandName_ar
+                ],
+                'brand_id' => $brandIds[$brandName_en],
             ]);
+        }
+    }
+
+    private function seedBodyStyles()
+    {
+        $bodyStyles = [
+            ['ar' => 'سيدان', 'en' => 'Sedan'],
+            ['ar' => 'دفع رباعي', 'en' => 'SUV'],
+            ['ar' => 'شاحنة', 'en' => 'Truck'],
+            ['ar' => 'فان', 'en' => 'Van'],
+            ['ar' => 'كوبيه', 'en' => 'Coupe'],
+            ['ar' => 'هاتشباك', 'en' => 'Hatchback'],
+            ['ar' => 'كابريوليه', 'en' => 'Convertible'],
+            ['ar' => 'ستيشن واجن', 'en' => 'Wagon'],
+            ['ar' => 'مينيفان', 'en' => 'Minivan'],
+            ['ar' => 'بيك أب', 'en' => 'Pickup']
+        ];
+
+        foreach ($bodyStyles as $style) {
+            \App\Models\BodyStyle::firstOrCreate(
+                ['name->en' => $style['en']],
+                ['name' => $style]
+            );
+        }
+    }
+
+    private function seedTypes()
+    {
+        $types = [
+            ['en' => 'Sedan', 'ar' => 'سيدان'],
+            ['en' => 'SUV', 'ar' => 'دفع رباعي'],
+            ['en' => 'Truck', 'ar' => 'شاحنة'],
+            ['en' => 'Coupe', 'ar' => 'كوبيه'],
+            ['en' => 'Convertible', 'ar' => 'كابريوليه'],
+            ['en' => 'Hatchback', 'ar' => 'هاتشباك'],
+            ['en' => 'Minivan', 'ar' => 'ميني فان'],
+            ['en' => 'Van', 'ar' => 'فان'],
+            ['en' => 'Crossover', 'ar' => 'كروس أوفر'],
+            ['en' => 'Wagon', 'ar' => 'وايقن'],
+            ['en' => 'Pickup', 'ar' => 'بيك أب'],
+            ['en' => 'Electric', 'ar' => 'كهربائي'],
+            ['en' => 'Hybrid', 'ar' => 'هجين']
+        ];
+
+        foreach ($types as $type) {
+            Type::firstOrCreate(
+                ['name->en' => $type['en']],
+                ['name' => $type]
+            );
         }
     }
 }

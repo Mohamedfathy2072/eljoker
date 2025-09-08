@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('car_models', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->json('name');
             $table->foreignId('brand_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });

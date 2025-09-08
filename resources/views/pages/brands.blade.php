@@ -22,6 +22,20 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title">Brands</h5>
+                    @error('name_ar')
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-octagon me-1"></i>
+                            Arabic Name: {{ $message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @enderror
+                    @error('name_en')
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-octagon me-1"></i>
+                            English Name: {{ $message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @enderror
                     @error('name')
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="bi bi-exclamation-octagon me-1"></i>
@@ -53,10 +67,15 @@
                                         <label for="brandImage" class="form-label">Brand Image</label>
                                         <input type="file" class="form-control" id="brandImage" name="image" accept="image/*">
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="brandName" class="form-label">Brand Name</label>
-                                        <input type="text" class="form-control" id="brandName" name="name" required>
-
+                                    <div class="form-group">
+                                        <label for="brandNameEn" class="form-label">Name (English)</label>
+                                        <input type="text" name="name_en" class="form-control" 
+                                               value="{{ old('name_en') }}" required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label for="brandNameAr" class="form-label">Name (العربية)</label>
+                                        <input type="text" name="name_ar" class="form-control" dir="rtl"
+                                               value="{{ old('name_ar') }}" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -74,11 +93,10 @@
                 <thead>
                   <tr>
                       <th>Image</th>
-                    <th>
-                      <b>N</b>ame
-                    </th>
-                    <th data-type="date" data-format="YYYY/DD/MM">Created Date</th>
-                    <th>Actions</th>
+                      <th>Name (Ar)</th>
+                      <th>Name (En)</th>
+                      <th>Created Date</th>
+                      <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,12 +104,17 @@
                     <tr>
                         <td>
                             @if($brand->image)
-                                <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" width="50">
+                                <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->getTranslation('name', 'en') }}" width="50">
                             @else
                                 <span class="text-muted">No Image</span>
                             @endif
                         </td>
-                        <td>{{ $brand->name }}</td>
+                        <td>
+                            <div>{{ $brand->getTranslation('name', 'ar') }}</div>
+                        </td>
+                        <td>
+                            <div>{{ $brand->getTranslation('name', 'en') }}</div>
+                        </td>
                         <td>{{ $brand->created_at->format('Y/m/d') }}</td>
                         <td>
                             <!-- Edit Button triggers modal -->
@@ -99,41 +122,46 @@
                                 Edit
                             </button>
 
-                            <!-- Edit Brand Modal -->
-                            <div class="modal fade" id="editBrandModal{{ $brand->id }}" tabindex="-1" aria-labelledby="editBrandModalLabel{{ $brand->id }}" aria-hidden="true">
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editBrandModal{{ $brand->id }}" tabindex="-1">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <form action="{{ route('admin.brands.edit', $brand->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editBrandModalLabel{{ $brand->id }}">Edit Brand</h5>
+                                                <h5 class="modal-title">Edit Brand</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label for="editBrandImage{{ $brand->id }}" class="form-label">Update Image</label>
-                                                    <input type="file" class="form-control" id="editBrandImage{{ $brand->id }}" name="image" accept="image/*">
-                                                </div>
-
                                                 @if($brand->image)
                                                     <div class="mb-3">
-                                                        <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" width="70">
+                                                        <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->getTranslation('name', 'en') }}" width="70">
                                                     </div>
                                                 @endif
                                                 <div class="mb-3">
-                                                    <label for="editBrandName{{ $brand->id }}" class="form-label">Brand Name</label>
-                                                    <input type="text" class="form-control" id="editBrandName{{ $brand->id }}" name="name" value="{{ $brand->name }}" required>
+                                                    <label for="editBrandImage{{ $brand->id }}" class="form-label">Change Image</label>
+                                                    <input type="file" class="form-control" id="editBrandImage{{ $brand->id }}" name="image" accept="image/*">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editBrandNameEn{{ $brand->id }}" class="form-label">Name (English)</label>
+                                                    <input type="text" name="name_en" class="form-control" 
+                                                           value="{{ old('name_en', $brand->getTranslation('name', 'en') ?? '') }}" required>
+                                                </div>
+                                                <div class="form-group mt-3">
+                                                    <label for="editBrandNameAr{{ $brand->id }}" class="form-label">Name (العربية)</label>
+                                                    <input type="text" name="name_ar" class="form-control" dir="rtl"
+                                                           value="{{ old('name_ar', $brand->getTranslation('name', 'ar') ?? '') }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- End Edit Modal -->
                             <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
