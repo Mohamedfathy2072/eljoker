@@ -27,6 +27,10 @@ use App\Http\Controllers\Admin\{
     VehicleStatusController
 };
 
+use App\Http\Controllers\Draftech\{
+    AuthController as draftechAuthController
+};
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -39,14 +43,17 @@ Route::prefix('auth')->group(function () {
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
     Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
     
-
+    // draftech endpoints apis 
+    Route::post('send-otp', [draftechAuthController::class, 'sendOtp']);
+    Route::post('verify-otp', [draftechAuthController::class, 'verifyOtp']);
+    
 });
 
-    Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
-        Route::post('/', [FinancingRequestController::class, 'store']);
-        Route::get('/', [FinancingRequestController::class, 'index']);
-        Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
-    });
+Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
+    Route::post('/', [FinancingRequestController::class, 'store']);
+    Route::get('/', [FinancingRequestController::class, 'index']);
+    Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
+});
 
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
@@ -141,3 +148,6 @@ Route::prefix('quizzes')->middleware('auth:api')->group(function () {
 Route::prefix('start-ad')->group(function () {
     Route::get('/', [StartAdController::class, 'show']);
 });
+
+// draftech endpoints part 2
+Route::post('complete-profile', [draftechAuthController::class, 'completeRegistration']); 
