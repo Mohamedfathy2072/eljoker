@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name_en', 191)->nullable();
-            $table->string('name_ar', 191)->nullable();
-            $table->string('email', 191)->unique();
+            $table->json('name')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->string('phone', 15)->unique()->nullable();
             $table->string('otp_hash')->nullable();
             $table->timestamp('otp_expires_at')->nullable();
@@ -24,6 +23,10 @@ return new class extends Migration
             $table->boolean('completed_registration')->default(false);
             $table->string('fcm_token')->nullable();
             $table->decimal('wallet', 12, 2)->default(0);
+            $table->json('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('password')->nullable();
+            $table->boolean('updated_profile')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

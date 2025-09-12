@@ -39,8 +39,10 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             [
                 'email' => 'admin@klaksat.com',
-                'name_ar' => 'كلاكسات',
-                'name_en' => 'klaksat',
+                'name' => [
+                    'ar' => 'كلاكسات',
+                    'en' => 'klaksat'
+                ],
                 'phone' => '01032163233',
                 'is_active' => true
             ]
@@ -56,8 +58,10 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             [
                 'email' => 'user@example.com',
-                'name_en' => 'User User',
-                'name_ar' => 'المستخدم الافتراضي',
+                'name' => [
+                    'en' => 'User User',
+                    'ar' => 'المستخدم الافتراضي'
+                ],
                 'phone' => '01125833982',
                 'is_active' => true
             ]
@@ -70,8 +74,10 @@ class DatabaseSeeder extends Seeder
             User::firstOrCreate(
                 [
                     'email' => $fakerEn->unique()->safeEmail, // Generates a unique fake email
-                    'name_en' => $fakerEn->name, // Generates an English name
-                    'name_ar' => $fakerAr->name, // Generates an Arabic name
+                    'name' => [
+                        'en' => $fakerEn->name, // Generates an English name
+                        'ar' => $fakerAr->name
+                    ], // Generates an Arabic name
                     'phone' => $fakerAr->numerify('0##########'), // Generates a fake phone number
                     'is_active' => $fakerEn->boolean(80) // Randomly set 'is_active' to 80% of true
                 ]
