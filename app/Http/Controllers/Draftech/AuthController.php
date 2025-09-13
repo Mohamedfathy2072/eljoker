@@ -158,7 +158,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'تم تسجيل الدخول إلى حسابك بنجاح.',
             'token' => $token,
-            'user' => $user
+            'user' => new DraftechUserResource($user)
         ]);
 
     }
@@ -187,7 +187,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'تم تحديث البيانات بنجاح.',
-            'user' => $user
+            'user' => new DraftechUserResource($user)
         ]);
     }
 
@@ -200,7 +200,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'user' => $user
+            'user' => new DraftechUserResource($user)
         ]);
     }
 

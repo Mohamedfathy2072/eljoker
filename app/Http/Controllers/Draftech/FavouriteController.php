@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Draftech;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\CarService;
+use App\Http\Resources\CarResource;
 
 class FavouriteController extends BaseController
 {
@@ -38,17 +39,9 @@ class FavouriteController extends BaseController
     public function myFavourites(Request $request)
     {
         $user = auth('api')->user();
-
         $size = $request->query('size', 10);
-
-        $favourites = $user->favouriteCars()
-            ->with(['images', 'brand', 'exteriorConditions', 'interiorConditions', 'mechanicalConditions'])
-            ->paginate($size);
-
-        // Format كل سيارة
-        $this->carService->formatCars($favourites);
-
-        return $this->successResponse($favourites, 'Favourite cars fetched successfully.');
+        $favourites = $user->favouriteCars()->paginate($size);
+        return $this->successResponse(CarResource::collection($favourites), 'Favourite cars fetched successfully.');
     }
 
 

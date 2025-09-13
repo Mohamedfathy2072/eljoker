@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class BrandController extends Controller
+class BrandController extends BaseController
 {
     public function showBrands()
     {
@@ -83,11 +83,16 @@ class BrandController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function indexAPI()
+    public function indexAPI(Request $request)
     {
-
-        $brands = BrandResource::collection(Brand::all());
-        return response()->json($brands, 200);
+        if(config('app.app') === 'kalksat') { 
+            $brands = BrandResource::collection(Brand::all());
+            return response()->json($brands, 200);
+        } else {
+            $size = $request->input('size', 10);
+            $brands = Brand::paginate($size);
+            return $this->successResponse(BrandResource::collection($brands), "Brands fetched successfully.");
+        }
     }
 
     /**
@@ -96,8 +101,10 @@ class BrandController extends Controller
     public function showAPI(int $id)
     {
         try {
-            $brand = new BrandResource(Brand::findOrFail($id));
-            return response()->json($brand, 200);
+            $brand = new BrandResource(Brand::findOrFail($id));            
+            return config('app.app') === 'kalksat' 
+                ? response()->json($brand, 200) 
+                : $this->singleItemResponse($brand, "Brand fetched successfully.");
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'BodyStyle not found'], 404);
         }
