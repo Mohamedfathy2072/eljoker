@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('license_expire_date')->nullable(); // License Valid To
             $table->string('location')->nullable(); // Nasr City...
             $table->string('description')->nullable();
+            $table->string('vehicle_category')->nullable();
 
             // Vehicle specifications
             $table->foreignId('body_style_id')->nullable()->constrained()->onDelete('set null'); // SUV, Sedan, Hatchback, etc.

@@ -37,6 +37,10 @@ class Car extends Model
         'trim_id',
         'down_payment',
         'owner_id',
+        'vehicle_category',
+        'description',
+        'location',
+        'payment_option'
     ];
 
     public $translatable = ['color','refurbishment_status'];
