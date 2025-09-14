@@ -56,6 +56,8 @@ class CarResource extends JsonResource
             // Physical attributes
             'appearance' => [
                 'color' => $this->resource->color ?? '',
+                'color_en' => $this->resource->getTranslation('color', 'en'),
+                'color_ar' => $this->resource->getTranslation('color', 'ar'),
                 'size' => $this->resource->size ? [
                     'id' => (int) $this->resource->size->id,
                     'length' => $this->resource->size->length,
@@ -94,6 +96,7 @@ class CarResource extends JsonResource
                     'id' => (int) $this->resource->vehicle_status_id,
                     'name' => $this->resource->vehicleStatus?->name,
                 ] : null,
+                'refurbishment_status' => $this->resource->refurbishment_status,
                 'refurbishment_status_en' => $this->resource->getTranslation('refurbishment_status', 'en'),
                 'refurbishment_status_ar' => $this->resource->getTranslation('refurbishment_status', 'ar')
             ],
@@ -146,17 +149,21 @@ class CarResource extends JsonResource
                     ];
                 })->groupBy('name')->toArray(),
             // conditions
-            'conditions' => $this->resource->conditions->map(fn($condition) => [
-                        'id' => (int) $condition->id,
-                        'name' => $condition->name,
-                        'name_ar'=>$condition->getTranslation('name','ar'),
-                        'name_en'=>$condition->getTranslation('name','en'),
-                        'part_ar' => $condition->getTranslation('part','ar'),
-                        'part_en' => $condition->getTranslation('part','en'),
-                        'description_ar' => $condition->getTranslation('description','ar'),
-                        'description_en' => $condition->getTranslation('description','en'),
-                        'image' => $condition->image,
-                    ])->groupBy('name'),
+            'conditions' => $this->resource->conditions->map(function($condition) {
+                return [
+                    'id' => (int) $condition->id,
+                    'name' => $condition->name,
+                    'part' => $condition->part,
+                    'description' => $condition->description,
+                    'image' => $condition->image,
+                    'name_ar' => $condition->getTranslation('name', 'ar'),
+                    'name_en' => $condition->getTranslation('name', 'en'),
+                    'part_ar' => $condition->getTranslation('part', 'ar'),
+                    'part_en' => $condition->getTranslation('part', 'en'),
+                    'description_ar' => $condition->getTranslation('description', 'ar'),
+                    'description_en' => $condition->getTranslation('description', 'en'),
+                ];
+            })->groupBy('name'),
             // Media
             'images' => $this->resource->images ?? [],
             // Timestamps

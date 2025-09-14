@@ -16,6 +16,8 @@ use App\Models\Image;
 use App\Models\Size;
 use App\Models\VehicleStatus;
 use App\Enums\RefurbishmentStatus;
+use App\Enums\Feature as FeatureEnum; 
+use App\Enums\Condition as ConditionEnum; 
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -266,7 +268,7 @@ class CarRepository implements CarRepositoryInterface
 
     public function update($carId, $carData)
     {
-        dd($carData);
+        // dd($carData) ;
         $car = Car::findOrFail($carId);
 
         $fuelEco = $this->updateFuelEconomy($carData);
@@ -351,7 +353,10 @@ class CarRepository implements CarRepositoryInterface
             'drive_type_id'         => filled($data['drive_type']) ? (int) $data['drive_type'] : null,
             'engine_type_id'        => filled($data['engine_type']) ? (int) $data['engine_type'] : null,
             'engine_capacity_cc'    => filled($data['engine_capacity']) ? (float) $data['engine_capacity'] : null,
-            'color'                 => $data['color'] ?? null,
+            'color'                 => (!empty($data['color_en']) || !empty($data['color_ar'])) ? [
+                'en' => $data['color_en'] ?? '',
+                'ar' => $data['color_ar'] ?? ''
+            ] : null,
             'size_id'               => $size?->id,
             'mileage'               => filled($data['mileage']) ? (int) $data['mileage'] : null,
             'horsepower_id'         => $horseP?->id,
@@ -367,43 +372,85 @@ class CarRepository implements CarRepositoryInterface
 
     protected function syncFlags(Car $car, array $submittedFlags): void
     {
-        $submittedIds = collect($submittedFlags)->pluck('id')->filter()->toArray();
-        $existing = Flag::where('car_id', $car->id)->get();
+        try {
+            // Start transaction for atomic operations
+            \DB::beginTransaction();
 
-        foreach ($existing as $flag) {
-            if (!in_array($flag->id, $submittedIds)) {
-                $flag->delete();
+            // Get IDs of submitted flags (filter out null/empty values)
+            $submittedIds = collect($submittedFlags)
+                ->pluck('id')
+                ->filter()
+                ->values()
+                ->toArray();
+
+            // Delete flags that are not in the submitted list
+            if (!empty($submittedIds)) {
+                $car->flags()
+                    ->whereNotIn('id', $submittedIds)
+                    ->delete();
+            } else {
+                // If no flags with IDs are submitted, delete all existing flags
+                $car->flags()->delete();
             }
-        }
 
-        foreach ($submittedFlags as $flagInput) {
-            $flagModel = isset($flagInput['id'])
-                ? Flag::where('car_id', $car->id)->where('id', $flagInput['id'])->first()
-                : new Flag(['car_id' => $car->id]);
+            // Process each submitted flag
+            foreach ($submittedFlags as $flagInput) {
+                // Skip if both name_ar and name_en are empty
+                if (empty($flagInput['name_ar']) && empty($flagInput['name_en'])) {
+                    continue;
+                }
 
-            if (!$flagModel) continue;
+                // Find existing flag or create new one
+                $flagModel = isset($flagInput['id']) 
+                    ? $car->flags()->find($flagInput['id']) 
+                    : new Flag(['car_id' => $car->id]);
 
-            $flagModel->value = $flagInput['name'] ?? null;
-            if (isset($flagInput['image']) && $flagInput['image'] instanceof \Illuminate\Http\UploadedFile) {
-                $flagModel->image = $flagInput['image']->store('flags', 'public');
+                if (!$flagModel) {
+                    continue; // Skip if trying to update non-existent flag
+                }
+
+                // Update flag values
+                $flagModel->value = [
+                    'ar' => $flagInput['name_ar'] ?? '',
+                    'en' => $flagInput['name_en'] ?? ''
+                ];
+
+                // Handle image upload if present
+                if (isset($flagInput['image']) && $flagInput['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    // Delete old image if exists
+                    if ($flagModel->image) {
+                        Storage::disk('public')->delete($flagModel->image);
+                    }
+                    $flagModel->image = $flagInput['image']->store('flags', 'public');
+                }
+
+                $flagModel->save();
             }
-            $flagModel->save();
+
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Error syncing flags: ' . $e->getMessage());
+            throw $e; // Re-throw to be handled by the caller
         }
     }
 
     protected function syncFeatures(Car $car, array $submittedFeatures): void
     {
+        // dd($submittedFeatures);
         $flat = [];
         foreach ($submittedFeatures as $type => $items) {
             foreach ($items as $item) {
-                $item['name'] = $type;
                 $flat[] = $item;
             }
         }
 
+
+
+
         $submittedIds = collect($flat)->pluck('id')->filter()->toArray();
         $existing = Feature::where('car_id', $car->id)->get();
-
+        // dd($existing->pluck('id')->toArray(), $submittedIds , $flat);
         foreach ($existing as $feature) {
             if (!in_array($feature->id, $submittedIds)) {
                 $feature->delete();
@@ -415,52 +462,94 @@ class CarRepository implements CarRepositoryInterface
 
             $feature = !empty($input['id'])
                 ? Feature::where('car_id', $car->id)->where('id', $input['id'])->first()
-                : new Feature(['car_id' => $car->id]);
+                : new Feature(['car_id' => $car->id]) ;
+                
+           
 
             if (!$feature) continue;
-
-            $feature->name = $input['name'];
-            $feature->label = $input['label'] ?? null;
-            $feature->value = $input['value'] ?? null;
+            $nameAr = FeatureEnum::from($input['name'])->label('ar');
+            $feature->setTranslation('name','en', $input['name'] ?? '');
+            $feature->setTranslation('name','ar', $nameAr);
+            $feature->setTranslation('label','en', $input['label_en'] ?? '');
+            $feature->setTranslation('label','ar', $input['label_ar'] ?? '');
+            $feature->setTranslation('value','en', $input['value_en'] ?? '');
+            $feature->setTranslation('value','ar', $input['value_ar'] ?? '');
             $feature->save();
         }
     }
 
     protected function syncConditions(Car $car, array $submittedConditions): void
     {
+        // dd($submittedConditions);
         $flat = [];
         foreach ($submittedConditions as $type => $items) {
             foreach ($items as $item) {
-                $item['name'] = $type;
+                if (empty($item['name'])) continue;
+                
+                $item['type'] = $type;
                 $flat[] = $item;
             }
         }
 
+        // dd($flat);
         $submittedIds = collect($flat)->pluck('id')->filter()->toArray();
-        $existing = Condition::where('car_id', $car->id)->get();
-
+        $existing = $car->conditions()->get();
+        // dd($submittedIds ,$existing ,$flat);
         foreach ($existing as $condition) {
             if (!in_array($condition->id, $submittedIds)) {
                 $condition->delete();
             }
         }
 
-        foreach ($flat as $cond) {
-            if (empty($cond['name'])) continue;
-
-            $model = !empty($cond['id'])
-                ? Condition::where('car_id', $car->id)->where('id', $cond['id'])->first()
-                : new Condition(['car_id' => $car->id]);
-
-            if (!$model) continue;
-
-            $model->name = $cond['name'];
-            $model->part = $cond['part'] ?? null;
-            $model->description = $cond['description'] ?? null;
-            if (!empty($cond['image']) && $cond['image'] instanceof \Illuminate\Http\UploadedFile) {
-                $model->image = $cond['image']->store('conditions', 'public');
+        foreach ($flat as $item) {
+            // $conditionData = [
+            //     'name' => {}
+            //         'en' => $item['name'] ?? '',
+            //         'ar' => $item['name_ar'] ?? ''
+            //     ],
+            //     'part' => json_encode([
+            //         'en' => $item['part_en'] ?? '',
+            //         'ar' => $item['part_ar'] ?? ''
+            //     ]),
+            //     'description' => json_encode([
+            //         'en' => $item['description_en'] ?? '',
+            //         'ar' => $item['description_ar'] ?? ''
+            //     ])
+            // ];
+            // dd($conditionData);
+            if (!empty($item['id'])) {
+                $model = $car->conditions()->find($item['id']);
+                if ($model) {
+                    $model->setTranslation('name','ar',$this->getConditionArabicName($item['name']));
+                    $model->setTranslation('name','en',$item['name']);
+                    $model->setTranslation('part','en',$item['part_en']);
+                    $model->setTranslation('part','ar',$item['part_ar']);
+                    $model->setTranslation('description','en',$item['description_en']);
+                    $model->setTranslation('description','ar',$item['description_ar']);
+                    $model->save() ;
+                }
+            } else {
+                $model = $car->conditions()->create([
+                    'name' => [
+                        'en'=> $item['name'],
+                        'ar'=> $this->getConditionArabicName($item['name'])
+                    ],
+                    'part' => [
+                        'en'=> $item['part_en'],
+                        'ar'=> $item['part_ar'],
+                    ],
+                    'description' => 
+                    [
+                        'en'=>$item['description_en'] ?? '',
+                        'ar'=>$item['description_ar'] ?? ''
+                    ]
+                ]);
             }
-            $model->save();
+
+            if (isset($item['image']) && $item['image'] instanceof \Illuminate\Http\UploadedFile) {
+                $path = $item['image']->store('conditions', 'public');
+                $model->update(['image' => $path]);
+            }
         }
     }
 
@@ -482,6 +571,21 @@ class CarRepository implements CarRepositoryInterface
                 $path = $img->store('cars', 'public');
                 $car->images()->create(['location' => $path]);
             }
+        }
+    }
+
+    /**
+     * Get the Arabic name for a condition
+     */
+    protected function getConditionArabicName(string $name): string
+    {
+        try {
+            // dd(Condition::from(ucfirst(strtolower($name)))->label('ar'));
+            return ConditionEnum::from(ucfirst(strtolower($name)))->label('ar') ?? $name;
+        } catch (\ValueError $e) {
+            // If the condition name doesn't match any enum case, return the original name
+            dd($name,'fall');
+            return $name;
         }
     }
 }

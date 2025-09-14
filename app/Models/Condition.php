@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
-
 class Condition extends Model
 {
-    use HasTranslations ;
+    use HasTranslations;
+    
     protected $fillable = [
         'car_id',
         'name',
@@ -16,10 +16,20 @@ class Condition extends Model
         'description',
         'image'
     ];
+
     protected $casts = [
         'name' => 'array',
         'part' => 'array',
         'description' => 'array',
     ];
-    public $translatable = ['name','part','description'] ;
+
+    public $translatable = ['name', 'part', 'description'];
+
+    /**
+     * Get the car that owns the condition.
+     */
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
 }

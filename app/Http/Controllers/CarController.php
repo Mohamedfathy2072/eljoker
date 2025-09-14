@@ -85,13 +85,17 @@ class CarController extends Controller
     {
         $car = $this->carService->getCarDetails($id);
         $data = $this->getDropDownData() + ['car' => $this->toRecursiveArray($car)];
+        // dd($car);
+        // dd($data['car']['features']);
         return view('pages.editCar', $data);
     }
 
 
     public function update(int $id, UpdateCarRequest $request)
     {
+        // dd($request->all());
         $updatedCarData = $request->validated();
+        // dd($id,$updatedCarData);
         try {
             $updatedCar = $this->carService->updateCar($id, $updatedCarData);
             if (request()->expectsJson())
