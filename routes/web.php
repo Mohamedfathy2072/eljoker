@@ -46,6 +46,10 @@ Route::prefix('admin')->group(function () {
         });
     });
     
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+});
     // Other admin routes
 
     // register admin routes here
@@ -209,6 +213,4 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
 });
-
-
 

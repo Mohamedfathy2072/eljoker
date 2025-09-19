@@ -148,13 +148,20 @@
                                                     name="max_fuel_economy" placeholder="Max Fuel Economy"
                                                     value="{{ old('performance', $car['performance']['fuel_economy']['max']) }}">
                                             </div>
-
-                                            <!-- Color -->
+                                            {{-- @dd($car) --}}
                                             <div class="col-md-4">
-                                                <label for="inputColor" class="form-label">Color</label>
-                                                <input type="text" class="form-control" id="exampleColorInput"
-                                                    name="color" title="Choose your color"
-                                                    value="{{ old('appearance', $car['appearance']['color']) }}">
+                                                <label for="inputColorAR" class="form-label">Color (AR)</label>
+                                                <input type="text" class="form-control" id="exampleColorInputAR"
+                                                    name="color_ar" title="Choose your color ar"
+                                                    value="{{ old('appearance', $car['appearance']['color_ar'] ?? '') }}">
+                                            </div>
+
+
+                                            <div class="col-md-4">
+                                                <label for="inputColorEN" class="form-label">Color (EN)</label>
+                                                <input type="text" class="form-control" id="exampleColorInputEN"
+                                                    name="color_en" title="Choose your color en"
+                                                    value="{{ old('appearance', $car['appearance']['color_en'] ?? '') }}">
                                             </div>
                                         </div>
 
@@ -249,7 +256,7 @@
                                                     <option value="" selected>Choose...</option>
                                                     @foreach ($refurbishmentStatuses as $item)
                                                         <option value="{{ $item->value }}"
-                                                            {{ old('performance', $car['performance']['refurbishment_status']->value) == $item->value ? 'selected' : '' }}>
+                                                            {{ old('performance', $car['performance']['refurbishment_status_en']) == $item->value ? 'selected' : '' }}>
                                                             {{ $item->name }}</option>
                                                     @endforeach
                                                 </select>
@@ -431,7 +438,8 @@
 
                                                                 <input id="flag_en" type="text" class="form-control"
                                                                     name="flags[{{ $index }}][name_en]"
-                                                                    value="{{ $flag['value_en'] }}" placeholder="Flag Name">
+                                                                    value="{{ $flag['value_en'] }}"
+                                                                    placeholder="Flag Name">
                                                                 <label for='flag_ar'>flag (ar)</label>
                                                                 <input id="flag_ar" type="text" class="form-control"
                                                                     name="flags[{{ $index }}][name_ar]"
@@ -451,7 +459,7 @@
                                                                     accept="image/*" onchange="previewImage(this)">
                                                                 @if (!empty($flag['image']))
                                                                     <img class="img-preview mt-2"
-                                                                        src="{{ asset('storage/' . $flag['image']) }}"
+                                                                        src="{{ asset($flag['image']) }}"
                                                                         style="max-height: 80px;" />
                                                                 @else
                                                                     <img class="img-preview mt-2"
@@ -483,11 +491,12 @@
 
                                         {{-- Features --}}
                                         @php $featureIndex = 0; @endphp
+                                        {{-- @dd($car['features']) --}}
                                         <div id="featureBlockContainer">
                                             @foreach ($car['features'] as $type => $featuresList)
                                                 @foreach ($featuresList as $item)
                                                     <div class="feature-block row g-3 mb-3 align-items-end">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-2">
                                                             <label class="form-label">Feature</label>
                                                             <select class="form-select"
                                                                 name="features[{{ $type }}][{{ $featureIndex }}][name]">
@@ -505,17 +514,29 @@
                                                                     value="{{ $item['id'] }}">
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-4">
-                                                            <label class="form-label">Label</label>
+                                                        <div class="col-md-2">
+                                                            <label class="form-label">Label (en)</label>
                                                             <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][label]"
-                                                                value="{{ $item['label'] }}">
+                                                                name="features[{{ $type }}][{{ $featureIndex }}][label_en]"
+                                                                value="{{ $item['label_en'] }}">
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            <label class="form-label">Value</label>
+                                                        <div class="col-md-2">
+                                                            <label class="form-label">Label (ar)</label>
                                                             <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][value]"
-                                                                value="{{ $item['value'] }}">
+                                                                name="features[{{ $type }}][{{ $featureIndex }}][label_ar]"
+                                                                value="{{ $item['label_ar'] }}">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="form-label">Value (en)</label>
+                                                            <input type="text" class="form-control"
+                                                                name="features[{{ $type }}][{{ $featureIndex }}][value_en]"
+                                                                value="{{ $item['value_en'] }}">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="form-label">Value (ar)</label>
+                                                            <input type="text" class="form-control"
+                                                                name="features[{{ $type }}][{{ $featureIndex }}][value_ar]"
+                                                                value="{{ $item['value_ar'] }}">
                                                         </div>
                                                         <div class="col-md-1 text-end">
                                                             <button type="button" class="btn btn-link text-danger p-0"
@@ -524,6 +545,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
+                                                    <hr />
                                                     @php $featureIndex++; @endphp
                                                 @endforeach
                                             @endforeach
@@ -532,7 +554,7 @@
                                         <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
                                             <i class="bi bi-plus-circle"></i> Add More
                                         </button>
-
+                                        {{-- @dd($car) --}}
                                         {{-- Conditions --}}
                                         <div class="row g-3 mt-4">
                                             <div class="col-12">
@@ -543,58 +565,60 @@
                                                 <div id="conditionBlockContainer">
                                                     @foreach ($car['conditions'] as $type => $items)
                                                         {{-- @dd($car['conditions'] , $items , $type) --}}
-                                                        @foreach ($items as $item)
+                                                        @foreach ($items as $index => $item)
+                                                        {{-- @dd($item) --}}
                                                             <div class="condition-block row g-3 mb-3 align-items-end">
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-2">
                                                                     <label class="form-label">Condition Type</label>
-                                                                    <select class="form-select">
+                                                                    {{-- @dd($conditions) --}}
+                                                                    <select class="form-select"
+                                                                        name="conditions[{{ $type }}][{{ $index }}][name]">
                                                                         @foreach ($conditions as $option)
-                                                                            <option value="{{ $option->value }}"
-                                                                                {{ $type === $option->value ? 'selected' : '' }}>
+                                                                            <option value="{{ $option->name }}"
+                                                                                {{ $type === $option->name ? 'selected' : '' }}>
                                                                                 {{ $option->name }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-                                                                    <input type="hidden"
-                                                                        name="conditions[{{ $type }}][{{ $conditionIndex }}][name]"
-                                                                        value="{{ $type }}">
                                                                     @if (!empty($item['id']))
                                                                         <input type="hidden"
-                                                                            name="conditions[{{ $type }}][{{ $conditionIndex }}][id]"
+                                                                            name="conditions[{{ $type }}][{{ $index }}][id]"
                                                                             value="{{ $item['id'] }}">
                                                                     @endif
                                                                 </div>
 
-                                                                <div class="col-md-4">
-                                                                    <label class="form-label">Part ar</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="conditions[{{ $type }}][{{ $conditionIndex }}][part]"
-                                                                        value="{{ $item['part_ar'] }}">
-                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label">Part (EN)</label>
 
-                                                                <div class="col-md-4">
-                                                                    <label class="form-label">Description ar</label>
-                                                                    <textarea class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][description]"
-                                                                        rows="1">{{ $item['description_ar'] }}</textarea>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label class="form-label">Part en</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="conditions[{{ $type }}][{{ $conditionIndex }}][part]"
+                                                                        name="conditions[{{ $type }}][{{ $index }}][part_en]"
                                                                         value="{{ $item['part_en'] }}">
                                                                 </div>
 
-                                                                <div class="col-md-3">
-                                                                    <label class="form-label">Description en</label>
-                                                                    <textarea class="form-control" name="conditions[{{ $type }}][{{ $conditionIndex }}][description]"
-                                                                        rows="1">{{ $item['description_en'] }}</textarea>
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label">Part (AR)</label>
+                                                                    <input type="text" class="form-control text-end"
+                                                                        dir="rtl"
+                                                                        name="conditions[{{ $type }}][{{ $index }}][part_ar]"
+                                                                        value="{{ $item['part_ar'] }}">
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label">Description (EN)</label>
+                                                                    <textarea class="form-control" rows="1" name="conditions[{{ $type }}][{{ $index }}][description_en]">{{ $item['description_en'] }}</textarea>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <label class="form-label">Description (AR)</label>
+                                                                    <textarea class="form-control text-end" dir="rtl" rows="1"
+                                                                        name="conditions[{{ $type }}][{{ $index }}][description_ar]">{{ $item['description_ar'] }}</textarea>
                                                                 </div>
 
                                                                 <div class="col-md-2">
                                                                     <label class="form-label">Image</label>
 
                                                                     <input type="file" class="form-control"
-                                                                        name="conditions[{{ $type }}][{{ $conditionIndex }}][image]"
+                                                                        name="conditions[{{ $type }}][{{ $index }}][image]"
                                                                         accept="image/*">
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -617,8 +641,7 @@
                                                             </div>
                                                             @php $conditionIndex++; @endphp
                                                         @endforeach
-                                                        <hr/>
-
+                                                        <hr />
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -673,12 +696,18 @@
             // Name
             const nameCol = document.createElement('div');
             nameCol.classList.add('col-md-5');
-            const nameInput = document.createElement('input');
-            nameInput.type = 'text';
-            nameInput.classList.add('form-control');
-            nameInput.name = `flags[${flagIndex}][name]`;
-            nameInput.placeholder = 'Flag Name';
-            nameCol.appendChild(nameInput);
+            const nameInputEn = document.createElement('input');
+            const nameInputAr = document.createElement('input');
+            nameInputEn.type = 'text';
+            nameInputAr.type = 'text';
+            nameInputEn.classList.add('form-control', 'mb-2');
+            nameInputAr.classList.add('form-control', 'mb-2');
+            nameInputEn.name = `flags[${flagIndex}][name_en]`;
+            nameInputAr.name = `flags[${flagIndex}][name_ar]`;
+            nameInputEn.placeholder = 'Flag Name (EN)';
+            nameInputAr.placeholder = 'Flag Name (AR)';
+            nameCol.appendChild(nameInputEn);
+            nameCol.appendChild(nameInputAr);
 
             // Image
             const imageCol = document.createElement('div');
@@ -743,72 +772,107 @@
             const newBlock = document.createElement('div');
             newBlock.className = 'feature-block row g-3 mb-3 align-items-end';
             newBlock.innerHTML = `
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <label class="form-label">Feature</label>
-                <select class="form-select" name="features[safety][${featureIndex}][name]">
+                <select class="form-select"
+                
+                    name="features['safety'][${featureIndex}][name]">
                     @foreach ($features as $featureOption)
                         <option value="{{ $featureOption->value }}">{{ $featureOption->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
-                <label class="form-label">Label</label>
-                <input type="text" class="form-control" name="features[safety][${featureIndex}][label]">
+            <div class="col-md-2">
+                <label class="form-label">Label (en)</label>
+                <input type="text" class="form-control"
+                    name="features['safety'][${featureIndex}][label_en]">
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Value</label>
-                <input type="text" class="form-control" name="features[safety][${featureIndex}][value]">
+            <div class="col-md-2">
+                <label class="form-label">Label (ar)</label>
+                <input type="text" class="form-control"
+                    name="features['safety'][${featureIndex}][label_ar]">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Value (en)</label>
+                <input type="text" class="form-control"
+                    name="features['safety'][${featureIndex}][value_en]">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Value (ar)</label>
+                <input type="text" class="form-control"
+                    name="features['safety'][${featureIndex}][value_ar]">
             </div>
             <div class="col-md-1 text-end">
-                <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('.feature-block').remove()">
+                <button type="button" class="btn btn-link text-danger p-0"
+                    onclick="this.closest('.feature-block').remove()">
                     <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
                 </button>
             </div>
         `;
+            
             container.appendChild(newBlock);
             featureIndex++;
         }
 
-        let conditionIndex = 0;
 
+
+    </script>
+
+    <script>
         function addConditionBlock() {
             const container = document.getElementById('conditionBlockContainer');
-
-            const conditionTypeOptions = `
-            @foreach ($conditions as $item)
-                <option value="{{ $item->value }}">{{ $item->name }}</option>
-            @endforeach
-        `;
-
-            const uniqueKey = `new_${conditionIndex}`;
-
+            const type = 'exterior'; // Default type, can be changed via UI if needed
+            const index = document.querySelectorAll('.condition-block').length;
+            
             const block = document.createElement('div');
-            block.className = 'condition-block row g-3 mb-3';
-
+            block.className = 'condition-block row g-3 mb-3 align-items-end';
             block.innerHTML = `
-            <div class="col-md-3">
-                <label class="form-label">Condition Type</label>
-                <select class="form-select" name="conditions[${uniqueKey}][name]">
-                    <option value="" selected>Choose...</option>
-                    ${conditionTypeOptions}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Part</label>
-                <input type="text" class="form-control" name="conditions[${uniqueKey}][part]">
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Description</label>
-                <textarea class="form-control" rows="1" name="conditions[${uniqueKey}][description]"></textarea>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Image</label>
-                <input type="file" class="form-control" name="conditions[${uniqueKey}][image]" accept="image/*">
-            </div>
-        `;
+                <div class="col-md-2">
+                    <label class="form-label">Condition Type</label>
+                    <select class="form-select" name="conditions[${type}][${index}][name]">
+                        @foreach ($conditions as $option)
+                            <option value="{{ $option->value }}">{{ $option->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
+                <div class="col-md-2">
+                    <label class="form-label">Part (EN)</label>
+                    <input type="text" class="form-control" name="conditions[${type}][${index}][part_en]" value="">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Part (AR)</label>
+                    <input type="text" class="form-control text-end" dir="rtl" 
+                           name="conditions[${type}][${index}][part_ar]" value="">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Description (EN)</label>
+                    <textarea class="form-control" rows="1" name="conditions[${type}][${index}][description_en]"></textarea>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Description (AR)</label>
+                    <textarea class="form-control text-end" dir="rtl" rows="1" 
+                              name="conditions[${type}][${index}][description_ar]"></textarea>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Image</label>
+                    <input type="file" class="form-control" 
+                           name="conditions[${type}][${index}][image]" accept="image/*">
+                </div>
+
+                <div class="col-md-1 text-end">
+                    <button type="button" class="btn btn-link text-danger p-0" 
+                            onclick="this.closest('.condition-block').remove()">
+                        <i class="bi bi-x-circle" style="font-size: 1.5rem;" title="Delete Condition"></i>
+                    </button>
+                </div>
+            `;
+            
             container.appendChild(block);
-            conditionIndex++;
         }
     </script>
 

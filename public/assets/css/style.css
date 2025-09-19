@@ -44,12 +44,20 @@ h6 {
 #main {
   margin-top: 60px;
   padding: 20px 30px;
+  padding-bottom: 80px;
   transition: all 0.3s;
+  min-height: calc(100vh - 140px);
 }
 
 @media (max-width: 1199px) {
   #main {
     padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  #main {
+    padding-bottom: 100px;
   }
 }
 
@@ -1213,11 +1221,23 @@ h6 {
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
-.footer {
+#footer {
+  background: #fff;
   padding: 20px 0;
+  color: #444444;
   font-size: 14px;
-  transition: all 0.3s;
-  border-top: 1px solid #cddfff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0px -2px 15px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  #footer {
+    text-align: center;
+    padding: 15px 0;
+  }
 }
 
 .footer .copyright {

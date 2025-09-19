@@ -38,7 +38,8 @@ class UpdateCarRequest extends FormRequest
             'drive_type' => 'nullable|integer',
 
             // Appearance
-            'color' => 'nullable|string|max:50',
+            'color_ar' => 'nullable|string|max:50',
+            'color_en' => 'nullable|string|max:50',
             'license_expire_date' => 'nullable|date|after:today',
 
             // Dimensions
@@ -83,16 +84,20 @@ class UpdateCarRequest extends FormRequest
             'features.*' => 'nullable|array',
             'features.*.*.id' => 'nullable|integer|exists:features,id',
             'features.*.*.name' => 'required_with:features.*.*.label|string|max:100',
-            'features.*.*.label' => 'required_with:features.*.*.name|string|max:100',
-            'features.*.*.value' => 'required_with:features.*.*.name|string|max:100',
+            'features.*.*.label_en' => 'required_with:features.*.*.name|string|max:100',
+            'features.*.*.label_ar' => 'required_with:features.*.*.name|string|max:100',
+            'features.*.*.value_en' => 'required_with:features.*.*.name|string|max:100',
+            'features.*.*.value_ar' => 'required_with:features.*.*.name|string|max:100',
 
             // Conditions (multi-dimensional)
             'conditions' => 'nullable|array',
             'conditions.*' => 'nullable|array',
             'conditions.*.*.id' => 'nullable|integer',
             'conditions.*.*.name' => 'required_with:conditions.*.*.part|string|max:100',
-            'conditions.*.*.part' => 'required_with:conditions.*.*.name|string|max:100',
-            'conditions.*.*.description' => 'nullable|string|max:255',
+            'conditions.*.*.part_ar' => 'required_with:conditions.*.*.name|string|max:100',
+            'conditions.*.*.part_en' => 'required_with:conditions.*.*.name|string|max:100',
+            'conditions.*.*.description_ar' => 'nullable|string|max:255',
+            'conditions.*.*.description_en' => 'nullable|string|max:255',
             'conditions.*.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             // Images (optional multiple)

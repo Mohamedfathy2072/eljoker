@@ -12,9 +12,31 @@ enum Feature: string
     case Exteriors = 'exteriors';
     case DimensionsCapacity = 'dimensions_capacity';
 
-    public function label(): string
+
+    public function label(string $locale): string
+    {
+        return match ($locale) {
+            default => $this->EnglishLabel(),
+            'ar' => $this->arabicLabel(),
+        };
+    }
+
+    public function arabicLabel(): string
     {
         return match ($this) {
+            self::Performance => 'الأداء',
+            self::ComfortConvenience => 'الراحة والرفاهية',
+            self::EntertainmentCommunication => 'الترفيه والاتصالات',
+            self::Interiors => 'التصميم الداخلي',
+            self::Safety => 'السلامة',
+            self::Exteriors => 'التصميم الخارجي',
+            self::DimensionsCapacity => 'الأبعاد والسعة',
+        };
+    }
+
+    public function EnglishLabel(): string 
+    {
+        return match($this){
             self::Performance => 'Performance',
             self::ComfortConvenience => 'Comfort & Convenience',
             self::EntertainmentCommunication => 'Entertainment & Communication',
