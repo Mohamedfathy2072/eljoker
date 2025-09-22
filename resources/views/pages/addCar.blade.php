@@ -266,41 +266,7 @@
                             <div id="collapseTrim" class="accordion-collapse collapse" aria-labelledby="headingTrim" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <div class="row g-3">
-                                        <!-- Price -->
-                                        <div class="col-md-4">
-                                            <label for="inputPrice" class="form-label">Price</label>
-                                            <input type="number" class="form-control" id="inputPrice" name="price">
-                                        </div>
-
-                                        <!-- Discount -->
-                                        <div class="col-md-4">
-                                            <label for="inputDiscount" class="form-label">Discount</label>
-                                            <input type="number" class="form-control" id="inputDiscount" name="discount">
-                                        </div>
-
-                                        <!-- Monthly Installment -->
-                                        <div class="col-md-4">
-                                            <label for="inputInstallment" class="form-label">Monthly Installment</label>
-                                            <input type="number" class="form-control" id="inputInstallment" name="monthly_installment">
-                                        </div>
-
-                                        <!-- Down Payment -->
-                                        <div class="col-md-4">
-                                            <label for="inputDownpayment" class="form-label">Down Payment</label>
-                                            <input type="number" class="form-control" id="inputDownpayment" name="down_payment">
-                                        </div>
-
-                                        <!-- Trim -->
-                                        <div class="col-md-4">
-                                            <label for="inputTrim" class="form-label">Trim</label>
-                                            <select id="inputTrim" class="form-select" name="trim">
-                                                <option value="" selected>Choose...</option>
-                                                @foreach ($trim as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
+                                       
                                         <!-- Images Upload -->
                                         <div class="col-md-4">
                                             <label for="formFile" class="form-label">Images Upload</label>
@@ -312,137 +278,6 @@
                         </div>
 
                         <!-- Flags and Features Section -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingSeven">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                                    Part 4
-                                </button>
-                            </h2>
-                            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-
-                                    <!-- Flags Section -->
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <label for="inputFlags" class="form-label">Flags</label>
-                                            <div id="flagContainer">
-                                                <div class="flagInput row g-2 align-items-center">
-                                                    <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="flags[0][name_ar]" placeholder="Flag Name (Ar)">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="flags[0][name_en]" placeholder="Flag Name (En)">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <input type="file" class="form-control" name="flags[0][image]" accept="image/*">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-link" onclick="addFlagInput()">
-                                                <i class="bi bi-plus-circle"></i> Add Flag
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    {{-- features --}}
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <div id="featureBlockContainer">
-                                                <!-- First Block of Fields -->
-                                                <div class="feature-block mb-3">
-                                                    <!-- Feature Selection -->
-                                                    <div class="col-12 mb-3">
-                                                        <label class="form-label">Feature</label>
-                                                        <select class="form-select" name="features[0][name]">
-                                                            <option value="" selected>Choose...</option>
-                                                            @foreach($features as $feature)
-                                                                <option value="{{ $feature->value }}">
-                                                                    {{ $feature->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Label (English) -->
-                                                    <div class="col-12 mb-3">
-                                                        <label class="form-label">Label (English)</label>
-                                                        <input type="text" class="form-control" name="features[0][label][en]" placeholder="Enter label in English">
-                                                    </div>
-
-                                                    <!-- Label (Arabic) -->
-                                                    <div class="col-12 mb-3">
-                                                        <label class="form-label">Label (Arabic)</label>
-                                                        <input type="text" class="form-control" name="features[0][label][ar]" placeholder="Enter label in Arabic" dir="rtl">
-                                                    </div>
-
-                                                    <!-- Value (English) -->
-                                                    <div class="col-12 mb-3">
-                                                        <label class="form-label">Value (English)</label>
-                                                        <input type="text" class="form-control" name="features[0][value][en]" placeholder="Enter value in English">
-                                                    </div>
-
-                                                    <!-- Value (Arabic) -->
-                                                    <div class="col-12 mb-3">
-                                                        <label class="form-label">Value (Arabic)</label>
-                                                        <input type="text" class="form-control" name="features[0][value][ar]" placeholder="Enter value in Arabic" dir="rtl">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Add More Button -->
-                                            <button type="button" class="btn btn-link" onclick="addFeatureBlock()">
-                                                <i class="bi bi-plus-circle"></i> Add More
-                                            </button>
-                                        </div>
-                                    </div>
-
-
-
-                                    <!-- Conditions Section -->
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <div id="conditionBlockContainer">
-                                                <!-- First Block of Fields -->
-                                                <div class="condition-block mb-3">
-                                                    <div class="col-12">
-                                                        <label for="inputConditions" class="form-label">Conditions</label>
-                                                        <select class="form-select" name="conditions[0][name]">
-                                                            <option value="" selected>Choose...</option>
-                                                            @foreach ($conditions as $item)
-                                                                <option value="{{ $item->value }}">
-                                                                    {{ $item->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="inputPart" class="form-label">Part</label>
-                                                        <input type="text" class="form-control" name="conditions[0][part]">
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="inputDescription" class="form-label">Description</label>
-                                                        <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="inputConditionImage" class="form-label">Image</label>
-                                                        <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Add More Button -->
-                                            <button type="button" class="btn btn-link" onclick="addConditionBlock()">
-                                                <i class="bi bi-plus-circle"></i> Add More
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                     <div class="text-center mt-4">
@@ -510,10 +345,10 @@ function addFeatureBlock() {
     const container = document.getElementById('featureBlockContainer');
     const newBlock = document.createElement('div');
     newBlock.className = 'feature-block mb-3 border p-3';
-    
+
     // Get the current index and increment for next time
     const currentIndex = featureIndex++;
-    
+
     // Feature Selection
     const featureSelectGroup = document.createElement('div');
     featureSelectGroup.className = 'col-12 mb-3';
@@ -528,7 +363,7 @@ function addFeatureBlock() {
             @endforeach
         </select>
     `;
-    
+
     // Label (English)
     const labelEnGroup = document.createElement('div');
     labelEnGroup.className = 'col-12 mb-3';
@@ -536,7 +371,7 @@ function addFeatureBlock() {
         <label class="form-label">Label (English)</label>
         <input type="text" class="form-control" name="features[${currentIndex}][label][en]" placeholder="Enter label in English">
     `;
-    
+
     // Label (Arabic)
     const labelArGroup = document.createElement('div');
     labelArGroup.className = 'col-12 mb-3';
@@ -544,7 +379,7 @@ function addFeatureBlock() {
         <label class="form-label">Label (Arabic)</label>
         <input type="text" class="form-control" name="features[${currentIndex}][label][ar]" placeholder="Enter label in Arabic" dir="rtl">
     `;
-    
+
     // Value (English)
     const valueEnGroup = document.createElement('div');
     valueEnGroup.className = 'col-12 mb-3';
@@ -552,7 +387,7 @@ function addFeatureBlock() {
         <label class="form-label">Value (English)</label>
         <input type="text" class="form-control" name="features[${currentIndex}][value][en]" placeholder="Enter value in English">
     `;
-    
+
     // Value (Arabic)
     const valueArGroup = document.createElement('div');
     valueArGroup.className = 'col-12 mb-3';
@@ -560,7 +395,7 @@ function addFeatureBlock() {
         <label class="form-label">Value (Arabic)</label>
         <input type="text" class="form-control" name="features[${currentIndex}][value][ar]" placeholder="Enter value in Arabic" dir="rtl">
     `;
-    
+
     // Remove button
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
@@ -571,7 +406,7 @@ function addFeatureBlock() {
         // Re-index remaining feature blocks
         reindexFeatureBlocks();
     };
-    
+
     // Append all elements to the new block
     newBlock.appendChild(featureSelectGroup);
     newBlock.appendChild(labelEnGroup);
@@ -579,7 +414,7 @@ function addFeatureBlock() {
     newBlock.appendChild(valueEnGroup);
     newBlock.appendChild(valueArGroup);
     newBlock.appendChild(removeButton);
-    
+
     // Add the new block to the container
     container.appendChild(newBlock);
 }

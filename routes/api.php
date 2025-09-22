@@ -34,22 +34,22 @@ use App\Http\Controllers\Draftech\{
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', config('app.app') === 'kalksat' 
+    Route::post('/login', config('app.app') === 'kalksat'
         ? [AuthController::class, 'login']
         : [draftechAuthController::class, 'login']
     );
     Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
     Route::post('/resendOtp', [AuthController::class, 'resendOtp']);
     Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
-    Route::get('/me', config('app.app') === 'kalksat' 
+    Route::get('/me', config('app.app') === 'kalksat'
         ? [AuthController::class, 'me']
         : [draftechAuthController::class, 'me']
     )->middleware('auth:api');
     Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
     Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
     Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
-    
-    // draftech endpoints apis 
+
+    // draftech endpoints apis
     Route::post('send-otp', [draftechAuthController::class, 'sendOtp']);
     Route::post('verify-otp', [draftechAuthController::class, 'verifyOtp']);
     Route::post('update-profile', [draftechAuthController::class, 'updateProfile'])->middleware('auth:api');
@@ -58,7 +58,7 @@ Route::prefix('auth')->group(function () {
     Route::delete('delete-account', [draftechAuthController::class, 'deleteAccount'])->middleware('auth:api');
     Route::post('/update-phone', [draftechAuthController::class, 'updatephone']);
     Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite'])->middleware('auth:api');
-    Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');   
+    Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');
 });
 
 Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
@@ -162,7 +162,7 @@ Route::prefix('start-ad')->group(function () {
 });
 
 // draftech endpoints part 2
-Route::post('complete-profile', [draftechAuthController::class, 'completeRegistration']); 
+Route::post('complete-profile', [draftechAuthController::class, 'completeRegistration']);
 Route::post('reset-password', [draftechAuthController::class, 'resetPassword'])->middleware('auth:api');
 
 

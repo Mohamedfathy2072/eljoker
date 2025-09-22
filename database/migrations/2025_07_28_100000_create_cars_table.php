@@ -42,12 +42,6 @@ return new class extends Migration
             $table->foreignId('vehicle_status_id')->nullable()->constrained()->onDelete('set null'); // New, Used, etc.
             $table->json('refurbishment_status'); // Refurbishment status if applicable
 
-            // Pricing
-            $table->decimal('price'); // Sale price
-            $table->decimal('discount', 8, 2)->default(0); // Discount amount
-            $table->decimal('monthly_installment')->nullable(); // Monthly payment option
-            $table->decimal('down_payment')->nullable(); // Down payment
-            $table->enum('payment_option', ['cash', 'installment'])->nullable();
 
             // Classification
             $table->foreignId('trim_id')->nullable()->constrained()->onDelete('set null'); // 1st Category (trim/grade)

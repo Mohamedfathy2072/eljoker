@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'app' => env('APP', 'kalksat'),
+    'app' => env('APP', 'Eljoker'),
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return [
     'locale' => env('APP_LOCALE', 'en'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
-    
+
     'available_locales' => ['en', 'ar'],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),

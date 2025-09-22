@@ -50,7 +50,6 @@ class CarController extends BaseController
             'engine_cc' => 'required|integer',
             'body_type' => 'required|string',
             'km_driven' => 'required|integer',
-            'price' => 'required|numeric',
             'down_payment' => 'required|numeric',
             'license_validity' => 'required|string',
             'location' => 'required|string',

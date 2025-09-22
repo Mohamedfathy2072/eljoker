@@ -94,32 +94,10 @@
               </li>
           @endrole
 
-          <li class="nav-item">
-              <a class="nav-link collapsed" data-bs-target="#banner-nav" data-bs-toggle="collapse" href="#">
-                  <i class="bi bi-menu-button-wide"></i><span>Designs</span><i class="bi bi-chevron-down ms-auto"></i>
-              </a>
-              <ul id="banner-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                  <li>
-                      <a href="{{ route('admin.Banners') }}">
-                          <i class="bi bi-circle"></i><span>Banners</span>
-                      </a>
-                  </li>
-                  <li>
-                      <a href="{{ route('admin.StartAds') }}">
-                          <i class="bi bi-circle"></i><span>Ads</span>
-                      </a>
-                  </li>
-              </ul>
-          </li>
 
           <li class="nav-heading">Pages</li>
 
-          <li class="nav-item">
-              <a class="nav-link collapsed" href="{{ route('admin.Users') }}">
-                  <i class="bi bi-person"></i>
-                  <span>Users</span>
-              </a>
-          </li>
+
           @role('super-admin')
               <li class="nav-item">
                   <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
@@ -129,16 +107,6 @@
               </li><!-- End Admins Page Nav -->
           @endrole
 
-
-      <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('admin.notifications.*') ? '' : 'collapsed' }}" href="{{ route('admin.notifications.index') }}">
-            <i class="bi bi-bell"></i>
-            <span>Notifications</span>
-            @if($unreadCount = \App\Models\Notification::unread()->count())
-            <span class="badge bg-danger rounded-pill ms-auto">{{ $unreadCount }}</span>
-            @endif
-        </a>
-      </li>
 
       <li class="nav-heading">Pages</li>
 
@@ -153,18 +121,7 @@
           <li class="nav-item">
 
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.Users') }}">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
-          <i class="bi bi-person"></i>
-          <span>Financing Requests</span>
-        </a>
-      </li>
+
       @role('super-admin')
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
@@ -174,22 +131,8 @@
       </li><!-- End Admins Page Nav -->
       @endrole
 
-              <a class="nav-link collapsed" href="{{ route('admin.Quizzes') }}">
-                  <i class="bi bi-question"></i>
-                  <span>Quizzes</span>
-              </a>
-          </li><!-- End Quizzes Page Nav -->
 
 
-          <li class="nav-item">
-              <a class="nav-link collapsed" href="pages-faq.html">
-
-                  <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
-
-                      <i class="bi bi-question-circle"></i>
-                      <span>F.A.Q</span>
-                  </a>
-          </li><!-- End F.A.Q Page Nav -->
 
 
       </ul>

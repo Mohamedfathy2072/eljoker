@@ -58,35 +58,15 @@ class CreateCarRequest extends FormRequest
             'vehicle_status' => 'nullable',
             'refurbishment_status' => 'nullable',
             // Pricing
-            'price' => 'required|numeric|min:0|max:9999999999.99',
-            'discount' => 'nullable|numeric|min:0|max:999999.99',
-            'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
-            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
+
             // Classification
             'trim' => 'nullable',
             // Images upload
             'images' => 'nullable|array',
             //            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg',
-            // Flags, Features, and Conditions (Array)
-            'flags' => 'nullable|array',
-            'flags.*.name_ar' => 'nullable|string|max:100',
-            'flags.*.name_en' => 'nullable|string|max:100',
-            'flags.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
             // Features (Nested for dynamic input)
-            'features' => 'nullable|array',
-            'features.*.name' => 'nullable|string|max:100',
-            'features.*.label' => 'nullable|array',
-            'features.*.label.en' => 'nullable|string|max:100',
-            'features.*.label.ar' => 'nullable|string|max:100',
-            'features.*.value' => 'nullable|array',
-            'features.*.value.en' => 'nullable|string|max:100',
-            'features.*.value.ar' => 'nullable|string|max:100',
-            'inputConditions' => 'nullable|array',
-            'conditions' => 'nullable|array',
-            'conditions.*.name' => 'nullable|string|max:100',  // For condition input
-            'conditions.*.part' => 'nullable|string|max:100',  // For part input
-            'conditions.*.description' => 'nullable|string|max:255',  // For description input
-            'conditions.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',  // For value input
+
         ];
     }
 

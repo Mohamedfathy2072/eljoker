@@ -45,7 +45,7 @@ class BrandController extends BaseController
     public function editBrand(Request $request, $id)
     {
         $brand = Brand::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
@@ -85,7 +85,7 @@ class BrandController extends BaseController
      */
     public function indexAPI(Request $request)
     {
-        if(config('app.app') === 'kalksat') { 
+        if(config('app.app') === 'kalksat') {
             $brands = BrandResource::collection(Brand::all());
             return response()->json($brands, 200);
         } else {
@@ -101,9 +101,9 @@ class BrandController extends BaseController
     public function showAPI(int $id)
     {
         try {
-            $brand = new BrandResource(Brand::findOrFail($id));            
-            return config('app.app') === 'kalksat' 
-                ? response()->json($brand, 200) 
+            $brand = new BrandResource(Brand::findOrFail($id));
+            return config('app.app') === 'kalksat'
+                ? response()->json($brand, 200)
                 : $this->singleItemResponse($brand, "Brand fetched successfully.");
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'BodyStyle not found'], 404);

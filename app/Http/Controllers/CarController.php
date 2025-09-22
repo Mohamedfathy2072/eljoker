@@ -34,7 +34,7 @@ class CarController extends Controller
     {
         // dd($request) ;
         $carData = $request->validated();
-        
+
         try {
             $newCar = $this->carService->addNewCar($carData);
             if (request()->expectsJson())

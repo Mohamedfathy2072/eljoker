@@ -15,16 +15,16 @@ class BrandResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if(config('app.app') === 'kalksat') {
+        if(config('app.app') === 'Eljoker') {
             return [
                 'id' => $this->id,
-                'name' => $this->name, 
+                'name' => $this->name,
                 'image' => $this->image ? asset('storage/' . $this->image) : null,
             ];
         } else {
             return [
                 'id' => $this->id,
-                'name' => $this->name, 
+                'name' => $this->name,
                 'image_url' => $this->image ? Storage::url($this->image) : null,
             ];
         }

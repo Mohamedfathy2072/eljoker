@@ -14,16 +14,16 @@ class CarResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {    
-        return config('app.app') === 'kalksat' 
+    {
+        return config('app.app') === 'Eljoker'
             ? $this->getCarKlaksat()
             : $this->getCarDraftech();
     }
 
-    public function getCarDraftech() 
+    public function getCarDraftech()
     {
         $user = auth('api')->user();
-        $conditions = !empty($this->resource->conditions) 
+        $conditions = !empty($this->resource->conditions)
             ? $this->resource->conditions->map(fn($condition) => [
                     'id' => (int) $condition->id,
                     'name' => $condition->name,
@@ -58,7 +58,7 @@ class CarResource extends JsonResource
                     "name" => $this->resource->brand?->name,
                     "created_at" => $this->resource->brand?->created_at,
                     "updated_at" => $this->resource->brand?->updated_at,
-                    "image_url" => !empty($this->resource->brand?->image) 
+                    "image_url" => !empty($this->resource->brand?->image)
                         ? Storage::url($this->resource->brand?->image) : ''
                 ],
                 "is_fav" => $user->favouriteCars()->where('car_id', $this->resource->id)->exists() ? true : false,
@@ -67,17 +67,17 @@ class CarResource extends JsonResource
                     'id' => (int) $img->id,
                     'image_url' => Storage::url($img->location)
                 ]) : [],
-                "exterior_conditions" => !empty($conditions) ? 
-                    !empty($conditions['exterior_condition']) 
-                    ? $conditions['exterior_condition'] : []    
+                "exterior_conditions" => !empty($conditions) ?
+                    !empty($conditions['exterior_condition'])
+                    ? $conditions['exterior_condition'] : []
                 : [],
-                "interior_conditions" => !empty($conditions) ? 
-                    !empty($conditions['interior_condition']) 
-                    ? $conditions['interior_condition'] : []    
+                "interior_conditions" => !empty($conditions) ?
+                    !empty($conditions['interior_condition'])
+                    ? $conditions['interior_condition'] : []
                 : [],
-                "mechanical_conditions" => !empty($conditions) ? 
-                    !empty($conditions['mechanical_condition']) 
-                    ? $conditions['mechanical_condition'] : []    
+                "mechanical_conditions" => !empty($conditions) ?
+                    !empty($conditions['mechanical_condition'])
+                    ? $conditions['mechanical_condition'] : []
                 : [],
                 "pivot" => [
                     "user_id" => $user->id,
