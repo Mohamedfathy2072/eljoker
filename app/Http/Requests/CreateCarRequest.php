@@ -63,9 +63,7 @@ class CreateCarRequest extends FormRequest
             'trim' => 'nullable',
             // Images upload
             'images' => 'nullable|array',
-            //            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg',
 
-            // Features (Nested for dynamic input)
 
         ];
     }

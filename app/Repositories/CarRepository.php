@@ -16,8 +16,8 @@ use App\Models\Image;
 use App\Models\Size;
 use App\Models\VehicleStatus;
 use App\Enums\RefurbishmentStatus;
-use App\Enums\Feature as FeatureEnum; 
-use App\Enums\Condition as ConditionEnum; 
+use App\Enums\Feature as FeatureEnum;
+use App\Enums\Condition as ConditionEnum;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -204,7 +204,7 @@ class CarRepository implements CarRepositoryInterface
         if (!empty($carData['features'])) {
             foreach ($carData['features'] as $feature) {
                 if (empty($feature['name'])) continue;
-                
+
                 $newCar->features()->create([
                     'name' => $feature['name'],
                     'label' => [
@@ -219,35 +219,7 @@ class CarRepository implements CarRepositoryInterface
             }
         }
 
-        // make new flags, conditions for the car
-        foreach ($carData['flags'] as $flag) {
-            if (empty($flag) || empty(($flag['name_ar'] || $flag['name_en']))) continue;
-            $path = null;
-            if (!empty($flag['image']))
-                $path = $flag['image']->store('flags', 'public');
-            $newCar->flags()->create([
-                'car_id' => $newCar->id,
-                'value' => [
-                    'ar' => $flag['name_ar'],
-                    'en' => $flag['name_en']
-                ],
-                'image' => $path
-            ]);
-        }
 
-        foreach ($carData['conditions'] as $cond) {
-            if (empty($cond) || empty($cond['name'])) continue;
-            $path = null;
-            if (!empty($cond['image']))
-                $path = $cond['image']->store('conditions', 'public');
-            $newCar->conditions()->create([
-                'car_id' => $newCar->id,
-                'name' => $cond['name'],
-                'part' => $cond['part'] ?? '',
-                'description' => $cond['description'] ?? '',
-                'image' => $path
-            ]);
-        }
 
         // if has images save images and save its location
         if (!empty($carData['images']) && is_array($carData['images'])) {
@@ -401,8 +373,8 @@ class CarRepository implements CarRepositoryInterface
                 }
 
                 // Find existing flag or create new one
-                $flagModel = isset($flagInput['id']) 
-                    ? $car->flags()->find($flagInput['id']) 
+                $flagModel = isset($flagInput['id'])
+                    ? $car->flags()->find($flagInput['id'])
                     : new Flag(['car_id' => $car->id]);
 
                 if (!$flagModel) {
@@ -463,8 +435,8 @@ class CarRepository implements CarRepositoryInterface
             $feature = !empty($input['id'])
                 ? Feature::where('car_id', $car->id)->where('id', $input['id'])->first()
                 : new Feature(['car_id' => $car->id]) ;
-                
-           
+
+
 
             if (!$feature) continue;
             $nameAr = FeatureEnum::from($input['name'])->label('ar');
@@ -485,7 +457,7 @@ class CarRepository implements CarRepositoryInterface
         foreach ($submittedConditions as $type => $items) {
             foreach ($items as $item) {
                 if (empty($item['name'])) continue;
-                
+
                 $item['type'] = $type;
                 $flat[] = $item;
             }
@@ -538,7 +510,7 @@ class CarRepository implements CarRepositoryInterface
                         'en'=> $item['part_en'],
                         'ar'=> $item['part_ar'],
                     ],
-                    'description' => 
+                    'description' =>
                     [
                         'en'=>$item['description_en'] ?? '',
                         'ar'=>$item['description_ar'] ?? ''
