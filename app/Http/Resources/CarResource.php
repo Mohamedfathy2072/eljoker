@@ -174,70 +174,15 @@ class CarResource extends JsonResource
                 'refurbishment_status_en' => $this->resource->getTranslation('refurbishment_status', 'en'),
                 'refurbishment_status_ar' => $this->resource->getTranslation('refurbishment_status', 'ar')
             ],
-            // Pricing information
-            'pricing' => [
-                'original_price' => $this->resource->price,
-                'original_price_formatted' => ' EGP ' . number_format($this->resource->price, 2),
-                'discount' => $this->resource->discount,
-                'discount_formatted' => ' EGP ' . number_format($this->resource->discount, 2),
-                'final_price' => $this->resource->price - $this->resource->discount,
-                'final_price_formatted' => ' EGP ' . number_format($this->resource->price - $this->resource->discount, 2),
-                'monthly_installment' => $this->resource->monthly_installment,
-                'monthly_installment_formatted' => $this->resource->monthly_installment
-                    ? ' EGP ' . number_format($this->resource->monthly_installment, 2) . '/month'
-                    : null,
-                'has_discount' => $this->resource->discount > 0,
-                'down_payment' => $this->resource->down_payment ?? null,
-                'down_payment_formatted' => $this->resource->down_payment
-                    ? ' EGP ' . number_format($this->resource->down_payment, 2)
-                    : null,
-            ],
+
             // Classification
             'trim' => $this->resource->trim_id ? [
                 'id' => (int) $this->resource->trim_id,
                 'name' => $this->resource->trim?->name,
             ] : null,
             // flags
-            'flags' =>
-                $this->resource->flags->map(function ($flag) {
-                    return [
-                        'id' => $flag->id,
-                        'value' => $flag->value,
-                        'value_en' => $flag->getTranslation('value','en'),
-                        'value_ar' =>$flag->getTranslation('value','ar'),
-                        'image' => $flag->image ? asset('storage/' . $flag->image) : null
-                    ];
-                }),
-            // features
-            'features' =>
-                $this->resource->features->map(function ($feature) {
-                    return [
-                        'id' => (int) $feature->id,
-                        'name' => $feature->name,
-                        'label' => $feature->label,
-                        'value' => $feature->value,
-                        'label_en' => $feature->getTranslation('label', 'en'),
-                        'label_ar' => $feature->getTranslation('label', 'ar'),
-                        'value_en' => $feature->getTranslation('value', 'en'),
-                        'value_ar' => $feature->getTranslation('value', 'ar')
-                    ];
-                })->groupBy('name')->toArray(),
-            // conditions
-            'conditions' => $this->resource->conditions->map(function($condition) {
-                return [
-                    'id' => (int) $condition->id,
-                    'name' => $condition->name,
-                    'part' => $condition->part,
-                    'description' => $condition->description,
-                    'image' => $condition->image,
-                    'name_ar' => $condition->getTranslation('name', 'ar'),
-                    'name_en' => $condition->getTranslation('name', 'en'),
-                    'part_ar' => $condition->getTranslation('part', 'ar'),
-                    'part_en' => $condition->getTranslation('part', 'en'),
-                    'description_ar' => $condition->getTranslation('description', 'ar'),
-                    'description_en' => $condition->getTranslation('description', 'en'),
-                ];
-            })->groupBy('name'),
+
+
             // Media
             'images' => $this->resource->images ?? [],
             // Timestamps

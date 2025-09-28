@@ -107,29 +107,11 @@ class CarService
             unset($car->brand->image_path);
         }
 
-        // ✅ روابط صور الحالات الخارجية
-        foreach ($car->exteriorConditions as $condition) {
-            $condition->image_url = $condition->image_path
-                ? Storage::url($condition->image_path)
-                : null;
-            unset($condition->image_path);
-        }
 
-        // ✅ روابط صور الحالات الداخلية
-        foreach ($car->interiorConditions as $condition) {
-            $condition->image_url = $condition->image_path
-                ? Storage::url($condition->image_path)
-                : null;
-            unset($condition->image_path);
-        }
 
-        // ✅ روابط صور الحالات الميكانيكية
-        foreach ($car->mechanicalConditions as $condition) {
-            $condition->image_url = $condition->image_path
-                ? Storage::url($condition->image_path)
-                : null;
-            unset($condition->image_path);
-        }
+
+
+
 
         return $car;
     }
