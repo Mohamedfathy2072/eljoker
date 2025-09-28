@@ -174,9 +174,6 @@ class CarController extends Controller
     public function toRecursiveArray(CarResource $car)
     {
         $carArray = $car->toArray(request());
-        $carArray['flags'] = $carArray['flags']->toArray(request());
-        $carArray['features'] = $carArray['features'];
-        $carArray['conditions'] = $carArray['conditions']->toArray(request());
         $carArray['images'] = $carArray['images']->toArray(request());
 
         return $carArray;
