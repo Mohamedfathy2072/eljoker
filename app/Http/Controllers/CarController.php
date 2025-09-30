@@ -171,10 +171,41 @@ class CarController extends Controller
         return view('pages.cars', ['cars' => $carResources]);
     }
 
-    public function toRecursiveArray(CarResource $car)
+    public function toRecursiveArray(CarResource $car): array
     {
         $carArray = $car->toArray(request());
-        $carArray['images'] = $carArray['images']->toArray(request());
+
+        $carArray['flags'] = isset($carArray['flags'])
+            ? $carArray['flags']->toArray(request())
+            : [];
+
+        $carArray['features'] = $carArray['features'] ?? [];
+
+        $carArray['conditions'] = isset($carArray['conditions'])
+            ? $carArray['conditions']->toArray(request())
+            : [];
+
+        $carArray['images'] = isset($carArray['images'])
+            ? $carArray['images']->toArray(request())
+            : [];
+
+        // 🔹 جهّز المفاتيح الأساسية
+        $carArray['specifications'] = $carArray['specifications'] ?? [];
+
+        $defaults = [
+            'body_style', 'type', 'transmission_type',
+            'drive_type', 'engine_type', 'vehicle_status', 'trim'
+        ];
+
+        foreach ($defaults as $field) {
+            $carArray['specifications'][$field] = $carArray['specifications'][$field] ?? [
+                'id' => null,
+                'name' => null,
+            ];
+
+            // ✨ انسخ نسخة في الـ root عشان تسهّل الوصول في Blade
+            $carArray[$field] = $carArray['specifications'][$field];
+        }
 
         return $carArray;
     }
