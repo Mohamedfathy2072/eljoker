@@ -319,38 +319,7 @@
                                                     value="{{ old('performance', $car['performance']['horsepower']['max']) }}">
                                             </div>
 
-                                            <!-- Price -->
-                                            <div class="col-md-4">
-                                                <label for="inputPrice" class="form-label">Price</label>
-                                                <input type="number" class="form-control" id="inputPrice"
-                                                    name="price"
-                                                    value="{{ old('pricing', $car['pricing']['original_price']) }}">
-                                            </div>
 
-                                            <!-- Discount -->
-                                            <div class="col-md-4">
-                                                <label for="inputDiscount" class="form-label">Discount</label>
-                                                <input type="number" class="form-control" id="inputDiscount"
-                                                    name="discount"
-                                                    value="{{ old('pricing', $car['pricing']['discount']) }}">
-                                            </div>
-
-                                            <!-- Monthly Installment -->
-                                            <div class="col-md-4">
-                                                <label for="inputInstallment" class="form-label">Monthly
-                                                    Installment</label>
-                                                <input type="number" class="form-control" id="inputInstallment"
-                                                    name="monthly_installment"
-                                                    value="{{ old('pricing', $car['pricing']['monthly_installment']) }}">
-                                            </div>
-
-                                            <!-- Down Payment -->
-                                            <div class="col-md-4">
-                                                <label for="inputDownpayment" class="form-label">Down Payment</label>
-                                                <input type="number" class="form-control" id="inputDownpayment"
-                                                    name="down_payment"
-                                                    value="{{ old('pricing', $car['pricing']['down_payment']) }}">
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -412,250 +381,6 @@
                                 </div>
                             </div>
 
-                            <!-- Flags and Features and conditions Section -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingSeven">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseSeven" aria-expanded="false"
-                                        aria-controls="collapseSeven">
-                                        Part 4
-                                    </button>
-                                </h2>
-                                <div id="collapseSeven" class="accordion-collapse collapse"
-                                    aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-
-                                        <!-- Flags Section -->
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <label class="form-label">Flags</label>
-                                                <div id="flagContainer">
-                                                    @foreach ($car['flags'] as $index => $flag)
-                                                        <div class="flagInput row g-2 align-items-center mt-2">
-                                                            <!-- Flag Name -->
-                                                            <div class="col-md-5">
-                                                                <label for='flag_en'>flag (en)</label>
-
-                                                                <input id="flag_en" type="text" class="form-control"
-                                                                    name="flags[{{ $index }}][name_en]"
-                                                                    value="{{ $flag['value_en'] }}"
-                                                                    placeholder="Flag Name">
-                                                                <label for='flag_ar'>flag (ar)</label>
-                                                                <input id="flag_ar" type="text" class="form-control"
-                                                                    name="flags[{{ $index }}][name_ar]"
-                                                                    value="{{ $flag['value_ar'] }}"
-                                                                    placeholder="Flag Name">
-                                                                @if (!empty($flag['id']))
-                                                                    <input type="hidden"
-                                                                        name="flags[{{ $index }}][id]"
-                                                                        value="{{ $flag['id'] }}">
-                                                                @endif
-                                                            </div>
-
-                                                            <!-- Image Upload -->
-                                                            <div class="col-md-5">
-                                                                <input type="file" class="form-control"
-                                                                    name="flags[{{ $index }}][image]"
-                                                                    accept="image/*" onchange="previewImage(this)">
-                                                                @if (!empty($flag['image']))
-                                                                    <img class="img-preview mt-2"
-                                                                        src="{{ asset($flag['image']) }}"
-                                                                        style="max-height: 80px;" />
-                                                                @else
-                                                                    <img class="img-preview mt-2"
-                                                                        style="display:none; max-height: 80px;" />
-                                                                @endif
-                                                            </div>
-
-                                                            <!-- Remove Button -->
-                                                            <div class="col-md-2 d-flex align-items-center">
-                                                                <button type="button"
-                                                                    class="btn btn-link text-danger p-0 ms-2"
-                                                                    title="Remove"
-                                                                    onclick="this.closest('.flagInput').remove()">
-                                                                    <i class="bi bi-x-circle"
-                                                                        style="font-size: 1.5rem;"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <!-- Add More Button -->
-                                                <button type="button" class="btn btn-link mt-3"
-                                                    onclick="addFlagInput()">
-                                                    <i class="bi bi-plus-circle"></i> Add Flag
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        {{-- Features --}}
-                                        @php $featureIndex = 0; @endphp
-                                        {{-- @dd($car['features']) --}}
-                                        <div id="featureBlockContainer">
-                                            @foreach ($car['features'] as $type => $featuresList)
-                                                @foreach ($featuresList as $item)
-                                                    <div class="feature-block row g-3 mb-3 align-items-end">
-                                                        <div class="col-md-2">
-                                                            <label class="form-label">Feature</label>
-                                                            <select class="form-select"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][name]">
-                                                                <option value="">Choose...</option>
-                                                                @foreach ($features as $featureOption)
-                                                                    <option value="{{ $featureOption->value }}"
-                                                                        {{ $featureOption->value === $type ? 'selected' : '' }}>
-                                                                        {{ $featureOption->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            @if (!empty($item['id']))
-                                                                <input type="hidden"
-                                                                    name="features[{{ $type }}][{{ $featureIndex }}][id]"
-                                                                    value="{{ $item['id'] }}">
-                                                            @endif
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="form-label">Label (en)</label>
-                                                            <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][label_en]"
-                                                                value="{{ $item['label_en'] }}">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="form-label">Label (ar)</label>
-                                                            <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][label_ar]"
-                                                                value="{{ $item['label_ar'] }}">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="form-label">Value (en)</label>
-                                                            <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][value_en]"
-                                                                value="{{ $item['value_en'] }}">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="form-label">Value (ar)</label>
-                                                            <input type="text" class="form-control"
-                                                                name="features[{{ $type }}][{{ $featureIndex }}][value_ar]"
-                                                                value="{{ $item['value_ar'] }}">
-                                                        </div>
-                                                        <div class="col-md-1 text-end">
-                                                            <button type="button" class="btn btn-link text-danger p-0"
-                                                                onclick="this.closest('.feature-block').remove()">
-                                                                <i class="bi bi-x-circle" style="font-size: 1.4rem;"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <hr />
-                                                    @php $featureIndex++; @endphp
-                                                @endforeach
-                                            @endforeach
-                                        </div>
-
-                                        <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
-                                            <i class="bi bi-plus-circle"></i> Add More
-                                        </button>
-                                        {{-- @dd($car) --}}
-                                        {{-- Conditions --}}
-                                        <div class="row g-3 mt-4">
-                                            <div class="col-12">
-                                                <h2 class="form-label underline font-bold">Conditions</h2>
-
-                                                <!-- Existing Conditions -->
-                                                @php $conditionIndex = 0; @endphp
-                                                <div id="conditionBlockContainer">
-                                                    @foreach ($car['conditions'] as $type => $items)
-                                                        {{-- @dd($car['conditions'] , $items , $type) --}}
-                                                        @foreach ($items as $index => $item)
-                                                        {{-- @dd($item) --}}
-                                                            <div class="condition-block row g-3 mb-3 align-items-end">
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Condition Type</label>
-                                                                    {{-- @dd($conditions) --}}
-                                                                    <select class="form-select"
-                                                                        name="conditions[{{ $type }}][{{ $index }}][name]">
-                                                                        @foreach ($conditions as $option)
-                                                                            <option value="{{ $option->name }}"
-                                                                                {{ $type === $option->name ? 'selected' : '' }}>
-                                                                                {{ $option->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    @if (!empty($item['id']))
-                                                                        <input type="hidden"
-                                                                            name="conditions[{{ $type }}][{{ $index }}][id]"
-                                                                            value="{{ $item['id'] }}">
-                                                                    @endif
-                                                                </div>
-
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Part (EN)</label>
-
-                                                                    <input type="text" class="form-control"
-                                                                        name="conditions[{{ $type }}][{{ $index }}][part_en]"
-                                                                        value="{{ $item['part_en'] }}">
-                                                                </div>
-
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Part (AR)</label>
-                                                                    <input type="text" class="form-control text-end"
-                                                                        dir="rtl"
-                                                                        name="conditions[{{ $type }}][{{ $index }}][part_ar]"
-                                                                        value="{{ $item['part_ar'] }}">
-                                                                </div>
-
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Description (EN)</label>
-                                                                    <textarea class="form-control" rows="1" name="conditions[{{ $type }}][{{ $index }}][description_en]">{{ $item['description_en'] }}</textarea>
-                                                                </div>
-
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Description (AR)</label>
-                                                                    <textarea class="form-control text-end" dir="rtl" rows="1"
-                                                                        name="conditions[{{ $type }}][{{ $index }}][description_ar]">{{ $item['description_ar'] }}</textarea>
-                                                                </div>
-
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label">Image</label>
-
-                                                                    <input type="file" class="form-control"
-                                                                        name="conditions[{{ $type }}][{{ $index }}][image]"
-                                                                        accept="image/*">
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    @if (!empty($item['image']))
-                                                                        <img src="{{ asset('storage/' . $item['image']) }}"
-                                                                            class="img-preview mt-2"
-                                                                            style="max-height: 80px;">
-                                                                    @endif
-                                                                </div>
-
-                                                                <div class="col-md-1 text-end">
-                                                                    <button type="button"
-                                                                        class="btn btn-link text-danger p-0"
-                                                                        onclick="this.closest('.condition-block').remove()">
-                                                                        <i class="bi bi-x-circle"
-                                                                            style="font-size: 1.5rem;"
-                                                                            title="Delete Condition"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            @php $conditionIndex++; @endphp
-                                                        @endforeach
-                                                        <hr />
-                                                    @endforeach
-                                                </div>
-                                            </div>
-
-                                            <!-- Add More Button -->
-                                            <button type="button" class="btn btn-link mt-2"
-                                                onclick="addConditionBlock()">
-                                                <i class="bi bi-plus-circle"></i> Add More
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
                         </div>
 
                 </div>
@@ -775,7 +500,7 @@
             <div class="col-md-2">
                 <label class="form-label">Feature</label>
                 <select class="form-select"
-                
+
                     name="features['safety'][${featureIndex}][name]">
                     @foreach ($features as $featureOption)
                         <option value="{{ $featureOption->value }}">{{ $featureOption->name }}</option>
@@ -809,7 +534,7 @@
                 </button>
             </div>
         `;
-            
+
             container.appendChild(newBlock);
             featureIndex++;
         }
@@ -823,7 +548,7 @@
             const container = document.getElementById('conditionBlockContainer');
             const type = 'exterior'; // Default type, can be changed via UI if needed
             const index = document.querySelectorAll('.condition-block').length;
-            
+
             const block = document.createElement('div');
             block.className = 'condition-block row g-3 mb-3 align-items-end';
             block.innerHTML = `
@@ -843,7 +568,7 @@
 
                 <div class="col-md-2">
                     <label class="form-label">Part (AR)</label>
-                    <input type="text" class="form-control text-end" dir="rtl" 
+                    <input type="text" class="form-control text-end" dir="rtl"
                            name="conditions[${type}][${index}][part_ar]" value="">
                 </div>
 
@@ -854,24 +579,24 @@
 
                 <div class="col-md-2">
                     <label class="form-label">Description (AR)</label>
-                    <textarea class="form-control text-end" dir="rtl" rows="1" 
+                    <textarea class="form-control text-end" dir="rtl" rows="1"
                               name="conditions[${type}][${index}][description_ar]"></textarea>
                 </div>
 
                 <div class="col-md-2">
                     <label class="form-label">Image</label>
-                    <input type="file" class="form-control" 
+                    <input type="file" class="form-control"
                            name="conditions[${type}][${index}][image]" accept="image/*">
                 </div>
 
                 <div class="col-md-1 text-end">
-                    <button type="button" class="btn btn-link text-danger p-0" 
+                    <button type="button" class="btn btn-link text-danger p-0"
                             onclick="this.closest('.condition-block').remove()">
                         <i class="bi bi-x-circle" style="font-size: 1.5rem;" title="Delete Condition"></i>
                     </button>
                 </div>
             `;
-            
+
             container.appendChild(block);
         }
     </script>
