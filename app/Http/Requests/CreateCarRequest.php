@@ -26,45 +26,50 @@ class CreateCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Car identification
+            // ✅ الحقول الإلزامية
             'brand' => 'required',
             'model' => 'required',
             'model_year' => 'required|numeric|min:1900|max:' . (date('Y') + 1),
-            // Vehicle specifications
+            'images' => 'required|array|min:1',
+            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:4096',
+            'name' => 'nullable|string|max:255', // اسم العربية
+            'notes' => 'nullable|string',
+            // ❕ باقي الحقول اختيارية (nullable)
             'body_style' => 'nullable',
             'type' => 'nullable',
             'transmission_type' => 'nullable',
             'drive_type' => 'nullable',
+
             // Physical attributes
             'color_ar' => 'nullable|string|max:50',
             'color_en' => 'nullable|string|max:50',
+
             // License Expiry Date
             'license_expire_date' => 'nullable|date|after:today',
+
             // Dimensions
             'length' => 'nullable|numeric|min:0|max:99999',
             'width' => 'nullable|numeric|min:0|max:99999',
             'height' => 'nullable|numeric|min:0|max:99999',
+
             // Fuel Economy
             'min_fuel_economy' => 'nullable|numeric|min:0|max:999',
             'max_fuel_economy' => 'nullable|numeric|min:0|max:999',
-            // Engine type and capacity
+
+            // Engine
             'engine_type' => 'nullable',
             'engine_capacity' => 'nullable|numeric|min:0|max:99999',
+
             // Power
             'min_horse_power' => 'nullable|numeric|min:0|max:1000',
             'max_horse_power' => 'nullable|numeric|min:0|max:1000',
-            // Performance & condition
+
+            // Condition
             'mileage' => 'nullable|numeric|min:0|max:9999999',
             'vehicle_status' => 'nullable',
             'refurbishment_status' => 'nullable',
-            // Pricing
 
-            // Classification
             'trim' => 'nullable',
-            // Images upload
-            'images' => 'nullable|array',
-
-
         ];
     }
 

@@ -35,7 +35,6 @@
                   <th>Color</th>
                   <th>Engine</th>
                   <th>Status</th>
-                  <th>Price</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -50,7 +49,7 @@
                   <td>{{ $car['color'] ?? '-' }}</td>
                   <td>{{ $car['EngineType']['name'] ?? '-' }} ({{ $car['engine_capacity_cc'] ?? '0' }} cc)</td>
                   <td>{{ $car['VehicleStatus']['name'] ?? '-' }}</td>
-                  <td>{{ $car['price'] ?? '-' }}</td>
+
                   <td>
                     <a href="{{ route('admin.car.show', $car['id']) }}" class="btn btn-info btn-sm">View</a>
                     <a href="{{ route('admin.car.edit', $car['id']) }}" class="btn btn-warning btn-sm">Edit</a>

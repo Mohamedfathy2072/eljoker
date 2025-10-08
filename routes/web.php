@@ -45,7 +45,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
         });
     });
-    
+
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -62,8 +62,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        
-        
+
+
         Route::resource('financing-requests', FinancingRequestController::class, [
             'names' => [
                 'index' => 'admin.financing-requests.index',
@@ -72,7 +72,7 @@ Route::middleware(['auth:admin'])->group(function () {
                 'destroy' => 'admin.financing-requests.destroy'
             ]
         ])->except(['create', 'edit', 'store']);
-        
+
         Route::patch('financing-requests/{financingRequest}/status', [FinancingRequestController::class, 'updateStatus'])
             ->name('admin.financing-requests.update-status');
 
@@ -85,6 +85,9 @@ Route::middleware(['auth:admin'])->group(function () {
             Route::get('/edit/{id}', [CarController::class, 'edit'])->name('admin.car.edit');
             Route::put('/{id}', [CarController::class, 'update'])->name('admin.car.update');
             Route::delete('/{id}', [CarController::class, 'destroy'])->name('admin.car.destroy');
+            Route::get('/get-models/{brandId}', [CarController::class, 'getModelsByBrand'])->name('admin.car.getModelsByBrand');
+
+
         });
 
 

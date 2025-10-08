@@ -196,7 +196,9 @@ class CarRepository implements CarRepositoryInterface
             'monthly_installment'   => isset($carData['monthly_installment']) ? (float) $carData['monthly_installment'] : null,
             'down_payment'          => isset($carData['down_payment']) ? (float) $carData['down_payment'] : null,
             'trim_id'               => !empty($carData['trim']) ? (int) $carData['trim'] : null,
-            'owner_id'              => auth()->user() instanceof Admin ? 1 : auth()->user()->id
+            'owner_id'              => auth()->user() instanceof Admin ? 1 : auth()->user()->id,
+            'name'                  => !empty($carData['name']) ? $carData['name'] : null,
+            'notes'                 => !empty($carData['notes']) ? $carData['notes'] : null,
         ];
 
         $newCar = Car::create($carDetails);
@@ -333,12 +335,10 @@ class CarRepository implements CarRepositoryInterface
             'mileage'               => filled($data['mileage']) ? (int) $data['mileage'] : null,
             'horsepower_id'         => $horseP?->id,
             'vehicle_status_id'     => filled($data['vehicle_status']) ? (int) $data['vehicle_status'] : null,
-            'refurbishment_status'  => $data['refurbishment_status'] ?? null,
-            'price'                 => filled($data['price']) ? (float) $data['price'] : null,
-            'discount'              => filled($data['discount']) ? (float) $data['discount'] : null,
-            'monthly_installment'   => filled($data['monthly_installment']) ? (float) $data['monthly_installment'] : null,
-            'down_payment'          => filled($data['down_payment']) ? (float) $data['down_payment'] : null,
             'trim_id'               => filled($data['trim']) ? (int) $data['trim'] : null,
+            'name'  => $data['name'] ?? $car->name,
+            'notes' => $data['notes'] ?? $car->notes,
+
         ]);
     }
 

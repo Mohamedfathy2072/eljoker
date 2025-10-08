@@ -33,6 +33,8 @@
                                 data-bs-parent="#accordionCarDetails">
                                 <div class="accordion-body">
                                     <div class="row g-3">
+                                        <div class="col-md-4"><strong>Car Name:</strong> {{ $car['name'] ?? 'N/A' }}</div>
+
                                         <div class="col-md-4"><strong>Brand:</strong> {{ $car['brand']['name'] ?? 'N/A' }}
                                         </div>
                                         <div class="col-md-4"><strong>Model:</strong> {{ $car['model']['name'] ?? 'N/A' }}
@@ -110,6 +112,12 @@
                                         </div>
                                         <div class="col-md-4"><strong>Owner:</strong> {{ $car['owner'] }}</div>
                                     </div>
+                                    <div class="row g-3 mt-3">
+                                        <div class="col-md-12">
+                                            <strong>Notes:</strong> {{ $car['notes'] ?? 'No notes provided' }}
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

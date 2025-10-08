@@ -36,6 +36,11 @@ class Car extends Model
         'vehicle_category',
         'description',
         'location',
+        'name',
+        'notes',
+    ];
+    protected $casts = [
+        'color' => 'array',
     ];
 
     public $translatable = ['color','refurbishment_status'];

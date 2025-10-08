@@ -91,6 +91,9 @@ class CarResource extends JsonResource
         $locale = app()->getLocale();
         return [
             'id' => (int) $this->resource->id,
+            'name'  => $this->resource->name ?? null,
+            'notes' => $this->resource->notes ?? null,
+
             // Car identification
             'brand' => $this->resource->brand_id ? [
                 'id' => (int) $this->resource->brand_id,

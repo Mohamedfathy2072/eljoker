@@ -68,19 +68,29 @@
                                         <!-- Model -->
                                         <div class="col-md-4">
                                             <label for="inputModel" class="form-label">Model</label>
-                                            <select class="form-select" id="inputModel" name="model">
-                                                <option value="" selected>Choose...</option>
-                                                @foreach ($carModels as $model)
-                                                    <option value="{{ $model->id }}">{{ $model->name }}</option>
-                                                @endforeach
+                                            <select class="form-select" id="inputModel" name="model" disabled>
+                                                <option value="" selected>Select Brand First...</option>
                                             </select>
+                                            @error('model')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
 
                                         <!-- Model Year -->
                                         <div class="col-md-4">
                                             <label for="inputDate" class="form-label">Model Year</label>
                                             <input type="number" class="form-control" id="inputDate" name="model_year" placeholder="year">
                                         </div>
+                                        <div class="col-md-4">
+                                            <label for="inputName" class="form-label">Car Name</label>
+                                            <input type="text" class="form-control" id="inputName" name="name" placeholder="Enter car name" >
+                                            @error('name')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+
                                     </div>
 
                                     <div class="row g-3">
@@ -266,12 +276,20 @@
                             <div id="collapseTrim" class="accordion-collapse collapse" aria-labelledby="headingTrim" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <div class="row g-3">
-                                       
+
                                         <!-- Images Upload -->
                                         <div class="col-md-4">
                                             <label for="formFile" class="form-label">Images Upload</label>
                                             <input class="form-control" type="file" id="formFile" name="images[]" multiple>
                                         </div>
+                                        <div class="col-md-12 mt-3">
+                                            <label for="inputNotes" class="form-label">Notes</label>
+                                            <textarea class="form-control" id="inputNotes" name="notes" rows="3" placeholder="Enter any notes about the car"></textarea>
+                                            @error('notes')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -281,9 +299,10 @@
 
                     </div>
                     <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Submit</button>
                         <button type="reset" class="btn btn-secondary">Reset</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -526,6 +545,71 @@ function reindexFeatureBlocks() {
 
         conditionIndex++;
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const requiredFields = ['inputBrand', 'inputModel', 'inputDate', 'formFile'];
+        const submitBtn = document.getElementById('submitBtn');
+
+        function checkFormCompletion() {
+            let allFilled = requiredFields.every(id => {
+                const el = document.getElementById(id);
+                if (!el) return false;
+
+                if (el.type === 'file') {
+                    return el.files.length > 0;
+                }
+
+                return el.value && el.value.trim() !== '';
+            });
+
+            submitBtn.disabled = !allFilled;
+        }
+
+        // Attach listeners for change/input
+        requiredFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('input', checkFormCompletion);
+            el.addEventListener('change', checkFormCompletion);
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const brandSelect = document.getElementById('inputBrand');
+        const modelSelect = document.getElementById('inputModel');
+
+        brandSelect.addEventListener('change', function () {
+            const brandId = this.value;
+
+            modelSelect.innerHTML = '<option value="">Loading...</option>';
+            modelSelect.disabled = true;
+
+            if (brandId) {
+                fetch(`/admin/cars/get-models/${brandId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        modelSelect.innerHTML = '<option value="">Choose...</option>';
+                        data.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name.en; // ✅ عرض الاسم بالإنجليزي
+                            // أو استخدم model.name.ar لو عايز بالعربي
+                            modelSelect.appendChild(option);
+                        });
+                        modelSelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching models:', error);
+                        modelSelect.innerHTML = '<option value="">Error loading models</option>';
+                    });
+            } else {
+                modelSelect.innerHTML = '<option value="">Select Brand First...</option>';
+                modelSelect.disabled = true;
+            }
+        });
+    });
 </script>
 
 @endsection

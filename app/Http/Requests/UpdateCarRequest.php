@@ -63,11 +63,7 @@ class UpdateCarRequest extends FormRequest
             'vehicle_status' => 'nullable|string|max:50',
             'refurbishment_status' => 'nullable|string|max:50',
 
-            // Pricing
-            'price' => 'required|numeric|min:0|max:9999999999.99',
-            'discount' => 'nullable|numeric|min:0|max:999999.99',
-            'monthly_installment' => 'nullable|numeric|min:0|max:99999999.99',
-            'down_payment' => 'nullable|numeric|min:0|max:99999999.99',
+
 
             // Classification
             'trim' => 'nullable|integer',
@@ -104,7 +100,10 @@ class UpdateCarRequest extends FormRequest
             'images' => 'nullable|array',
             'images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'delete_images' => 'nullable|array',
-            'delete_images.*' => 'nullable|integer'
+            'delete_images.*' => 'nullable|integer',
+            'name' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:5000',
+
         ];
     }
 
