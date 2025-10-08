@@ -587,15 +587,14 @@ function reindexFeatureBlocks() {
             modelSelect.disabled = true;
 
             if (brandId) {
-                fetch(`/admin/cars/get-models/${brandId}`)
+                fetch(`{{ url('admin/cars/get-models') }}/${brandId}`)
                     .then(response => response.json())
                     .then(data => {
                         modelSelect.innerHTML = '<option value="">Choose...</option>';
                         data.forEach(model => {
                             const option = document.createElement('option');
                             option.value = model.id;
-                            option.textContent = model.name.en; // ✅ عرض الاسم بالإنجليزي
-                            // أو استخدم model.name.ar لو عايز بالعربي
+                            option.textContent = model.name.en;
                             modelSelect.appendChild(option);
                         });
                         modelSelect.disabled = false;
@@ -611,5 +610,6 @@ function reindexFeatureBlocks() {
         });
     });
 </script>
+
 
 @endsection
